@@ -4,6 +4,7 @@
   "description": "Tools for deploying SvelteKit to AWS using CDK",
   "main": "index.js",
   "scripts": {
+    "build": "pnpm build --filter=\"sveltekit-cdk-*\" --filter=\"sample-site\""
   },
   "repository": {
     "type": "git",
