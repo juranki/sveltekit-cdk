@@ -1,3 +1,7 @@
+/**
+ * Dummy page renderer to provide the interface to code proxy handler(s)
+ */
+
 import type { IncomingRequest} from '@sveltejs/kit'
 import { ServerResponse } from '@sveltejs/kit/types/hooks'
 

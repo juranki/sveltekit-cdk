@@ -1,4 +1,5 @@
 import preprocess from 'svelte-preprocess';
+import {AwsServerlessAdapter} from 'sveltekit-cdk-adapter'
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -8,7 +9,10 @@ const config = {
 
 	kit: {
 		// hydrate the <div id="svelte"> element in src/app.html
-		target: '#svelte'
+		target: '#svelte',
+		adapter: AwsServerlessAdapter({
+			cdkProjectPath: '../sample-stack'
+		})
 	}
 };
 

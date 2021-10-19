@@ -30,17 +30,20 @@ export function AwsServerlessAdapter({
     if (!cdkProjectPath && stackName) {
         throw new Error("when stackName is specified, cdkProjectPath is mandatory");
     }
-    const targetPath = artifactPath || path.join(cdkProjectPath!, 'sveltekit')
-    const files = path.join(__dirname, 'files');
-    const dirs = {
-        static: path.join(targetPath, 'static'),
-        lambda: path.join(targetPath, 'lambda'),
-        server: path.join(targetPath, 'server'),
-    }
     return {
-        name: 'adapter-aws-serverless',
+        name: 'sveltekit-cdk-adapter',
         async adapt({ utils, config }): Promise<void> {
+
+            const targetPath = artifactPath || path.join(cdkProjectPath!, 'sveltekit')
+            const files = path.join(__dirname, 'files');
+            const dirs = {
+                static: path.join(targetPath, 'static'),
+                lambda: path.join(targetPath, 'lambda'),
+                server: path.join(targetPath, 'server'),
+            }
+
             utils.rimraf(targetPath)
+
             await utils.prerender({
                 dest: dirs.static
             });
