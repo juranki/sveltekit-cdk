@@ -27,5 +27,8 @@
   },
   "peerDependencies": {
     "@sveltejs/kit": ">=1.0.0-next.184"
+  },
+  "dependencies": {
+    "esbuild": "^0.13.8"
   }
 }
