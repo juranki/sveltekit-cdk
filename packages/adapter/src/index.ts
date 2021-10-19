@@ -43,16 +43,17 @@ export function AwsServerlessAdapter({
             }
 
             utils.rimraf(targetPath)
+            utils.rimraf('.svelte-kit/cdk')
 
             await utils.prerender({
                 dest: dirs.static
             });
             utils.copy_client_files(dirs.static)
             utils.copy_static_files(dirs.static)
-            utils.copy(path.join(files, 'proxy-handler-v2.js'), '.svelte-kit/aws/proxy-handler-v2.js')
+            utils.copy(path.join(files, 'proxy-handler-v2.ts'), '.svelte-kit/cdk/proxy-handler-v2.ts')
 
             await build({
-                entryPoints: ['.svelte-kit/aws/proxy-handler-v2.js'],
+                entryPoints: ['.svelte-kit/cdk/proxy-handler-v2.ts'],
                 outfile: path.join(dirs.server, 'proxy-handler-v2.js'),
                 bundle: true,
                 platform: 'node',
