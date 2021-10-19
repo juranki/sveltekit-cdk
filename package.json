@@ -1,0 +1,19 @@
+{
+  "name": "sveltekit-cdk",
+  "version": "0.0.1",
+  "description": "Tools for deploying SvelteKit to AWS using CDK",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juranki/sveltekit-cdk.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/juranki/sveltekit-cdk/issues"
+  },
+  "homepage": "https://github.com/juranki/sveltekit-cdk#readme"
+}
