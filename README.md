@@ -1,24 +1,17 @@
+# SvelteKit CDK Adapter
 
-  "devDependencies": {
-    "@types/aws-lambda": "^8.10.84",
-    "@types/node": "^16.11.1",
-    "typescript": "^4.4.4"
-  },
-  "peerDependencies": {
-    "@sveltejs/kit": ">=1.0.0-next.184"
-  }
+## WARNING: Not for production use!!
 
+**At the moment, below is more wishful thinking than factual description of existing functionality**
 
+This repo contains tooling to deploy SvelteKit sites to AWS using CDK.
 
-  "devDependencies": {
-    "@types/aws-lambda": "^8.10.84",
-    "@types/node": "^16.11.1",
-    "typescript": "^4.4.4"
-  },
-  "peerDependencies": {
-    "@aws-cdk/core": ">=1.128.0",
-    "@aws-cdk/aws-apigatewayv2-integrations": ">=1.128.0",
-    "@aws-cdk/aws-lambda-nodejs": ">=1.128.0",
-    "@aws-cdk/aws-cloudfront": ">=1.128.0",
-    "@aws-cdk/aws-cloudfront-origins": ">=1.128.0",
-    "@aws-cdk/aws-s3-deployment": ">=1.128.0"
+Two packages are provided:
+- [ ] **sveltekit-cdk-adapter**
+  - [x] makes sveltekit artifacts available to be consumed in CDK stacks
+  - [ ] optionally deploys a CDK stack after producing the artifacts
+- **sveltekit-cdk-constructs**
+  - CDK constructs for
+    - cloudfront distribution for static content
+    - lambda backend
+    - ecs backend
