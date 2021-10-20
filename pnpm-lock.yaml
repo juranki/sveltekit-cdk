@@ -54,6 +54,7 @@ importers:
       '@fontsource/fira-mono': ^4.5.0
       '@lukeed/uuid': ^2.0.0
       '@sveltejs/kit': next
+      '@sveltekit-cdk/adapter': workspace:*
       '@types/cookie': ^0.4.1
       '@typescript-eslint/eslint-plugin': ^4.31.1
       '@typescript-eslint/parser': ^4.31.1
@@ -66,14 +67,13 @@ importers:
       svelte: ^3.44.0
       svelte-check: ^2.2.6
       svelte-preprocess: ^4.9.4
-      sveltekit-cdk-adapter: workspace:*
       tslib: ^2.3.1
       typescript: ^4.4.3
     dependencies:
       '@fontsource/fira-mono': 4.5.0
       '@lukeed/uuid': 2.0.0
+      '@sveltekit-cdk/adapter': link:../adapter
       cookie: 0.4.1
-      sveltekit-cdk-adapter: link:../adapter
     devDependencies:
       '@sveltejs/kit': 1.0.0-next.187_svelte@3.44.0
       '@types/cookie': 0.4.1
@@ -94,20 +94,20 @@ importers:
     specifiers:
       '@aws-cdk/assert': 1.128.0
       '@aws-cdk/core': 1.128.0
+      '@sveltekit-cdk/constructs': workspace:*
       '@types/jest': ^26.0.10
       '@types/node': 10.17.27
       aws-cdk: 1.128.0
       esbuild: ^0.13.8
       jest: ^26.4.2
       source-map-support: ^0.5.16
-      sveltekit-cdk-constructs: workspace:*
       ts-jest: ^26.2.0
       ts-node: ^9.0.0
       typescript: ~3.9.7
     dependencies:
       '@aws-cdk/core': 1.128.0
+      '@sveltekit-cdk/constructs': link:../constructs
       source-map-support: 0.5.20
-      sveltekit-cdk-constructs: link:../constructs
     devDependencies:
       '@aws-cdk/assert': 1.128.0_jest@26.6.3
       '@types/jest': 26.0.24

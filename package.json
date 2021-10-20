@@ -5,11 +5,11 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "build": "pnpm build --filter=\"sveltekit-cdk-*\" --filter=\"sample-site\"",
+    "build": "pnpm build --filter=\"@sveltekit-cdk/*\" --filter=\"sample-site\"",
     "synth": "pnpm cdk synth --filter=\"sample-stack\"",
     "diff": "pnpm cdk diff --filter=\"sample-stack\"",
     "deploy": "pnpm cdk deploy --filter=\"sample-stack\"",
-    "publish": "pnpm publish -r --filter=\"sveltekit-cdk-*\""
+    "pub": "pnpm publish --filter=\"@sveltekit-cdk/*\""
   },
   "repository": {
     "type": "git",

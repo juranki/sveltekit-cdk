@@ -1,5 +1,5 @@
 {
-  "name": "sveltekit-cdk-adapter",
+  "name": "@sveltekit-cdk/adapter",
   "version": "0.2.0",
   "description": "sveltekit-cdk-adapter produces artifacts that can be embedded to CDK stacks using sveltekit-cdk-constructs",
   "main": "dist/index.js",

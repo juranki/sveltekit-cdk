@@ -1,5 +1,5 @@
 import preprocess from 'svelte-preprocess';
-import {AwsServerlessAdapter} from 'sveltekit-cdk-adapter'
+import { AwsServerlessAdapter } from '@sveltekit-cdk/adapter'
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {

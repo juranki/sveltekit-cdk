@@ -1,5 +1,5 @@
 {
-  "name": "sveltekit-cdk-constructs",
+  "name": "@sveltekit-cdk/constructs",
   "version": "0.2.0",
   "description": "sveltekit-cdk-constructs is used to add SvelteKit site to CDK stack",
   "main": "dist/cjs/index.js",
