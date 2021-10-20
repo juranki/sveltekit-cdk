@@ -2,9 +2,13 @@
   "name": "sveltekit-cdk",
   "version": "0.0.1",
   "description": "Tools for deploying SvelteKit to AWS using CDK",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "build": "pnpm build --filter=\"sveltekit-cdk-*\" --filter=\"sample-site\""
+    "build": "pnpm build --filter=\"sveltekit-cdk-*\" --filter=\"sample-site\"",
+    "synth": "pnpm cdk synth --filter=\"sample-stack\"",
+    "diff": "pnpm cdk diff --filter=\"sample-stack\"",
+    "deploy": "pnpm cdk deploy --filter=\"sample-stack\""
   },
   "repository": {
     "type": "git",
