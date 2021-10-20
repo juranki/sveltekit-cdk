@@ -6,7 +6,13 @@
 
 This repo contains tooling to deploy SvelteKit sites to AWS using CDK.
 
-Two packages are provided:
+Package structure is based on assumption that SvelteKit site is part or a larger system,
+hosted on AWS and deployed with CDK.
+
+Tools are split to two packages: **adapter** that plugs into the sveltekit project, and 
+**constructs** that are imported to CDK project to integrate SvelteKit site to other parts
+of your system.
+
 - **sveltekit-cdk-adapter**
   - [x] makes sveltekit artifacts available to be consumed in CDK stacks
   - [ ] optionally deploys a CDK stack after producing the artifacts
@@ -14,7 +20,4 @@ Two packages are provided:
   - [x] cloudfront distribution for static content
   - [x] lambda backend for ssr and endpoints using api gateway v2
   - [ ] ecs backend for ssr and endpoints using ALB
-  - ...
 
-The assumption is that if you use AWS as you platform, you are able and
-want to have more control
