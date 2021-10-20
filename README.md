@@ -11,6 +11,10 @@ Two packages are provided:
   - [x] makes sveltekit artifacts available to be consumed in CDK stacks
   - [ ] optionally deploys a CDK stack after producing the artifacts
 - **sveltekit-cdk-constructs**
-  - [ ] cloudfront distribution for static content
-  - [ ] lambda backend for ssr and endpoints
-  - [ ] ecs backend for ssr and endpoints
+  - [x] cloudfront distribution for static content
+  - [x] lambda backend for ssr and endpoints using api gateway v2
+  - [ ] ecs backend for ssr and endpoints using ALB
+  - ...
+
+The assumption is that if you use AWS as you platform, you are able and
+want to have more control
