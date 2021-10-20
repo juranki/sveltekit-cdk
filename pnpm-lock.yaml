@@ -49,12 +49,6 @@ importers:
       '@types/node': 10.17.27
       typescript: 4.4.4
 
-  packages/constructs/dist/cjs:
-    specifiers: {}
-
-  packages/constructs/dist/mjs:
-    specifiers: {}
-
   packages/sample-site:
     specifiers:
       '@fontsource/fira-mono': ^4.5.0
