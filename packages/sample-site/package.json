@@ -32,5 +32,6 @@
     "@lukeed/uuid": "^2.0.0",
     "cookie": "^0.4.1",
     "sveltekit-cdk-adapter": "workspace:*"
-  }
+  },
+  "private": true
 }

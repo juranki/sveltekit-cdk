@@ -25,5 +25,6 @@
     "@aws-cdk/core": "1.128.0",
     "source-map-support": "^0.5.16",
     "sveltekit-cdk-constructs": "workspace:*"
-  }
+  },
+  "private": true
 }

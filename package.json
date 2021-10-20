@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/juranki/sveltekit-cdk/issues"
   },
-  "homepage": "https://github.com/juranki/sveltekit-cdk#readme"
+  "homepage": "https://github.com/juranki/sveltekit-cdk#readme",
+  "devDependencies": {
+    "@changesets/cli": "^2.17.0"
+  }
 }
