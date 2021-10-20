@@ -1,6 +1,6 @@
 {
   "name": "sveltekit-cdk-adapter",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "sveltekit-cdk-adapter produces artifacts that can be embedded to CDK stacks using sveltekit-cdk-constructs",
   "main": "dist/index.js",
   "type": "commonjs",
@@ -12,7 +12,7 @@
     "aws",
     "cdk"
   ],
-  "author": "",
+  "author": "juhani@juranki.com",
   "devDependencies": {
     "@sveltejs/kit": "next",
     "@types/aws-lambda": "^8.10.84",
