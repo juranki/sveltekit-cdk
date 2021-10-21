@@ -2,13 +2,10 @@
 
 ## WARNING: Not for production use!!
 
-**At the moment, below is more wishful thinking than factual description of existing functionality**
-
 ## Intro
 
 Plug this adapter to your SvelteKit project to
-copy artifacts to CDK stack, and optionally
-and optionally deploy the stack on build.
+copy artifacts to CDK stack, and optionally deploy thereafter.
 
 Use the [@sveltekit-cdk/construct](../constructs)
 to specify how SvelteKit is integrated to your
