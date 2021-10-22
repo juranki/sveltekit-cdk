@@ -1,5 +1,11 @@
 # sveltekit-cdk-constructs
 
+## 0.3.1
+
+### Patch Changes
+
+- 5ba4e28: update package info for npm
+
 ## 0.3.0
 
 ### Minor Changes
