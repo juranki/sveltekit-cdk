@@ -2,6 +2,15 @@
   "name": "@sveltekit-cdk/adapter",
   "version": "0.2.0",
   "description": "sveltekit-cdk-adapter produces artifacts that can be embedded to CDK stacks using sveltekit-cdk-constructs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juranki/sveltekit-cdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/juranki/sveltekit-cdk/issues"
+  },
+  "homepage": "https://github.com/juranki/sveltekit-cdk#readme",
+  "license": "MIT",
   "main": "dist/index.js",
   "type": "commonjs",
   "scripts": {

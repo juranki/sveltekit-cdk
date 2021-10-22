@@ -2,6 +2,15 @@
   "name": "@sveltekit-cdk/constructs",
   "version": "0.3.0",
   "description": "sveltekit-cdk-constructs is used to add SvelteKit site to CDK stack",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juranki/sveltekit-cdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/juranki/sveltekit-cdk/issues"
+  },
+  "homepage": "https://github.com/juranki/sveltekit-cdk#readme",
+  "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/mjs/index.js",
   "exports": {

@@ -12,17 +12,9 @@
     "bump": "changeset version",
     "pub": "pnpm publish --access public --filter=\"@sveltekit-cdk/*\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/juranki/sveltekit-cdk.git"
-  },
   "keywords": [],
   "author": "juhani@juranki.com",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/juranki/sveltekit-cdk/issues"
-  },
-  "homepage": "https://github.com/juranki/sveltekit-cdk#readme",
   "devDependencies": {
     "@changesets/cli": "^2.17.0"
   }
