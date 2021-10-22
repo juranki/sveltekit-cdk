@@ -9,6 +9,7 @@
     "synth": "pnpm cdk synth --filter=\"sample-stack\"",
     "diff": "pnpm cdk diff --filter=\"sample-stack\"",
     "deploy": "pnpm cdk deploy --filter=\"sample-stack\"",
+    "bump": "changeset version",
     "pub": "pnpm publish --access public --filter=\"@sveltekit-cdk/*\""
   },
   "repository": {
