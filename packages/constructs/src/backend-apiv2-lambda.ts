@@ -2,7 +2,7 @@ import { HttpApi } from "@aws-cdk/aws-apigatewayv2";
 import { LambdaProxyIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs'
 import { Construct, Fn } from "@aws-cdk/core";
-import { SvelteBackend } from "backend";
+import { DEFAULT_ARTIFACT_PATH, SvelteBackend } from "./common";
 import { join } from "path";
 
 export interface SvelteBackendApiV2LambdaProps {
@@ -11,7 +11,7 @@ export interface SvelteBackendApiV2LambdaProps {
      * 
      * @default 'sveltekit'
      */
-    artifactPath: string
+    artifactPath?: string
     /**
      * Environment variables for the backend implementation
      */
@@ -23,12 +23,13 @@ export interface SvelteBackendApiV2LambdaProps {
 export class SvelteBackendApiV2Lambda extends Construct implements SvelteBackend {
     api: HttpApi
     handler: NodejsFunction
-    constructor(scope: Construct, id: string, props: SvelteBackendApiV2LambdaProps) {
+
+    constructor(scope: Construct, id: string, props?: SvelteBackendApiV2LambdaProps) {
         super(scope, id)
 
         this.handler = new NodejsFunction(this, 'svelteHandler', {
-            entry: join(props.artifactPath, 'server/proxy-handler-v2.js'),
-            environment: props.environment,
+            entry: join(props?.artifactPath || DEFAULT_ARTIFACT_PATH, 'server/proxy-handler-v2.js'),
+            environment: props?.environment,
         })
 
         const svelteIntegration = new LambdaProxyIntegration({
@@ -43,7 +44,9 @@ export class SvelteBackendApiV2Lambda extends Construct implements SvelteBackend
         })
 
     }
+
     get httpEndpoint(): string {
         return Fn.select(1, Fn.split('://', this.api.apiEndpoint))
     }
+
 }

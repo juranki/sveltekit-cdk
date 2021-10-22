@@ -2,6 +2,8 @@ import {
     AllowedMethods,
     CachePolicy,
     Distribution,
+    ICachePolicy,
+    IOriginRequestPolicy,
     OriginRequestCookieBehavior,
     OriginRequestHeaderBehavior,
     OriginRequestPolicy,
@@ -13,7 +15,7 @@ import { HttpOrigin, S3Origin } from '@aws-cdk/aws-cloudfront-origins'
 import { Bucket } from '@aws-cdk/aws-s3'
 import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment'
 import { Construct } from '@aws-cdk/core'
-import { SvelteBackend } from './backend'
+import { DEFAULT_ARTIFACT_PATH, SvelteBackend } from './common'
 import { readdirSync, statSync } from 'fs'
 import { join } from 'path'
 
@@ -23,7 +25,7 @@ export interface SvelteDistributionProps {
      * 
      * @default 'sveltekit'
      */
-    artifactPath: string
+    artifactPath?: string
 
     /**
      * Optional backend resource.
@@ -39,6 +41,24 @@ export interface SvelteDistributionProps {
      * @default PriceClass.PRICE_CLASS_100
      */
     priceClass?: PriceClass
+    /**
+     * Origin request policy determines which parts of requests
+     * CloudFront passes to your backend
+     * 
+     * @default minimal policy to make the sveltekit demo work (userid cookie, Accept header, all query str params)
+     * @link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-origin-requests.html
+     */
+    originRequestPolicy?: IOriginRequestPolicy
+
+    /**
+     * Cache policy determies caching for dynamic content.
+     * 
+     * Note: static content is cached using default setting (CACHING_OPTIMIZED).
+     * 
+     * @default CACHING_DISABLED
+     * @link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-origin-requests.html
+     */
+    cachePolicy?: ICachePolicy
 }
 
 export class SvelteDistribution extends Construct {
@@ -49,10 +69,16 @@ export class SvelteDistribution extends Construct {
 
         this.bucket = new Bucket(this, 'svelteStaticBucket')
 
-        const artifactPath = props.artifactPath || 'sveltekit'
+        const artifactPath = props.artifactPath || DEFAULT_ARTIFACT_PATH
         const staticPath = join(artifactPath, 'static')
 
         const origin = props.backend ? new HttpOrigin(props.backend.httpEndpoint) : new S3Origin(this.bucket)
+        const originRequestPolicy = props.originRequestPolicy || new OriginRequestPolicy(this, 'svelteDynamicRequestPolicy', {
+            cookieBehavior: OriginRequestCookieBehavior.allowList('userid'),
+            headerBehavior: OriginRequestHeaderBehavior.allowList('Accept'),
+            queryStringBehavior: OriginRequestQueryStringBehavior.all(),
+        })
+        const cachePolicy = props.cachePolicy || CachePolicy.CACHING_DISABLED
 
         this.distribution = new Distribution(this, 'distro', {
             priceClass: props.priceClass || PriceClass.PRICE_CLASS_100,
@@ -60,12 +86,8 @@ export class SvelteDistribution extends Construct {
                 origin,
                 viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                 allowedMethods: AllowedMethods.ALLOW_ALL,
-                originRequestPolicy: new OriginRequestPolicy(this, 'svelteDynamicRequestPolicy', {
-                    cookieBehavior: OriginRequestCookieBehavior.allowList('userid'),
-                    headerBehavior: OriginRequestHeaderBehavior.allowList('Accept'),
-                    queryStringBehavior: OriginRequestQueryStringBehavior.all(),
-                }),
-                cachePolicy: CachePolicy.CACHING_DISABLED,
+                originRequestPolicy,
+                cachePolicy,
             } : {
                 origin,
                 viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
