@@ -1,10 +1,8 @@
 import type { Adapter } from '@sveltejs/kit'
 import * as path from 'path'
 import { build } from 'esbuild'
-/**
- * Params to control the adapter
- */
-interface AwsServerlessAdapterParams {
+
+export interface AwsServerlessAdapterParams {
     /**
      * Location of CDK project. Required for automatic deploy.
      */

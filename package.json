@@ -16,6 +16,8 @@
   "author": "juhani@juranki.com",
   "license": "MIT",
   "devDependencies": {
-    "@changesets/cli": "^2.17.0"
+    "@changesets/cli": "^2.17.0",
+    "typedoc": "^0.22.6",
+    "typescript": "^4.4.4"
   }
 }

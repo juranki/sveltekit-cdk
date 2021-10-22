@@ -12,6 +12,7 @@
   "homepage": "https://github.com/juranki/sveltekit-cdk#readme",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "commonjs",
   "scripts": {
     "build": "rm -fr dist/* && tsc && cp -r handler/files dist"

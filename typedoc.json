@@ -1,0 +1,9 @@
+{
+    "entryPoints": [
+        "./packages/adapter",
+        "./packages/constructs"
+    ],
+    "entryPointStrategy": "packages",
+    "out": "docs",
+    "exclude": "**/proxy-handler-v2.ts"
+}
