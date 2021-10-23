@@ -1,5 +1,15 @@
 # sveltekit-cdk-constructs
 
+## 0.4.0
+
+### Minor Changes
+
+- Add option to deploy rendered as Lambda@Edge function that is
+  attached to the distribution.
+
+  Caused some refactoring in constructs and definately broke the API.
+  Api still doesn't feel right, so expect more of that.
+
 ## 0.3.1
 
 ### Patch Changes
