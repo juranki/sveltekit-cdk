@@ -48,11 +48,19 @@ export function AwsServerlessAdapter({
             });
             utils.copy_client_files(dirs.static)
             utils.copy_static_files(dirs.static)
-            utils.copy(path.join(files, 'proxy-handler-v2.ts'), '.svelte-kit/cdk/proxy-handler-v2.ts')
+            utils.copy(`${files}/`, '.svelte-kit/cdk/')
 
             await build({
-                entryPoints: ['.svelte-kit/cdk/proxy-handler-v2.ts'],
-                outfile: path.join(dirs.server, 'proxy-handler-v2.js'),
+                entryPoints: ['.svelte-kit/cdk/proxy-v2-handler.ts'],
+                outfile: path.join(dirs.server, 'proxy-v2/handler.js'),
+                bundle: true,
+                platform: 'node',
+                inject: [path.join(files, 'shims.js')]
+            })
+
+            await build({
+                entryPoints: ['.svelte-kit/cdk/at-edge-handler.ts'],
+                outfile: path.join(dirs.server, 'at-edge/handler.js'),
                 bundle: true,
                 platform: 'node',
                 inject: [path.join(files, 'shims.js')]

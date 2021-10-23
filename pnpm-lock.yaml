@@ -22,7 +22,7 @@ importers:
     dependencies:
       esbuild: 0.13.8
     devDependencies:
-      '@sveltejs/kit': 1.0.0-next.187
+      '@sveltejs/kit': 1.0.0-next.188
       '@types/aws-lambda': 8.10.84
       '@types/node': 10.17.27
       typescript: 4.4.4
@@ -33,6 +33,7 @@ importers:
       '@aws-cdk/aws-apigatewayv2-integrations': ^1.128.0
       '@aws-cdk/aws-cloudfront': ^1.128.0
       '@aws-cdk/aws-cloudfront-origins': ^1.128.0
+      '@aws-cdk/aws-lambda': ^1.128.0
       '@aws-cdk/aws-lambda-nodejs': ^1.128.0
       '@aws-cdk/aws-s3': ^1.128.0
       '@aws-cdk/aws-s3-deployment': ^1.128.0
@@ -45,6 +46,7 @@ importers:
       '@aws-cdk/aws-apigatewayv2-integrations': 1.128.0
       '@aws-cdk/aws-cloudfront': 1.128.0
       '@aws-cdk/aws-cloudfront-origins': 1.128.0
+      '@aws-cdk/aws-lambda': 1.128.0
       '@aws-cdk/aws-lambda-nodejs': 1.128.0
       '@aws-cdk/aws-s3': 1.128.0
       '@aws-cdk/aws-s3-deployment': 1.128.0
@@ -79,7 +81,7 @@ importers:
       '@sveltekit-cdk/adapter': link:../adapter
       cookie: 0.4.1
     devDependencies:
-      '@sveltejs/kit': 1.0.0-next.187_svelte@3.44.0
+      '@sveltejs/kit': 1.0.0-next.188_svelte@3.44.0
       '@types/cookie': 0.4.1
       '@typescript-eslint/eslint-plugin': 4.33.0_cc617358c89d3f38c52462f6d809db4c
       '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.4.4
@@ -1463,8 +1465,8 @@ packages:
       '@sinonjs/commons': 1.8.3
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.187:
-    resolution: {integrity: sha512-ImB7UYO1vNhkshw6OKymE1TpWGqmjAH5HCToBi2l8RMdPZhkwdWFCoqz65l1UssNltiIktPzegKeyy6E5w+XaA==}
+  /@sveltejs/kit/1.0.0-next.188:
+    resolution: {integrity: sha512-eDssOlwcAmkUR3SGh3PK4LHBfV3mMY9vhsMohMUPV7oJO3fydOgvDykqzxK9wc1NgNB/TIBCm+1sps2vetePHw==}
     engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:
@@ -1482,8 +1484,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.187_svelte@3.44.0:
-    resolution: {integrity: sha512-ImB7UYO1vNhkshw6OKymE1TpWGqmjAH5HCToBi2l8RMdPZhkwdWFCoqz65l1UssNltiIktPzegKeyy6E5w+XaA==}
+  /@sveltejs/kit/1.0.0-next.188_svelte@3.44.0:
+    resolution: {integrity: sha512-eDssOlwcAmkUR3SGh3PK4LHBfV3mMY9vhsMohMUPV7oJO3fydOgvDykqzxK9wc1NgNB/TIBCm+1sps2vetePHw==}
     engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:

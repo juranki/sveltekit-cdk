@@ -7,7 +7,7 @@
 Plug this adapter to your SvelteKit project to
 copy artifacts to CDK stack, and optionally deploy thereafter.
 
-Use the [@sveltekit-cdk/construct](../constructs)
+Use the [@sveltekit-cdk/construct](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructs#readme)
 to specify how SvelteKit is integrated to your
 stack.
 
@@ -36,3 +36,7 @@ stack.
 
     export default config;
     ```
+
+    ### Documentation
+
+[API reference](https://juranki.github.io/sveltekit-cdk/modules/_sveltekit_cdk_adapter.html)

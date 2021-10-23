@@ -9,13 +9,12 @@ import { URLSearchParams } from 'url'
 import type { RequestHeaders, ResponseHeaders } from '@sveltejs/kit/types/helper'
 import type { IncomingRequest, RawBody } from '@sveltejs/kit'
 import type { ServerResponse } from '@sveltejs/kit/types/hooks'
+import { log, toRawBody } from './util'
 
 type ProxyResponseHeadersV2 = {
     [header: string]: boolean | number | string;
 } | undefined
 
-const encoder = new TextEncoder()
-const LOG_LEVEL = process.env.LOG_LEVEL?.toUpperCase() || 'INFO'
 init()
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
@@ -53,14 +52,11 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     }
 }
 
-function transformIncomingBody(evt: APIGatewayProxyEventV2): RawBody {
-    if (!evt.body) {
-        return null
-    }
-    if (evt.isBase64Encoded) {
-        return new Uint8Array(Buffer.from(evt.body, 'base64'))
-    }
-    return encoder.encode(evt.body)
+function transformIncomingBody(evt: APIGatewayProxyEventV2): RawBody | undefined {
+    return evt.body ? toRawBody({
+        encoding: evt.isBase64Encoded ? 'base64' : 'text',
+        data: evt.body
+    }) : undefined
 }
 
 function transformIncomingHeaders(proxyHeaders: APIGatewayProxyEventHeaders, cookies: string[] | undefined): RequestHeaders {
@@ -101,7 +97,6 @@ function transformResponse(resp: ServerResponse): APIGatewayProxyStructuredResul
         headers: resp.headers ? transformOutgoingHeaders(resp.headers) : undefined,
         cookies: transformOutgoingCookies(resp.headers)
     }
-
     if (resp.body instanceof Uint8Array) {
         rv.body = Buffer.from(resp.body).toString('base64')
         rv.isBase64Encoded = true
@@ -110,15 +105,4 @@ function transformResponse(resp: ServerResponse): APIGatewayProxyStructuredResul
     }
 
     return rv
-}
-
-const logLevels: { [k: string]: number } = {
-    ERROR: 1,
-    INFO: 2,
-    DEBUG: 3,
-}
-function log(level: string, msg: string, data: any): void {
-    if (logLevels[level] && logLevels[level] >= logLevels[LOG_LEVEL]) {
-        console.log(JSON.stringify({ level, msg, data }))
-    }
 }

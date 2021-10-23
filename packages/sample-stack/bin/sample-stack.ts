@@ -6,4 +6,12 @@ import { SimpleSvelteStack } from '@sveltekit-cdk/constructs'
 const app = new cdk.App();
 new SimpleSvelteStack(app, 'SimpleSvelteStack', {
   env: { account: '385180606991', region: 'us-east-1' },
+  renderer: {
+    type: 'AT_EDGE',
+    rendererProps: {
+      environment: {
+        DEBUG_LEVEL: 'DEBUG',
+      }
+    }
+  }
 });

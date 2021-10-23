@@ -1,7 +1,7 @@
 {
   "name": "@sveltekit-cdk/constructs",
   "version": "0.3.1",
-  "description": "sveltekit-cdk-constructs is used to add SvelteKit site to CDK stack",
+  "description": "Add SvelteKit site to CDK stack",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/juranki/sveltekit-cdk.git"
@@ -34,6 +34,7 @@
     "@aws-cdk/aws-cloudfront": "^1.128.0",
     "@aws-cdk/aws-cloudfront-origins": "^1.128.0",
     "@aws-cdk/aws-lambda-nodejs": "^1.128.0",
+    "@aws-cdk/aws-lambda": "^1.128.0",
     "@aws-cdk/aws-s3": "^1.128.0",
     "@aws-cdk/aws-s3-deployment": "^1.128.0",
     "@aws-cdk/core": "1.128.0",
@@ -47,6 +48,7 @@
     "@aws-cdk/aws-cloudfront": "^1.128.0",
     "@aws-cdk/aws-cloudfront-origins": "^1.128.0",
     "@aws-cdk/aws-lambda-nodejs": "^1.128.0",
+    "@aws-cdk/aws-lambda": "^1.128.0",
     "@aws-cdk/aws-s3": "^1.128.0",
     "@aws-cdk/aws-s3-deployment": "^1.128.0",
     "@aws-cdk/core": "1.128.0"

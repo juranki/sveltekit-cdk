@@ -2,8 +2,10 @@ import {
     AllowedMethods,
     CachePolicy,
     Distribution,
+    EdgeLambda,
     ICachePolicy,
     IOriginRequestPolicy,
+    LambdaEdgeEventType,
     OriginRequestCookieBehavior,
     OriginRequestHeaderBehavior,
     OriginRequestPolicy,
@@ -15,9 +17,11 @@ import { HttpOrigin, S3Origin } from '@aws-cdk/aws-cloudfront-origins'
 import { Bucket } from '@aws-cdk/aws-s3'
 import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment'
 import { Construct } from '@aws-cdk/core'
-import { DEFAULT_ARTIFACT_PATH, SvelteBackend } from './common'
+import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from './common'
 import { readdirSync, statSync } from 'fs'
 import { join } from 'path'
+import { EdgeFunction } from '@aws-cdk/aws-cloudfront/lib/experimental'
+import { Code, Runtime } from '@aws-cdk/aws-lambda'
 
 export interface SvelteDistributionProps {
     /**
@@ -28,12 +32,32 @@ export interface SvelteDistributionProps {
     artifactPath?: string
 
     /**
-     * Optional backend resource.
-     * 
-     * If defined, will be the default handler that receives requests
-     * that don't match static content.
+     * Renderer configuration for this site.
+     * If the type is SERVICE, endpoint must be provided
      */
-    backend?: SvelteBackend
+    renderer: {
+        /**
+         * NONE assumes you sveltekit is configured for
+         * fully static site
+         * 
+         * AT_EDGE deploys renderer as Lambda@Edge function
+         * which is attached to Cloudfront distribution.
+         * rendererProps must be provided
+         * 
+         * SERVICE means that renderer is available 
+         * as a service, and you must provide the endpoint
+         */
+        type: 'NONE' | 'AT_EDGE' | 'SERVICE',
+        /**
+         * EndPoint for the renderer service
+         */
+        endpoint?: SvelteRendererEndpoint
+        /**
+         * Props for Lambda@Edge renderer
+         */
+        rendererProps?: RendererProps
+    }
+
     /**
      * PriceClass
      * 
@@ -67,12 +91,19 @@ export class SvelteDistribution extends Construct {
     constructor(scope: Construct, id: string, props: SvelteDistributionProps) {
         super(scope, id)
 
-        this.bucket = new Bucket(this, 'svelteStaticBucket')
-
+        // validate pros and apply defaults
+        checkProps(props)
         const artifactPath = props.artifactPath || DEFAULT_ARTIFACT_PATH
         const staticPath = join(artifactPath, 'static')
 
-        const origin = props.backend ? new HttpOrigin(props.backend.httpEndpoint) : new S3Origin(this.bucket)
+        // origins
+        this.bucket = new Bucket(this, 'svelteStaticBucket')
+        const s3origin = new S3Origin(this.bucket)
+        const origin = props.renderer.type === 'SERVICE'
+            ? new HttpOrigin(props.renderer.endpoint!.httpEndpoint)
+            : s3origin
+
+        // cache and origin request policies
         const originRequestPolicy = props.originRequestPolicy || new OriginRequestPolicy(this, 'svelteDynamicRequestPolicy', {
             cookieBehavior: OriginRequestCookieBehavior.allowList('userid'),
             headerBehavior: OriginRequestHeaderBehavior.allowList('Accept'),
@@ -80,9 +111,29 @@ export class SvelteDistribution extends Construct {
         })
         const cachePolicy = props.cachePolicy || CachePolicy.CACHING_DISABLED
 
+        // at edge lambda
+        let edgeLambdas: EdgeLambda[] | undefined = undefined
+        if (props.renderer.type === 'AT_EDGE') {
+            const lambda = new EdgeFunction(this, 'svelteHandler', {
+                code: Code.fromAsset(
+                    join(artifactPath, 'server/at-edge')),
+                handler: 'handler.handler',
+                runtime: Runtime.NODEJS_14_X,
+                environment: props.renderer.rendererProps?.environment,
+                logRetention: 7,
+            })
+
+            edgeLambdas = [{
+                eventType: LambdaEdgeEventType.VIEWER_REQUEST,
+                functionVersion: lambda.currentVersion,
+                includeBody: true,
+            }]
+        }
+
+        // distribution
         this.distribution = new Distribution(this, 'distro', {
             priceClass: props.priceClass || PriceClass.PRICE_CLASS_100,
-            defaultBehavior: props.backend ? {
+            defaultBehavior: props.renderer.type === 'SERVICE' ? {
                 origin,
                 viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                 allowedMethods: AllowedMethods.ALLOW_ALL,
@@ -91,11 +142,15 @@ export class SvelteDistribution extends Construct {
             } : {
                 origin,
                 viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+                edgeLambdas,
+                allowedMethods: edgeLambdas ? AllowedMethods.ALLOW_ALL : AllowedMethods.ALLOW_GET_HEAD,
+                originRequestPolicy: edgeLambdas ? originRequestPolicy : undefined,
+                cachePolicy: edgeLambdas ? cachePolicy : undefined
             }
         })
 
-        if (props.backend) {
-            const s3origin = new S3Origin(this.bucket)
+        // routes for static content
+        if (props.renderer.type === 'SERVICE' || props.renderer.type === 'AT_EDGE') {
             forStaticRoutes(staticPath, (pattern) => {
                 this.distribution.addBehavior(pattern, s3origin, {
                     viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -103,12 +158,22 @@ export class SvelteDistribution extends Construct {
             })
         }
 
-        const staticDeployment = new BucketDeployment(this, 'svelteStaticDeployment', {
+        // deploy static content
+        new BucketDeployment(this, 'svelteStaticDeployment', {
             destinationBucket: this.bucket,
             sources: [Source.asset(staticPath)],
             distribution: this.distribution,
         })
 
+    }
+}
+
+function checkProps(props: SvelteDistributionProps) {
+    if (props.renderer.type === 'SERVICE' && !props.renderer.endpoint) {
+        throw new Error("renderer endpoint must be provided when type is SERVICE")
+    }
+    if (props.renderer.type === 'AT_EDGE' && !props.renderer.rendererProps) {
+        throw new Error("rendererProps must be provided when type is AT_EDGE")
     }
 }
 

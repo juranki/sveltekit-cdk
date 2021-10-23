@@ -15,8 +15,8 @@ of your system.
   - [x] makes sveltekit artifacts available to be consumed in CDK stacks
   - [ ] optionally deploys a CDK stack after producing the artifacts
 - **[@sveltekit-cdk/constructs](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructs#readme)**
-  - [x] cloudfront distribution for static content
-  - [x] lambda backend for ssr and endpoints using api gateway v2
-  - [x] simple serverless stack for deploying a site similar to the demo site
+  - [x] CloudFront distribution for static content
+  - [x] Lambda renderer behind API Gateway HTTP API
+  - [x] Lambda@Edge renderer attached to the distribution
   - [ ] ecs backend for ssr and endpoints using ALB
 

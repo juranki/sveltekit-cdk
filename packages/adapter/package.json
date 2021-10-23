@@ -1,7 +1,7 @@
 {
   "name": "@sveltekit-cdk/adapter",
   "version": "0.2.1",
-  "description": "sveltekit-cdk-adapter produces artifacts that can be embedded to CDK stacks using sveltekit-cdk-constructs",
+  "description": "Plug this adapter to your SvelteKit project to deploy using AWS CDK",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/juranki/sveltekit-cdk.git"

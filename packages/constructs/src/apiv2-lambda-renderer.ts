@@ -2,33 +2,20 @@ import { HttpApi } from "@aws-cdk/aws-apigatewayv2";
 import { LambdaProxyIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs'
 import { Construct, Fn } from "@aws-cdk/core";
-import { DEFAULT_ARTIFACT_PATH, SvelteBackend } from "./common";
+import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from "./common";
 import { join } from "path";
 
-export interface SvelteBackendApiV2LambdaProps {
-    /**
-     * Location of sveltekit artifacts
-     * 
-     * @default 'sveltekit'
-     */
-    artifactPath?: string
-    /**
-     * Environment variables for the backend implementation
-     */
-    environment?: {
-        [key: string]: string;
-    }
-}
+export interface SvelteApiV2LambdaRendererProps extends RendererProps{}
 
-export class SvelteBackendApiV2Lambda extends Construct implements SvelteBackend {
+export class SvelteApiV2LambdaRenderer extends Construct implements SvelteRendererEndpoint {
     api: HttpApi
     handler: NodejsFunction
 
-    constructor(scope: Construct, id: string, props?: SvelteBackendApiV2LambdaProps) {
+    constructor(scope: Construct, id: string, props?: SvelteApiV2LambdaRendererProps) {
         super(scope, id)
 
         this.handler = new NodejsFunction(this, 'svelteHandler', {
-            entry: join(props?.artifactPath || DEFAULT_ARTIFACT_PATH, 'server/proxy-handler-v2.js'),
+            entry: join(props?.artifactPath || DEFAULT_ARTIFACT_PATH, 'server/proxy-v2/handler.js'),
             environment: props?.environment,
         })
 
