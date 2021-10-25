@@ -10,6 +10,7 @@ the site artifacts
 1. Use constructs from this package in you CDK stacks
 to deploy the site
 
-### Documentation
+### Links
 
-[API reference](https://juranki.github.io/sveltekit-cdk/modules/_sveltekit_cdk_constructs.html)
+- [API reference](https://juranki.github.io/sveltekit-cdk/modules/_sveltekit_cdk_constructs.html)
+- [Changelog](./CHANGELOG.md)

@@ -37,6 +37,9 @@ stack.
     export default config;
     ```
 
-    ### Documentation
 
-[API reference](https://juranki.github.io/sveltekit-cdk/modules/_sveltekit_cdk_adapter.html)
+### Links
+
+- [API reference](https://juranki.github.io/sveltekit-cdk/modules/_sveltekit_cdk_adapter.html)
+- [Changelog](./CHANGELOG.md)
+

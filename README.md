@@ -20,3 +20,9 @@ of your system.
   - [x] Lambda renderer behind API Gateway HTTP API
   - [ ] ECS/EKS renderer?
 
+
+### Links
+
+- [API reference](https://juranki.github.io/sveltekit-cdk/)
+- [@sveltekit-cdk/adapter changelog](https://github.com/juranki/sveltekit-cdk/blob/main/packages/adapter/CHANGELOG.md)
+- [@sveltekit-cdk/constructs changelog](https://github.com/juranki/sveltekit-cdk/blob/main/packages/constructs/CHANGELOG.md)
