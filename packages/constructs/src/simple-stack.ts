@@ -1,29 +1,20 @@
-import { DistributionProps } from "@aws-cdk/aws-cloudfront";
 import { Construct, Stack, StackProps } from "@aws-cdk/core";
-import { SvelteApiV2LambdaRenderer, SvelteApiV2LambdaRendererProps } from "./apiv2-lambda-renderer";
-import { SvelteDistribution, SvelteDistributionProps } from "./distribution";
-
-export interface SimpleSvelteStackProps extends
-    StackProps, SvelteDistributionProps { }
-
+import { SvelteDistribution } from "./distribution";
+/**
+ * Deploy sveltekit site to Cloudfront distribution with 
+ * Lambda@Edge renderer, triggered by origin request event.
+ */
 export class SimpleSvelteStack extends Stack {
-    constructor(scope: Construct, id: string, props?: SimpleSvelteStackProps) {
+    constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
-        // const renderer = new SvelteApiV2LambdaRenderer(this, 'svelteBackend', props)
-        const renderer = props?.renderer || {
-            type: 'AT_EDGE',
-            rendererProps: {}
-        }
         new SvelteDistribution(this, 'svelteDistribution', {
             renderer: {
-                type: 'AT_EDGE',
+                type: 'VIEWER_REQ',
                 rendererProps: {
-                    environment: {
-
-                    }
+                    environment: {}
                 }
-            },
+            }
         })
 
     }
