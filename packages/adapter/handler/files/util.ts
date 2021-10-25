@@ -7,9 +7,9 @@ export type LogLevel = 'ERROR' | 'INFO' | 'DEBUG'
 
 const LOG_LEVEL = (process.env.LOG_LEVEL?.toUpperCase() || 'INFO') as LogLevel
 const logLevels: { [k: string]: number } = {
-    ERROR: 1,
+    ERROR: 3,
     INFO: 2,
-    DEBUG: 3,
+    DEBUG: 1,
 }
 export function log(level: LogLevel, msg: string, data: any): void {
     if (logLevels[level] && logLevels[level] >= logLevels[LOG_LEVEL]) {
