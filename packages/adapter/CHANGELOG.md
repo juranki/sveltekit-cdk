@@ -1,5 +1,12 @@
 # sveltekit-cdk-adapter
 
+## 0.3.1
+
+### Patch Changes
+
+- log level handling in renderer adapters
+- exclude externals from api doc
+
 ## 0.3.0
 
 ### Minor Changes

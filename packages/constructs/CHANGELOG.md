@@ -1,5 +1,16 @@
 # sveltekit-cdk-constructs
 
+## 0.5.0
+
+### Minor Changes
+
+- add options to attach renderer to viewer or origin request events
+- hardcode simple stack config
+
+### Patch Changes
+
+- exclude externals from api doc
+
 ## 0.4.0
 
 ### Minor Changes
