@@ -16,7 +16,7 @@ of your system.
   - [ ] optionally deploys a CDK stack after producing the artifacts
 - **[@sveltekit-cdk/constructs](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructs#readme)**
   - [x] CloudFront distribution for static content
-  - [x] Lambda renderer behind API Gateway HTTP API
   - [x] Lambda@Edge renderer attached to the distribution
-  - [ ] ecs backend for ssr and endpoints using ALB
+  - [x] Lambda renderer behind API Gateway HTTP API
+  - [ ] ECS/EKS renderer?
 
