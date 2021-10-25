@@ -15,8 +15,8 @@ import {
 } from '@aws-cdk/aws-cloudfront'
 import { HttpOrigin, S3Origin } from '@aws-cdk/aws-cloudfront-origins'
 import { Bucket } from '@aws-cdk/aws-s3'
-import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment'
-import { Construct } from '@aws-cdk/core'
+import { BucketDeployment, CacheControl, Source } from '@aws-cdk/aws-s3-deployment'
+import { Construct, Duration } from '@aws-cdk/core'
 import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from './common'
 import { readdirSync, statSync } from 'fs'
 import { join } from 'path'
@@ -37,17 +37,23 @@ export interface SvelteDistributionProps {
      */
     renderer: {
         /**
-         * NONE assumes you sveltekit is configured for
-         * fully static site
+         * NONE is for fully static sveltekit sites
          * 
-         * AT_EDGE deploys renderer as Lambda@Edge function
-         * which is attached to Cloudfront distribution.
-         * rendererProps must be provided
+         * VIEWER_REQ deploys renderer as Lambda@Edge function
+         * that is attached to Cloudfront distribution as **viewer
+         * request handler**. rendererProps must be provided
          * 
-         * SERVICE means that renderer is available 
-         * as a service, and you must provide the endpoint
+         * ORIGIN_REQ deploys renderer as Lambda@Edge function
+         * that is attached to Cloudfront distribution as **origin
+         * request handler**. rendererProps must be provided
+         * 
+         * HTTP_ORIGIN attaches renderer to distribution as HttpOrigin
+         * of default behaviour. You must provide the endpoint attribute.
+         * 
+         * To learn more about Cloudfront request handling, see
+         * https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-cloudfront-trigger-events.html.
          */
-        type: 'NONE' | 'AT_EDGE' | 'SERVICE',
+        type: 'NONE' | 'VIEWER_REQ' | 'ORIGIN_REQ' | 'HTTP_ORIGIN',
         /**
          * EndPoint for the renderer service
          */
@@ -69,7 +75,7 @@ export interface SvelteDistributionProps {
      * Origin request policy determines which parts of requests
      * CloudFront passes to your backend
      * 
-     * @default minimal policy to make the sveltekit demo work (userid cookie, Accept header, all query str params)
+     * @default allow all for lambda@edge, otherwise minimal policy to make the sveltekit demo work (userid cookie, Accept header, all query str params)
      * @link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-origin-requests.html
      */
     originRequestPolicy?: IOriginRequestPolicy
@@ -99,21 +105,23 @@ export class SvelteDistribution extends Construct {
         // origins
         this.bucket = new Bucket(this, 'svelteStaticBucket')
         const s3origin = new S3Origin(this.bucket)
-        const origin = props.renderer.type === 'SERVICE'
+        const origin = props.renderer.type === 'HTTP_ORIGIN'
             ? new HttpOrigin(props.renderer.endpoint!.httpEndpoint)
             : s3origin
 
         // cache and origin request policies
         const originRequestPolicy = props.originRequestPolicy || new OriginRequestPolicy(this, 'svelteDynamicRequestPolicy', {
-            cookieBehavior: OriginRequestCookieBehavior.allowList('userid'),
-            headerBehavior: OriginRequestHeaderBehavior.allowList('Accept'),
+            cookieBehavior: OriginRequestCookieBehavior.all(),
+            headerBehavior: props.renderer.type === 'HTTP_ORIGIN'
+                ? OriginRequestHeaderBehavior.allowList('Accept')
+                : OriginRequestHeaderBehavior.all(),
             queryStringBehavior: OriginRequestQueryStringBehavior.all(),
         })
         const cachePolicy = props.cachePolicy || CachePolicy.CACHING_DISABLED
 
         // at edge lambda
         let edgeLambdas: EdgeLambda[] | undefined = undefined
-        if (props.renderer.type === 'AT_EDGE') {
+        if (props.renderer.type === 'VIEWER_REQ' || props.renderer.type === 'ORIGIN_REQ') {
             const lambda = new EdgeFunction(this, 'svelteHandler', {
                 code: Code.fromAsset(
                     join(artifactPath, 'server/at-edge')),
@@ -124,7 +132,9 @@ export class SvelteDistribution extends Construct {
             })
 
             edgeLambdas = [{
-                eventType: LambdaEdgeEventType.VIEWER_REQUEST,
+                eventType: props.renderer.type === 'ORIGIN_REQ' 
+                    ? LambdaEdgeEventType.ORIGIN_REQUEST
+                    : LambdaEdgeEventType.VIEWER_REQUEST,
                 functionVersion: lambda.currentVersion,
                 includeBody: true,
             }]
@@ -133,7 +143,7 @@ export class SvelteDistribution extends Construct {
         // distribution
         this.distribution = new Distribution(this, 'distro', {
             priceClass: props.priceClass || PriceClass.PRICE_CLASS_100,
-            defaultBehavior: props.renderer.type === 'SERVICE' ? {
+            defaultBehavior: props.renderer.type === 'HTTP_ORIGIN' ? {
                 origin,
                 viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                 allowedMethods: AllowedMethods.ALLOW_ALL,
@@ -150,7 +160,7 @@ export class SvelteDistribution extends Construct {
         })
 
         // routes for static content
-        if (props.renderer.type === 'SERVICE' || props.renderer.type === 'AT_EDGE') {
+        if (props.renderer.type !== 'NONE') {
             forStaticRoutes(staticPath, (pattern) => {
                 this.distribution.addBehavior(pattern, s3origin, {
                     viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -163,17 +173,20 @@ export class SvelteDistribution extends Construct {
             destinationBucket: this.bucket,
             sources: [Source.asset(staticPath)],
             distribution: this.distribution,
+            cacheControl: [
+                CacheControl.maxAge(Duration.days(365))
+            ]
         })
 
     }
 }
 
 function checkProps(props: SvelteDistributionProps) {
-    if (props.renderer.type === 'SERVICE' && !props.renderer.endpoint) {
+    if (props.renderer.type === 'HTTP_ORIGIN' && !props.renderer.endpoint) {
         throw new Error("renderer endpoint must be provided when type is SERVICE")
     }
-    if (props.renderer.type === 'AT_EDGE' && !props.renderer.rendererProps) {
-        throw new Error("rendererProps must be provided when type is AT_EDGE")
+    if ((props.renderer.type.endsWith('_REQ')) && !props.renderer.rendererProps) {
+        throw new Error("rendererProps must be provided when type is VIEWER_REQ or ORIGIN_REQ")
     }
 }
 
