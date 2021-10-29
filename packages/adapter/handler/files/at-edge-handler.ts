@@ -25,6 +25,12 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     const request = event.Records[0].cf.request
     const config = event.Records[0].cf.config
 
+    if (request.body && request.body.inputTruncated) {
+        log('ERROR', 'input trucated', request)
+        log('ERROR', 'ref', 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/edge-functions-restrictions.html#lambda-at-edge-function-restrictions')
+        throw new Error("input truncated");
+    }
+
     const input: Partial<IncomingRequest> = {
         headers: transformIncomingHeaders(request.headers),
         host: request.headers.host.length > 0 ? request.headers.host[0].value : config.distributionDomainName,
