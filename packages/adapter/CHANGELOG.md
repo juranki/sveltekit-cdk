@@ -1,5 +1,15 @@
 # sveltekit-cdk-adapter
 
+## 0.4.0
+
+### Minor Changes
+
+- inject environment variables to lambda@edge adapter
+
+### Patch Changes
+
+- handle empty response body in lambda@edge adapter
+
 ## 0.3.1
 
 ### Patch Changes

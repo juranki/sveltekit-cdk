@@ -1,21 +1,26 @@
 import { HttpApi } from "@aws-cdk/aws-apigatewayv2";
 import { LambdaProxyIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
-import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs'
+import { Code, Function, Runtime } from '@aws-cdk/aws-lambda'
 import { Construct, Fn } from "@aws-cdk/core";
 import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from "./common";
 import { join } from "path";
 
-export interface SvelteApiV2LambdaRendererProps extends RendererProps{}
+export interface SvelteApiV2LambdaRendererProps extends RendererProps { }
 
 export class SvelteApiV2LambdaRenderer extends Construct implements SvelteRendererEndpoint {
     api: HttpApi
-    handler: NodejsFunction
+    handler: Function
 
     constructor(scope: Construct, id: string, props?: SvelteApiV2LambdaRendererProps) {
         super(scope, id)
 
-        this.handler = new NodejsFunction(this, 'svelteHandler', {
-            entry: join(props?.artifactPath || DEFAULT_ARTIFACT_PATH, 'server/proxy-v2/handler.js'),
+        const artifactPath = props?.artifactPath || DEFAULT_ARTIFACT_PATH
+        const bundleDir = join(artifactPath, 'lambda/proxy-v2')
+
+        this.handler = new Function(this, 'svelteHandler', {
+            code: Code.fromAsset(bundleDir),
+            handler: 'handler.handler',
+            runtime: Runtime.NODEJS_14_X,
             environment: props?.environment,
         })
 

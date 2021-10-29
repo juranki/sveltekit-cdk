@@ -4,7 +4,7 @@ import type {
     CloudFrontRequestHandler,
     CloudFrontRequestResult
 } from 'aws-lambda'
-import { fromStrictBody, log, toRawBody } from './util'
+import { BodyInfo, fromStrictBody, log, toRawBody } from './util'
 import type { IncomingRequest } from '@sveltejs/kit'
 import type { RequestHeaders, ResponseHeaders } from '@sveltejs/kit/types/helper'
 import type { ServerResponse } from '@sveltejs/kit/types/hooks'
@@ -24,6 +24,12 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     }
     const request = event.Records[0].cf.request
     const config = event.Records[0].cf.config
+
+    if (request.body && request.body.inputTruncated) {
+        log('ERROR', 'input trucated', request)
+        log('ERROR', 'ref', 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/edge-functions-restrictions.html#lambda-at-edge-function-restrictions')
+        throw new Error("input truncated");
+    }
 
     const input: Partial<IncomingRequest> = {
         headers: transformIncomingHeaders(request.headers),
@@ -51,7 +57,7 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
         return outgoing
     }
 
-    
+
     log('INFO', 'handler', {
         path: request.uri,
         status: 404,
@@ -72,12 +78,12 @@ function transformIncomingHeaders(headers: CloudFrontHeaders): RequestHeaders {
 
 
 function transformResponse(rendered: ServerResponse): CloudFrontRequestResult {
-    const body = rendered.body ? fromStrictBody(rendered.body) : undefined
+    const body: BodyInfo | undefined = rendered.body ? fromStrictBody(rendered.body) : undefined
     return {
         status: rendered.status.toString(),
         headers: transformOutgoingHeaders(rendered.headers),
-        body: body.data,
-        bodyEncoding: body.encoding,
+        body: body?.data || '',
+        bodyEncoding: body?.encoding || 'text',
     }
 }
 

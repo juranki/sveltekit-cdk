@@ -12,7 +12,9 @@ export class SimpleSvelteStack extends Stack {
             renderer: {
                 type: 'VIEWER_REQ',
                 rendererProps: {
-                    environment: {}
+                    environment: {
+                        LOG_LEVEL: 'DEBUG',
+                    },
                 }
             }
         })

@@ -19,7 +19,7 @@ export function log(level: LogLevel, msg: string, data: any): void {
 
 
 // REQUEST TRANSFORMATION UTILITIES
-interface BodyInfo {
+export interface BodyInfo {
     data: string
     encoding: 'base64' | 'text'
 }

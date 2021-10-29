@@ -1,5 +1,11 @@
 # sveltekit-cdk-constructs
 
+## 0.6.0
+
+### Minor Changes
+
+- inject environment variables to lambda@edge adapter
+
 ## 0.5.0
 
 ### Minor Changes

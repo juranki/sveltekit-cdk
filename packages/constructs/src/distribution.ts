@@ -18,10 +18,11 @@ import { Bucket } from '@aws-cdk/aws-s3'
 import { BucketDeployment, CacheControl, Source } from '@aws-cdk/aws-s3-deployment'
 import { Construct, Duration } from '@aws-cdk/core'
 import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from './common'
-import { readdirSync, statSync } from 'fs'
+import { writeFileSync, readdirSync, statSync } from 'fs'
 import { join } from 'path'
 import { EdgeFunction } from '@aws-cdk/aws-cloudfront/lib/experimental'
 import { Code, Runtime } from '@aws-cdk/aws-lambda'
+import { buildSync } from 'esbuild'
 
 export interface SvelteDistributionProps {
     /**
@@ -122,17 +123,39 @@ export class SvelteDistribution extends Construct {
         // at edge lambda
         let edgeLambdas: EdgeLambda[] | undefined = undefined
         if (props.renderer.type === 'VIEWER_REQ' || props.renderer.type === 'ORIGIN_REQ') {
+
+            const envCode = props.renderer.rendererProps?.environment ?
+                Object.entries(props.renderer.rendererProps.environment)
+                    .map(([k, v]) => (`process.env["${k}"]="${v}";`))
+                    .join('\n') :
+                ''
+
+            const artifactPath = props?.artifactPath || DEFAULT_ARTIFACT_PATH
+            const bundleDir = join(artifactPath, 'lambda/at-edge-env')
+            const envFile = join(artifactPath, 'lambda/env.js')
+
+            writeFileSync(envFile, envCode)
+            const code = buildSync({
+                entryPoints: [join(artifactPath, 'lambda/at-edge/handler.js')],
+                outfile: join(bundleDir, 'handler.js'),
+                bundle: true,
+                platform: 'node',
+                inject: [envFile],
+            })
+            if (code.errors.length > 0) {
+                console.log('bundling lambda failed')
+                throw new Error(code.errors.map(e => (e.text)).join('\n'));
+            }
+
             const lambda = new EdgeFunction(this, 'svelteHandler', {
-                code: Code.fromAsset(
-                    join(artifactPath, 'server/at-edge')),
+                code: Code.fromAsset(bundleDir),
                 handler: 'handler.handler',
                 runtime: Runtime.NODEJS_14_X,
-                environment: props.renderer.rendererProps?.environment,
                 logRetention: 7,
             })
 
             edgeLambdas = [{
-                eventType: props.renderer.type === 'ORIGIN_REQ' 
+                eventType: props.renderer.type === 'ORIGIN_REQ'
                     ? LambdaEdgeEventType.ORIGIN_REQUEST
                     : LambdaEdgeEventType.VIEWER_REQUEST,
                 functionVersion: lambda.currentVersion,
