@@ -33,6 +33,6 @@
     "@sveltejs/kit": "next"
   },
   "dependencies": {
-    "esbuild": "^0.13.8"
+    "esbuild": "^0.13.9"
   }
 }
