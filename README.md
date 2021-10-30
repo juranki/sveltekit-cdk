@@ -20,6 +20,28 @@ of your system.
   - [x] Lambda renderer behind API Gateway HTTP API
   - [ ] ECS/EKS renderer?
 
+## Howto
+
+**TODO: fill in details**
+
+1. init sveltekit project
+2. init cdk project
+3. add adapter to sveltekit project and point it to cdk project
+4. add constructs to cdk project
+5. optionally edit cdk stacks to
+   - hook site up with other resources
+   - add custom domain and certificate
+   - adjust capacity allocation
+   - ...
+
+## Status
+
+- In initial development, API IS NOT STABLE!
+- I feel quite confident about overall structure
+- Areas of uncertainty that are likely to cause significant changes (== opinions, feedback and advice appreciated)
+  - how to design constructs to be both intuitive and flexible; how much flexibility is really needed
+  - dependency management of constructs: cdk moves fast, v1 and v2 have different approaches to packaging and versioning 
+  - adapter interface of sveltekit migth still change a little
 
 ### Links
 
