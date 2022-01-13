@@ -1,4 +1,5 @@
-import { init, render } from '../output/server/app'
+import { App } from '../output/server/app'
+import { manifest } from '../output/server/manifest'
 import type {
     CloudFrontHeaders,
     CloudFrontRequestHandler,
@@ -9,7 +10,7 @@ import type { IncomingRequest } from '@sveltejs/kit'
 import type { RequestHeaders, ResponseHeaders } from '@sveltejs/kit/types/helper'
 import type { ServerResponse } from '@sveltejs/kit/types/hooks'
 
-init()
+const app = new App(manifest)
 
 export const handler: CloudFrontRequestHandler = async (event, context) => {
 
@@ -31,19 +32,20 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
         throw new Error("input truncated");
     }
 
+    const domain = request.headers.host.length > 0 ? request.headers.host[0].value : config.distributionDomainName
+    const querystring = request.querystring ? `?${request.querystring}` : ''
+
     const input: Partial<IncomingRequest> = {
         headers: transformIncomingHeaders(request.headers),
-        host: request.headers.host.length > 0 ? request.headers.host[0].value : config.distributionDomainName,
         method: request.method,
-        path: request.uri,
-        query: new URLSearchParams(request.querystring),
+        url: `https://${domain}${request.uri}${querystring}`,
         rawBody: request.body ? toRawBody(request.body) : undefined,
     }
 
     log('DEBUG', 'render input', input)
 
     //@ts-ignore
-    const rendered = await render(input)
+    const rendered = await app.render(input)
 
     if (rendered) {
         log('DEBUG', 'render output', rendered)

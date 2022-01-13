@@ -14,15 +14,16 @@ import {
     ViewerProtocolPolicy
 } from '@aws-cdk/aws-cloudfront'
 import { HttpOrigin, S3Origin } from '@aws-cdk/aws-cloudfront-origins'
-import { Bucket } from '@aws-cdk/aws-s3'
+import { Bucket, BucketProps } from '@aws-cdk/aws-s3'
 import { BucketDeployment, CacheControl, Source } from '@aws-cdk/aws-s3-deployment'
-import { Construct, Duration } from '@aws-cdk/core'
+import { Construct, Duration, RemovalPolicy } from '@aws-cdk/core'
 import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from './common'
 import { writeFileSync, readdirSync, statSync } from 'fs'
 import { join } from 'path'
 import { EdgeFunction } from '@aws-cdk/aws-cloudfront/lib/experimental'
 import { Code, Runtime } from '@aws-cdk/aws-lambda'
 import { buildSync } from 'esbuild'
+import { Certificate } from '@aws-cdk/aws-certificatemanager'
 
 export interface SvelteDistributionProps {
     /**
@@ -90,6 +91,27 @@ export interface SvelteDistributionProps {
      * @link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-origin-requests.html
      */
     cachePolicy?: ICachePolicy
+
+    /**
+     * Bucket props for the svelteStaticBucket s3 bucket.
+     *
+     * @link https://docs.aws.amazon.com/cdk/api/v1/docs/@aws-cdk_aws-s3.BucketProps.html
+     */
+    bucketProps?: BucketProps
+
+    /**
+     * Certificate to use with the CloudFront Distribution
+     * 
+     * @default undefined
+     */
+    certificateArn?: string
+
+    /**
+     * Domain names to associate with the CloudFront Distribution
+     * 
+     * @default undefined
+     */
+    domainNames?: Array<string>
 }
 
 export class SvelteDistribution extends Construct {
@@ -104,7 +126,9 @@ export class SvelteDistribution extends Construct {
         const staticPath = join(artifactPath, 'static')
 
         // origins
-        this.bucket = new Bucket(this, 'svelteStaticBucket')
+        const bucketProps = props.bucketProps || {}
+        this.bucket = new Bucket(this, 'svelteStaticBucket', bucketProps);
+
         const s3origin = new S3Origin(this.bucket)
         const origin = props.renderer.type === 'HTTP_ORIGIN'
             ? new HttpOrigin(props.renderer.endpoint!.httpEndpoint)
@@ -178,8 +202,10 @@ export class SvelteDistribution extends Construct {
                 edgeLambdas,
                 allowedMethods: edgeLambdas ? AllowedMethods.ALLOW_ALL : AllowedMethods.ALLOW_GET_HEAD,
                 originRequestPolicy: edgeLambdas ? originRequestPolicy : undefined,
-                cachePolicy: edgeLambdas ? cachePolicy : undefined
-            }
+                cachePolicy: edgeLambdas ? cachePolicy : undefined,
+            },
+            domainNames: props.domainNames ? props.domainNames : undefined,
+            certificate: props.certificateArn ? Certificate.fromCertificateArn(this, 'domainCert', props.certificateArn) : undefined,
         })
 
         // routes for static content
@@ -210,6 +236,10 @@ function checkProps(props: SvelteDistributionProps) {
     }
     if ((props.renderer.type.endsWith('_REQ')) && !props.renderer.rendererProps) {
         throw new Error("rendererProps must be provided when type is VIEWER_REQ or ORIGIN_REQ")
+    }
+
+    if (props.certificateArn && !props.domainNames) {
+        throw new Error("domainNames must be provided when setting a certificateArn")
     }
 }
 
