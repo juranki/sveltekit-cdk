@@ -23,6 +23,7 @@ import { join } from 'path'
 import { EdgeFunction } from '@aws-cdk/aws-cloudfront/lib/experimental'
 import { Code, Runtime } from '@aws-cdk/aws-lambda'
 import { buildSync } from 'esbuild'
+import { Certificate } from '@aws-cdk/aws-certificatemanager'
 
 export interface SvelteDistributionProps {
     /**
@@ -97,6 +98,20 @@ export interface SvelteDistributionProps {
      * @link https://docs.aws.amazon.com/cdk/api/v1/docs/@aws-cdk_aws-s3.BucketProps.html
      */
     bucketProps?: BucketProps
+
+    /**
+     * Certificate to use with the CloudFront Distribution
+     * 
+     * @default undefined
+     */
+    certificateArn?: string
+
+    /**
+     * Domain names to associate with the CloudFront Distribution
+     * 
+     * @default undefined
+     */
+    domainNames?: Array<string>
 }
 
 export class SvelteDistribution extends Construct {
@@ -187,8 +202,10 @@ export class SvelteDistribution extends Construct {
                 edgeLambdas,
                 allowedMethods: edgeLambdas ? AllowedMethods.ALLOW_ALL : AllowedMethods.ALLOW_GET_HEAD,
                 originRequestPolicy: edgeLambdas ? originRequestPolicy : undefined,
-                cachePolicy: edgeLambdas ? cachePolicy : undefined
-            }
+                cachePolicy: edgeLambdas ? cachePolicy : undefined,
+            },
+            domainNames: props.domainNames ? props.domainNames : undefined,
+            certificate: props.certificateArn ? Certificate.fromCertificateArn(this, 'domainCert', props.certificateArn) : undefined,
         })
 
         // routes for static content
@@ -219,6 +236,10 @@ function checkProps(props: SvelteDistributionProps) {
     }
     if ((props.renderer.type.endsWith('_REQ')) && !props.renderer.rendererProps) {
         throw new Error("rendererProps must be provided when type is VIEWER_REQ or ORIGIN_REQ")
+    }
+
+    if (props.certificateArn && !props.domainNames) {
+        throw new Error("domainNames must be provided when setting a certificateArn")
     }
 }
 
