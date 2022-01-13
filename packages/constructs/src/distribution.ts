@@ -14,9 +14,9 @@ import {
     ViewerProtocolPolicy
 } from '@aws-cdk/aws-cloudfront'
 import { HttpOrigin, S3Origin } from '@aws-cdk/aws-cloudfront-origins'
-import { Bucket } from '@aws-cdk/aws-s3'
+import { Bucket, BucketProps } from '@aws-cdk/aws-s3'
 import { BucketDeployment, CacheControl, Source } from '@aws-cdk/aws-s3-deployment'
-import { Construct, Duration } from '@aws-cdk/core'
+import { Construct, Duration, RemovalPolicy } from '@aws-cdk/core'
 import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from './common'
 import { writeFileSync, readdirSync, statSync } from 'fs'
 import { join } from 'path'
@@ -90,6 +90,13 @@ export interface SvelteDistributionProps {
      * @link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-origin-requests.html
      */
     cachePolicy?: ICachePolicy
+
+    /**
+     * Bucket props for the svelteStaticBucket s3 bucket.
+     *
+     * @link https://docs.aws.amazon.com/cdk/api/v1/docs/@aws-cdk_aws-s3.BucketProps.html
+     */
+    bucketProps?: BucketProps
 }
 
 export class SvelteDistribution extends Construct {
@@ -104,7 +111,9 @@ export class SvelteDistribution extends Construct {
         const staticPath = join(artifactPath, 'static')
 
         // origins
-        this.bucket = new Bucket(this, 'svelteStaticBucket')
+        const bucketProps = props.bucketProps || {}
+        this.bucket = new Bucket(this, 'svelteStaticBucket', bucketProps);
+
         const s3origin = new S3Origin(this.bucket)
         const origin = props.renderer.type === 'HTTP_ORIGIN'
             ? new HttpOrigin(props.renderer.endpoint!.httpEndpoint)

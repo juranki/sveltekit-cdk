@@ -1,7 +1,7 @@
 export const DEFAULT_ARTIFACT_PATH = 'sveltekit'
 
 export interface SvelteRendererEndpoint {
-    get httpEndpoint(): string
+    readonly httpEndpoint: string;
 }
 
 export interface RendererProps {

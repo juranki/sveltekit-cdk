@@ -1,5 +1,5 @@
 import { HttpApi } from "@aws-cdk/aws-apigatewayv2";
-import { LambdaProxyIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
+import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
 import { Code, Function, Runtime } from '@aws-cdk/aws-lambda'
 import { Construct, Fn } from "@aws-cdk/core";
 import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from "./common";
@@ -24,9 +24,7 @@ export class SvelteApiV2LambdaRenderer extends Construct implements SvelteRender
             environment: props?.environment,
         })
 
-        const svelteIntegration = new LambdaProxyIntegration({
-            handler: this.handler,
-        })
+        const svelteIntegration = new HttpLambdaIntegration('SvelteIntegration', this.handler);
 
         this.api = new HttpApi(this, 'svelteBackendApi')
 
