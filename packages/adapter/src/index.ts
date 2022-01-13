@@ -30,7 +30,7 @@ export function AwsServerlessAdapter({
     }
     return {
         name: 'sveltekit-cdk-adapter',
-        async adapt({ utils, config }): Promise<void> {
+        async adapt(builder): Promise<void> {
 
             const targetPath = artifactPath || path.join(cdkProjectPath!, 'sveltekit')
             const files = path.join(__dirname, 'files');
@@ -39,15 +39,15 @@ export function AwsServerlessAdapter({
                 lambda: path.join(targetPath, 'lambda'),
             }
 
-            utils.rimraf(targetPath)
-            utils.rimraf('.svelte-kit/cdk')
+            builder.rimraf(targetPath)
+            builder.rimraf('.svelte-kit/cdk')
 
-            await utils.prerender({
+            await builder.prerender({
                 dest: dirs.static
             });
-            utils.copy_client_files(dirs.static)
-            utils.copy_static_files(dirs.static)
-            utils.copy(`${files}/`, '.svelte-kit/cdk/')
+            builder.writeClient(dirs.static)
+            builder.writeStatic(dirs.static)
+            builder.copy(`${files}/`, '.svelte-kit/cdk/')
 
             await build({
                 entryPoints: ['.svelte-kit/cdk/proxy-v2-handler.ts'],

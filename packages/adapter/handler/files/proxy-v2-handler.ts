@@ -1,11 +1,11 @@
-import { init, render } from '../output/server/app'
+import { App } from '../output/server/app'
+import { manifest } from '../output/server/manifest'
 import type {
     APIGatewayProxyHandlerV2,
     APIGatewayProxyEventHeaders,
     APIGatewayProxyEventV2,
     APIGatewayProxyStructuredResultV2
 } from 'aws-lambda'
-import { URLSearchParams } from 'url'
 import type { RequestHeaders, ResponseHeaders } from '@sveltejs/kit/types/helper'
 import type { IncomingRequest, RawBody } from '@sveltejs/kit'
 import type { ServerResponse } from '@sveltejs/kit/types/hooks'
@@ -15,22 +15,21 @@ type ProxyResponseHeadersV2 = {
     [header: string]: boolean | number | string;
 } | undefined
 
-init()
+const app = new App(manifest)
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     log('DEBUG', 'incoming event', event)
 
+    const querystring = event.rawQueryString ? `?${event.rawQueryString}` : ''
     const input: IncomingRequest = {
         headers: transformIncomingHeaders(event.headers, event.cookies),
-        host: event.requestContext.domainName,
         method: event.requestContext.http.method,
-        path: event.requestContext.http.path,
-        query: new URLSearchParams(event.rawQueryString),
+        url: `${event.requestContext.http.protocol}://${event.requestContext.domainName}${event.requestContext.http.path}${querystring}`,
         rawBody: transformIncomingBody(event),
     }
     log('DEBUG', 'render input', input)
 
-    const output = await render(input)
+    const output = await app.render(input)
     if (output) {
         log('DEBUG', 'render output', output)
 
