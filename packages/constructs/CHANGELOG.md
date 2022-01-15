@@ -1,5 +1,12 @@
 # sveltekit-cdk-constructs
 
+## 0.7.0
+
+### Minor Changes
+
+- Add ability to set domains and certificate to CloudFront distribution (contributed by KayoticSully)
+- Update constructs to work with the latest cdk version (contributed by KayoticSully)
+
 ## 0.6.0
 
 ### Minor Changes
