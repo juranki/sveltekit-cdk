@@ -8,13 +8,16 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "synth": "cdk synth --app SimpleSvelteStack",
+    "diff": "cdk diff --app SimpleSvelteStack",
+    "deploy": "cdk deploy --app SimpleSvelteStack"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.128.0",
+    "@aws-cdk/assert": "1.139.0",
     "@types/jest": "^26.0.24",
     "@types/node": "10.17.27",
-    "aws-cdk": "1.128.0",
+    "aws-cdk": "1.139.0",
     "esbuild": "^0.13.9",
     "jest": "^26.6.3",
     "ts-jest": "^26.5.6",
