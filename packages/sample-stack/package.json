@@ -22,7 +22,7 @@
     "typescript": "~3.9.10"
   },
   "dependencies": {
-    "@aws-cdk/core": "1.128.0",
+    "@aws-cdk/core": "1.139.0",
     "@sveltekit-cdk/constructs": "workspace:*",
     "source-map-support": "^0.5.20"
   },
