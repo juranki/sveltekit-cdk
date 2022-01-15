@@ -11,10 +11,10 @@ Tools are split to two packages: **adapter** that plugs into the sveltekit proje
 **constructs** that are imported to CDK project to integrate SvelteKit site to other parts
 of your system.
 
-- **[@sveltekit-cdk/adapter](https://github.com/juranki/sveltekit-cdk/tree/main/packages/adapter#readme)**
+- **[@sveltekit-cdk/adapter](https://github.com/juranki/sveltekit-cdk/tree/main/packages/adapter#readme)** [![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fadapter.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fadapter)
   - [x] makes sveltekit artifacts available to be consumed in CDK stacks
   - [ ] optionally deploys a CDK stack after producing the artifacts
-- **[@sveltekit-cdk/constructs](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructs#readme)**
+- **[@sveltekit-cdk/constructs](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructs#readme)** [![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructs.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructs)
   - [x] CloudFront distribution for static content
   - [x] Lambda@Edge renderer attached to the distribution
   - [x] Lambda renderer behind API Gateway HTTP API

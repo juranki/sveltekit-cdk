@@ -1,5 +1,7 @@
 # @sveltekit-cdk/adapter
 
+[![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fadapter.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fadapter)
+
 ## WARNING: Not for production use!!
 
 ## Intro
