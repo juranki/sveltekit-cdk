@@ -22,7 +22,7 @@ importers:
     dependencies:
       esbuild: 0.13.9
     devDependencies:
-      '@sveltejs/kit': 1.0.0-next.230
+      '@sveltejs/kit': 1.0.0-next.232
       '@types/aws-lambda': 8.10.84
       '@types/node': 10.17.27
       typescript: 4.4.4
@@ -60,6 +60,27 @@ importers:
       '@types/node': 10.17.27
       typescript: 4.4.4
 
+  packages/constructsv2:
+    specifiers:
+      '@aws-cdk/aws-apigatewayv2-alpha': ^2.8.0-alpha.0
+      '@aws-cdk/aws-apigatewayv2-integrations-alpha': ^2.8.0-alpha.0
+      '@types/aws-lambda': ^8.10.84
+      '@types/node': 10.17.27
+      aws-cdk-lib: ^2.8.0
+      constructs: ^10.0.35
+      esbuild: ^0.13.9
+      typescript: ^4.4.4
+    dependencies:
+      esbuild: 0.13.15
+    devDependencies:
+      '@aws-cdk/aws-apigatewayv2-alpha': 2.8.0-alpha.0_826ebb718f185caf3096cbfe6ae919fd
+      '@aws-cdk/aws-apigatewayv2-integrations-alpha': 2.8.0-alpha.0_399a2dc8bf327a936910cd0e257ec2a4
+      '@types/aws-lambda': 8.10.84
+      '@types/node': 10.17.27
+      aws-cdk-lib: 2.8.0_constructs@10.0.35
+      constructs: 10.0.35
+      typescript: 4.4.4
+
   packages/sample-site:
     specifiers:
       '@fontsource/fira-mono': ^4.5.0
@@ -81,7 +102,7 @@ importers:
       cookie: 0.4.1
     devDependencies:
       '@sveltejs/adapter-auto': 1.0.0-next.10
-      '@sveltejs/kit': 1.0.0-next.230_svelte@3.44.0
+      '@sveltejs/kit': 1.0.0-next.232_svelte@3.44.0
       '@types/cookie': 0.4.1
       svelte: 3.44.0
       svelte-check: 2.2.7_svelte@3.44.0
@@ -148,6 +169,30 @@ packages:
     dependencies:
       '@aws-cdk/core': 1.139.0
       constructs: 3.3.161
+    dev: true
+
+  /@aws-cdk/aws-apigatewayv2-alpha/2.8.0-alpha.0_826ebb718f185caf3096cbfe6ae919fd:
+    resolution: {integrity: sha512-G9wi9Jg1Xw3diHXrhy9+TItmZmoaWeEIAxNzCZ6ZSrKbvbennxZ5y5paSFFJi8cQCArw2vxJPjp3Z3d0xoj+pw==}
+    engines: {node: '>= 14.15.0'}
+    peerDependencies:
+      aws-cdk-lib: ^2.8.0
+      constructs: ^10.0.0
+    dependencies:
+      aws-cdk-lib: 2.8.0_constructs@10.0.35
+      constructs: 10.0.35
+    dev: true
+
+  /@aws-cdk/aws-apigatewayv2-integrations-alpha/2.8.0-alpha.0_399a2dc8bf327a936910cd0e257ec2a4:
+    resolution: {integrity: sha512-Vjp1VQu1MTsEyvU3VPK6inkLggZaNFpdRYH4Gruuai9kHg0uzgdeBWbuiuO9WonIGXDDeFWM6qPPujR6O//3Eg==}
+    engines: {node: '>= 14.15.0'}
+    peerDependencies:
+      '@aws-cdk/aws-apigatewayv2-alpha': 2.8.0-alpha.0
+      aws-cdk-lib: ^2.8.0
+      constructs: ^10.0.0
+    dependencies:
+      '@aws-cdk/aws-apigatewayv2-alpha': 2.8.0-alpha.0_826ebb718f185caf3096cbfe6ae919fd
+      aws-cdk-lib: 2.8.0_constructs@10.0.35
+      constructs: 10.0.35
     dev: true
 
   /@aws-cdk/aws-apigatewayv2-integrations/1.139.0:
@@ -1462,8 +1507,8 @@ packages:
       esbuild: 0.13.15
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.230:
-    resolution: {integrity: sha512-97i5KK7oDqgzm8rSQTqXsscTt1ajkjlamidaxtADL183NiYWi1kqkOt+mskYU+RverGUuHTNl/8yg5p5ZEZm1A==}
+  /@sveltejs/kit/1.0.0-next.232:
+    resolution: {integrity: sha512-STQ0hnJozIop8k9I313nwVasBIQ45Z2K1pUOkDVjCSOGijgsj+De5q0prQBtL1ZlqqisfkYlOf8W9gvDSyTLEA==}
     engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:
@@ -1480,8 +1525,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.230_svelte@3.44.0:
-    resolution: {integrity: sha512-97i5KK7oDqgzm8rSQTqXsscTt1ajkjlamidaxtADL183NiYWi1kqkOt+mskYU+RverGUuHTNl/8yg5p5ZEZm1A==}
+  /@sveltejs/kit/1.0.0-next.232_svelte@3.44.0:
+    resolution: {integrity: sha512-STQ0hnJozIop8k9I313nwVasBIQ45Z2K1pUOkDVjCSOGijgsj+De5q0prQBtL1ZlqqisfkYlOf8W9gvDSyTLEA==}
     engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:
@@ -1878,6 +1923,34 @@ packages:
     hasBin: true
     dev: true
 
+  /aws-cdk-lib/2.8.0_constructs@10.0.35:
+    resolution: {integrity: sha512-i6vys7oGc77a6LpXuBF3434wyx6X7WUS/BPaRFAf52LWb8PPlq/pSOVP5kkKPgqCElvAzQatqMZuoeT6tbincQ==}
+    engines: {node: '>= 14.15.0'}
+    peerDependencies:
+      constructs: ^10.0.0
+    dependencies:
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      constructs: 10.0.35
+      fs-extra: 9.1.0
+      ignore: 5.2.0
+      jsonschema: 1.4.0
+      minimatch: 3.0.4
+      punycode: 2.1.1
+      semver: 7.3.5
+      yaml: 1.10.2
+    dev: true
+    bundledDependencies:
+      - '@balena/dockerignore'
+      - case
+      - fs-extra
+      - ignore
+      - jsonschema
+      - minimatch
+      - punycode
+      - semver
+      - yaml
+
   /aws-cdk/1.139.0:
     resolution: {integrity: sha512-5QG4ecOnzix++n54D87sjE5OJtlefAM6E/QHaeesJRo9XCxKkvWQRgSVMB76UsNOAtFZz/SfEyQvceowaTv3uA==}
     engines: {node: '>= 10.13.0 <13 || >=13.7.0'}
@@ -2200,6 +2273,11 @@ packages:
       rsvp: 4.8.5
     dev: true
 
+  /case/1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
+    dev: true
+
   /cdk-assets/1.139.0:
     resolution: {integrity: sha512-LragVUmxggLAGRHsDakKDZaab+LDtUvA8c17eaI33MY5Ze2qKQRn+TP4YblAyoJMq937K2lgm1Wy8OAjk0cNxA==}
     engines: {node: '>= 10.13.0 <13 || >=13.7.0'}
@@ -2389,9 +2467,15 @@ packages:
   /concat-map/0.0.1:
     resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
 
+  /constructs/10.0.35:
+    resolution: {integrity: sha512-cSEhC9I6L4S0CNDsheNZAgKufqssmugG1RlkGx7KcN2iykA3C8/EUyeMRVULqwyn0XfKypXd//KK11eaL3yXww==}
+    engines: {node: '>= 12.7.0'}
+    dev: true
+
   /constructs/3.3.161:
     resolution: {integrity: sha512-/27vW3fo0iyb3py4vKI1BduEYmv8vv8uJgLXvI+5F0Jbnn0/E+As2wkGMa7bumhzCd0Ckv/USkAXstGYVXTYQA==}
     engines: {node: '>= 12.7.0'}
+    bundledDependencies: []
 
   /convert-source-map/1.8.0:
     resolution: {integrity: sha512-+OQdjP49zViI/6i7nIJpA8rAl4sV/JdPfU9nZs3VqOwGIgizICvuN2ru6fMd+4llL0tar18UYJXfZ/TWtmhUjA==}
@@ -2751,7 +2835,6 @@ packages:
     cpu: [arm64]
     os: [android]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-android-arm64/0.13.9:
@@ -2766,7 +2849,6 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-darwin-64/0.13.9:
@@ -2781,7 +2863,6 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-darwin-arm64/0.13.9:
@@ -2796,7 +2877,6 @@ packages:
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-freebsd-64/0.13.9:
@@ -2811,7 +2891,6 @@ packages:
     cpu: [arm64]
     os: [freebsd]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-freebsd-arm64/0.13.9:
@@ -2826,7 +2905,6 @@ packages:
     cpu: [ia32]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-linux-32/0.13.9:
@@ -2841,7 +2919,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-linux-64/0.13.9:
@@ -2856,7 +2933,6 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-linux-arm/0.13.9:
@@ -2871,7 +2947,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-linux-arm64/0.13.9:
@@ -2886,7 +2961,6 @@ packages:
     cpu: [mips64el]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-linux-mips64le/0.13.9:
@@ -2901,7 +2975,6 @@ packages:
     cpu: [ppc64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-linux-ppc64le/0.13.9:
@@ -2916,7 +2989,6 @@ packages:
     cpu: [x64]
     os: [netbsd]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-netbsd-64/0.13.9:
@@ -2931,7 +3003,6 @@ packages:
     cpu: [x64]
     os: [openbsd]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-openbsd-64/0.13.9:
@@ -2946,7 +3017,6 @@ packages:
     cpu: [x64]
     os: [sunos]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-sunos-64/0.13.9:
@@ -2961,7 +3031,6 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-windows-32/0.13.9:
@@ -2976,7 +3045,6 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-windows-64/0.13.9:
@@ -2991,7 +3059,6 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    dev: true
     optional: true
 
   /esbuild-windows-arm64/0.13.9:
@@ -3023,7 +3090,6 @@ packages:
       esbuild-windows-32: 0.13.15
       esbuild-windows-64: 0.13.15
       esbuild-windows-arm64: 0.13.15
-    dev: true
 
   /esbuild/0.13.9:
     resolution: {integrity: sha512-8bYcckmisXjGvBMeylp1PRtu21uOoCDFAgXGGF2BR241zYQDN6ZLNvcmQlnQ7olG0p6PRWmJI8WVH3ca8viPuw==}
