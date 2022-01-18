@@ -8,10 +8,8 @@ import { writeFileSync, readdirSync, statSync } from 'fs'
 import { join } from 'path'
 import { buildSync } from 'esbuild'
 import { Certificate } from 'aws-cdk-lib/aws-certificatemanager'
-// import { CachePolicy, LambdaEdgeEventType, Distribution, PriceClass, ViewerProtocolPolicy, AllowedMethods } from 'aws-cdk-lib/aws-cloudfront'
-import { EdgeFunction } from 'aws-cdk-lib/aws-cloudfront/lib/experimental'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { CacheControl } from 'aws-cdk-lib/aws-codepipeline-actions'
-import { Code, Runtime } from 'aws-cdk-lib/aws-lambda'
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment'
 
 export interface SvelteDistributionProps {
@@ -146,11 +144,11 @@ export class SvelteDistribution extends Construct {
             const artifactPath = props?.artifactPath || DEFAULT_ARTIFACT_PATH
             const bundleDir = join(artifactPath, 'lambda/at-edge-env')
             const envFile = join(artifactPath, 'lambda/env.js')
-
+            const outfile = join(bundleDir, 'handler.js')
             writeFileSync(envFile, envCode)
             const code = buildSync({
                 entryPoints: [join(artifactPath, 'lambda/at-edge/handler.js')],
-                outfile: join(bundleDir, 'handler.js'),
+                outfile,
                 bundle: true,
                 platform: 'node',
                 inject: [envFile],
@@ -160,10 +158,10 @@ export class SvelteDistribution extends Construct {
                 throw new Error(code.errors.map(e => (e.text)).join('\n'));
             }
 
-            const lambda = new EdgeFunction(this, 'svelteHandler', {
-                code: Code.fromAsset(bundleDir),
+            const l = new cdn.experimental.EdgeFunction(this, 'svelteHandler', {
+                code: lambda.Code.fromAsset(bundleDir),
                 handler: 'handler.handler',
-                runtime: Runtime.NODEJS_14_X,
+                runtime: lambda.Runtime.NODEJS_14_X,
                 logRetention: 7,
             })
 
@@ -171,7 +169,7 @@ export class SvelteDistribution extends Construct {
                 eventType: props.renderer.type === 'ORIGIN_REQ'
                     ? cdn.LambdaEdgeEventType.ORIGIN_REQUEST
                     : cdn.LambdaEdgeEventType.VIEWER_REQUEST,
-                functionVersion: lambda.currentVersion,
+                functionVersion: l.currentVersion,
                 includeBody: true,
             }]
         }
