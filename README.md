@@ -18,7 +18,7 @@ of your system.
   - [x] CloudFront distribution for static content
   - [x] Lambda@Edge renderer attached to the distribution
   - [x] Lambda renderer behind API Gateway HTTP API
-- CDK v2 constructs: **[@sveltekit-cdk/constructsv2](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructsv2#readme)**
+- CDK v2 constructs: **[@sveltekit-cdk/constructsv2](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructsv2#readme)** [![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructsv2.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructsv2)
   - [x] CloudFront distribution for static content
   - [x] Lambda@Edge renderer attached to the distribution
   - [x] Lambda renderer behind API Gateway HTTP API
