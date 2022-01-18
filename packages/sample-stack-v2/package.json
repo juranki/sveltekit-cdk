@@ -29,5 +29,6 @@
     "aws-cdk-lib": "2.8.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.16"
-  }
+  },
+  "private": true
 }
