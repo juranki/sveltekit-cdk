@@ -6,5 +6,10 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["sample-site", "sample-stack"]
+  "ignore": [
+    "sample-site",
+    "sample-stack",
+    "sample-site-v2",
+    "sample-stack-v2"
+  ]
 }
