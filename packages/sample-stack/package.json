@@ -9,9 +9,9 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "synth": "cdk synth --app SimpleSvelteStack",
-    "diff": "cdk diff --app SimpleSvelteStack",
-    "deploy": "cdk deploy --app SimpleSvelteStack"
+    "synth": "cdk synth",
+    "diff": "cdk diff",
+    "deploy": "cdk deploy"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.139.0",
