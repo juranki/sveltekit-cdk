@@ -4,8 +4,9 @@
 
 ## WARNING: Not for production use!!
 
+
 Use constructs from this package to add SvelteKit
-site to your CDK project. 
+site to your CDK v2 project. 
 
 1. Add [@sveltekit-cdk/adapter](https://github.com/juranki/sveltekit-cdk/tree/main/packages/adapter#readme) to your SvelteKit project to get
 the site artifacts
