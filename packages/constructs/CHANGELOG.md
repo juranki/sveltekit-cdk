@@ -1,5 +1,11 @@
 # sveltekit-cdk-constructs
 
+## 0.7.1
+
+### Patch Changes
+
+- add tag that is recognized by aws construct hub
+
 ## 0.7.0
 
 ### Minor Changes

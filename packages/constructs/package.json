@@ -1,6 +1,6 @@
 {
   "name": "@sveltekit-cdk/constructs",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Add SvelteKit site to CDK stack",
   "repository": {
     "type": "git",
@@ -25,7 +25,8 @@
   "keywords": [
     "sveltekit",
     "aws",
-    "cdk"
+    "cdk",
+    "awscdk"
   ],
   "author": "juhani@juranki.com",
   "devDependencies": {
