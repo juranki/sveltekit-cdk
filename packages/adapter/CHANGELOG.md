@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.6.1
+
+### Patch Changes
+
+- Construct Request object with body
+
 ## 0.6.0
 
 ### Minor Changes
