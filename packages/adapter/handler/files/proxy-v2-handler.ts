@@ -6,10 +6,7 @@ import type {
     APIGatewayProxyEventV2,
     APIGatewayProxyStructuredResultV2
 } from 'aws-lambda'
-import type { ResponseHeaders } from '@sveltejs/kit/types/helper'
 import { log, toRawBody } from './util'
-import { resolve } from 'dns'
-import { buffer } from 'stream/consumers'
 
 type ProxyResponseHeadersV2 = {
     [header: string]: boolean | number | string;
