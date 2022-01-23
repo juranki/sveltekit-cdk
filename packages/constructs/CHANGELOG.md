@@ -1,5 +1,11 @@
 # sveltekit-cdk-constructs
 
+## 0.7.2
+
+### Patch Changes
+
+- add distribution function -prop to be able to grant permissions to lambda@edge ssr
+
 ## 0.7.1
 
 ### Patch Changes
