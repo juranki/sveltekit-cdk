@@ -10,6 +10,7 @@
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "devDependencies": {
+    "@sveltekit-cdk/adapter": "workspace:*",
     "@sveltejs/kit": "1.0.0-next.240",
     "@types/cookie": "^0.4.1",
     "svelte": "^3.44.0",
@@ -22,8 +23,6 @@
   "dependencies": {
     "@fontsource/fira-mono": "^4.5.0",
     "@lukeed/uuid": "^2.0.0",
-    "@sveltekit-cdk/adapter": "workspace:*",
     "cookie": "^0.4.1"
-  },
-  "private": true
+  }
 }
