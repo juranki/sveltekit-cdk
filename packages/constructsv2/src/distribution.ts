@@ -104,6 +104,7 @@ export interface SvelteDistributionProps {
 export class SvelteDistribution extends Construct {
     distribution: cdn.Distribution
     bucket: s3.Bucket
+    function?: cdn.experimental.EdgeFunction
     constructor(scope: Construct, id: string, props: SvelteDistributionProps) {
         super(scope, id)
 
@@ -158,7 +159,7 @@ export class SvelteDistribution extends Construct {
                 throw new Error(code.errors.map(e => (e.text)).join('\n'));
             }
 
-            const l = new cdn.experimental.EdgeFunction(this, 'svelteHandler', {
+            this.function = new cdn.experimental.EdgeFunction(this, 'svelteHandler', {
                 code: lambda.Code.fromAsset(bundleDir),
                 handler: 'handler.handler',
                 runtime: lambda.Runtime.NODEJS_14_X,
@@ -169,7 +170,7 @@ export class SvelteDistribution extends Construct {
                 eventType: props.renderer.type === 'ORIGIN_REQ'
                     ? cdn.LambdaEdgeEventType.ORIGIN_REQUEST
                     : cdn.LambdaEdgeEventType.VIEWER_REQUEST,
-                functionVersion: l.currentVersion,
+                functionVersion: this.function.currentVersion,
                 includeBody: true,
             }]
         }

@@ -117,6 +117,7 @@ export interface SvelteDistributionProps {
 export class SvelteDistribution extends Construct {
     distribution: Distribution
     bucket: Bucket
+    function?: EdgeFunction
     constructor(scope: Construct, id: string, props: SvelteDistributionProps) {
         super(scope, id)
 
@@ -171,7 +172,7 @@ export class SvelteDistribution extends Construct {
                 throw new Error(code.errors.map(e => (e.text)).join('\n'));
             }
 
-            const lambda = new EdgeFunction(this, 'svelteHandler', {
+            this.function = new EdgeFunction(this, 'svelteHandler', {
                 code: Code.fromAsset(bundleDir),
                 handler: 'handler.handler',
                 runtime: Runtime.NODEJS_14_X,
@@ -182,7 +183,7 @@ export class SvelteDistribution extends Construct {
                 eventType: props.renderer.type === 'ORIGIN_REQ'
                     ? LambdaEdgeEventType.ORIGIN_REQUEST
                     : LambdaEdgeEventType.VIEWER_REQUEST,
-                functionVersion: lambda.currentVersion,
+                functionVersion: this.function.currentVersion,
                 includeBody: true,
             }]
         }
