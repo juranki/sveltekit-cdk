@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.6.0
+
+### Minor Changes
+
+- Comply with changes in SvelteKit adapter interface (1.0.0-next.240)
+
 ## 0.5.0
 
 ### Minor Changes
