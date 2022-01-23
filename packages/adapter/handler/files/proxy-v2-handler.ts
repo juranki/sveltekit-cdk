@@ -1,15 +1,15 @@
-import { App } from '../output/server/app'
-import { manifest } from '../output/server/manifest'
+import { App } from 'APP'
+import { manifest } from 'MANIFEST'
 import type {
     APIGatewayProxyHandlerV2,
     APIGatewayProxyEventHeaders,
     APIGatewayProxyEventV2,
     APIGatewayProxyStructuredResultV2
 } from 'aws-lambda'
-import type { RequestHeaders, ResponseHeaders } from '@sveltejs/kit/types/helper'
-import type { IncomingRequest, RawBody } from '@sveltejs/kit'
-import type { ServerResponse } from '@sveltejs/kit/types/hooks'
+import type { ResponseHeaders } from '@sveltejs/kit/types/helper'
 import { log, toRawBody } from './util'
+import { resolve } from 'dns'
+import { buffer } from 'stream/consumers'
 
 type ProxyResponseHeadersV2 = {
     [header: string]: boolean | number | string;
@@ -21,12 +21,12 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     log('DEBUG', 'incoming event', event)
 
     const querystring = event.rawQueryString ? `?${event.rawQueryString}` : ''
-    const input: IncomingRequest = {
+    const input: Request = new Request(`${event.requestContext.http.protocol}://${event.requestContext.domainName}${event.requestContext.http.path}${querystring}`, {
         headers: transformIncomingHeaders(event.headers, event.cookies),
         method: event.requestContext.http.method,
-        url: `${event.requestContext.http.protocol}://${event.requestContext.domainName}${event.requestContext.http.path}${querystring}`,
-        rawBody: transformIncomingBody(event),
-    }
+        body: transformIncomingBody(event),
+    })
+
     log('DEBUG', 'render input', input)
 
     const output = await app.render(input)
@@ -51,14 +51,14 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     }
 }
 
-function transformIncomingBody(evt: APIGatewayProxyEventV2): RawBody | undefined {
-    return evt.body ? toRawBody({
+function transformIncomingBody(evt: APIGatewayProxyEventV2): Uint8Array | string | undefined {
+    return evt.body?.length > 0 ? toRawBody({
         encoding: evt.isBase64Encoded ? 'base64' : 'text',
         data: evt.body
     }) : undefined
 }
 
-function transformIncomingHeaders(proxyHeaders: APIGatewayProxyEventHeaders, cookies: string[] | undefined): RequestHeaders {
+function transformIncomingHeaders(proxyHeaders: APIGatewayProxyEventHeaders, cookies: string[] | undefined): HeadersInit {
     const headers = Object.fromEntries(
         Object.entries(proxyHeaders)
             .filter(([k, v]) => (!!v)) as Array<[string, string]>
@@ -69,7 +69,7 @@ function transformIncomingHeaders(proxyHeaders: APIGatewayProxyEventHeaders, coo
     return headers
 }
 
-function transformOutgoingHeaders(svelteHeaders: ResponseHeaders): ProxyResponseHeadersV2 {
+function transformOutgoingHeaders(svelteHeaders: Headers): ProxyResponseHeadersV2 {
     return Object.fromEntries<string>(
         Object.entries(svelteHeaders)
             .filter(([k, _]) => (k.toLowerCase() !== 'set-cookie'))
@@ -82,26 +82,23 @@ function transformOutgoingHeaders(svelteHeaders: ResponseHeaders): ProxyResponse
     )
 }
 
-function transformOutgoingCookies(svelteHeaders: ResponseHeaders): string[] | undefined {
+function transformOutgoingCookies(svelteHeaders: Headers): string[] | undefined {
     if (!svelteHeaders) return undefined
     const cookieHeaderKeys = Object.keys(svelteHeaders).filter(k => (k.toLowerCase() === 'set-cookie'))
     if (cookieHeaderKeys.length === 0) return undefined
     return cookieHeaderKeys.map(k => svelteHeaders[k]).flat()
 }
 
-function transformResponse(resp: ServerResponse): APIGatewayProxyStructuredResultV2 {
+async function transformResponse(resp: Response): Promise<APIGatewayProxyStructuredResultV2> {
+    // TODO: BINARY RESPONSE???
+    const body = await resp.text()
     const rv: APIGatewayProxyStructuredResultV2 = {
+        body,
         statusCode: resp.status,
         isBase64Encoded: false,
         headers: resp.headers ? transformOutgoingHeaders(resp.headers) : undefined,
         cookies: transformOutgoingCookies(resp.headers)
     }
-    if (resp.body instanceof Uint8Array) {
-        rv.body = Buffer.from(resp.body).toString('base64')
-        rv.isBase64Encoded = true
-    } else {
-        rv.body = resp.body
-    }
-
+    
     return rv
 }

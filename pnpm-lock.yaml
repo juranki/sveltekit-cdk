@@ -85,7 +85,7 @@ importers:
     specifiers:
       '@fontsource/fira-mono': ^4.5.0
       '@lukeed/uuid': ^2.0.0
-      '@sveltejs/kit': ^1.0.0-next.240
+      '@sveltejs/kit': 1.0.0-next.240
       '@sveltekit-cdk/adapter': workspace:*
       '@types/cookie': ^0.4.1
       cookie: ^0.4.1
@@ -97,10 +97,10 @@ importers:
     dependencies:
       '@fontsource/fira-mono': 4.5.0
       '@lukeed/uuid': 2.0.0
-      '@sveltekit-cdk/adapter': link:../adapter
       cookie: 0.4.1
     devDependencies:
       '@sveltejs/kit': 1.0.0-next.240_svelte@3.44.0
+      '@sveltekit-cdk/adapter': link:../adapter
       '@types/cookie': 0.4.1
       svelte: 3.44.0
       svelte-check: 2.2.7_svelte@3.44.0
@@ -124,10 +124,10 @@ importers:
     dependencies:
       '@fontsource/fira-mono': 4.5.0
       '@lukeed/uuid': 2.0.0
-      '@sveltekit-cdk/adapter': link:../adapter
       cookie: 0.4.1
     devDependencies:
       '@sveltejs/kit': 1.0.0-next.240_svelte@3.44.0
+      '@sveltekit-cdk/adapter': link:../adapter
       '@types/cookie': 0.4.1
       svelte: 3.44.0
       svelte-check: 2.2.7_svelte@3.44.0

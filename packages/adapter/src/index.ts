@@ -47,7 +47,12 @@ export function AwsServerlessAdapter({
             });
             builder.writeClient(dirs.static)
             builder.writeStatic(dirs.static)
-            builder.copy(`${files}/`, '.svelte-kit/cdk/')
+            builder.copy(`${files}/`, '.svelte-kit/cdk/', {
+                replace: {
+                    APP: '../output/server/app',
+                    MANIFEST: '../output/server/manifest'
+                }
+            })
 
             await build({
                 entryPoints: ['.svelte-kit/cdk/proxy-v2-handler.ts'],
