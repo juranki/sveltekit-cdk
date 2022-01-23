@@ -9,7 +9,7 @@ const config = {
 
 	kit: {
 		adapter: AwsServerlessAdapter({
-			cdkProjectPath: '../sample-stack'
+			cdkProjectPath: '../sample-stack-v2'
 		}),
 
 		// hydrate the <div id="svelte"> element in src/app.html
