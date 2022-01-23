@@ -1,5 +1,5 @@
-import preprocess from 'svelte-preprocess';
 import { AwsServerlessAdapter } from '@sveltekit-cdk/adapter'
+import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -8,11 +8,17 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
-		// hydrate the <div id="svelte"> element in src/app.html
-		target: '#svelte',
 		adapter: AwsServerlessAdapter({
 			cdkProjectPath: '../sample-stack-v2'
-		})
+		}),
+
+		// hydrate the <div id="svelte"> element in src/app.html
+		target: '#svelte',
+
+		// Override http methods in the Todo forms
+		methodOverride: {
+			allowed: ['PATCH', 'DELETE']
+		}
 	}
 };
 

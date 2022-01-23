@@ -1,4 +1,3 @@
-import type { RawBody } from "@sveltejs/kit"
 import type { StrictBody } from "@sveltejs/kit/types/hooks"
 
 
@@ -26,7 +25,7 @@ export interface BodyInfo {
 
 const encoder = new TextEncoder()
 
-export function toRawBody(body: BodyInfo): RawBody {
+export function toRawBody(body: BodyInfo): Uint8Array | string {
     return body.encoding === 'base64'
         ? new Uint8Array(Buffer.from(body.data, 'base64'))
         : encoder.encode(body.data)

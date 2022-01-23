@@ -1,14 +1,11 @@
-import { App } from '../output/server/app'
-import { manifest } from '../output/server/manifest'
+import { App } from 'APP'
+import { manifest } from 'MANIFEST'
 import type {
     CloudFrontHeaders,
     CloudFrontRequestHandler,
     CloudFrontRequestResult
 } from 'aws-lambda'
-import { BodyInfo, fromStrictBody, log, toRawBody } from './util'
-import type { IncomingRequest } from '@sveltejs/kit'
-import type { RequestHeaders, ResponseHeaders } from '@sveltejs/kit/types/helper'
-import type { ServerResponse } from '@sveltejs/kit/types/hooks'
+import { log, toRawBody } from './util'
 
 const app = new App(manifest)
 
@@ -35,22 +32,20 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     const domain = request.headers.host.length > 0 ? request.headers.host[0].value : config.distributionDomainName
     const querystring = request.querystring ? `?${request.querystring}` : ''
 
-    const input: Partial<IncomingRequest> = {
+    const input: Request = new Request(`https://${domain}${request.uri}${querystring}`,{
         headers: transformIncomingHeaders(request.headers),
         method: request.method,
-        url: `https://${domain}${request.uri}${querystring}`,
-        rawBody: request.body ? toRawBody(request.body) : undefined,
-    }
+        body: request.body?.data.length > 0 ? toRawBody(request.body) : undefined,
+    })
 
     log('DEBUG', 'render input', input)
 
-    //@ts-ignore
     const rendered = await app.render(input)
 
     if (rendered) {
         log('DEBUG', 'render output', rendered)
 
-        const outgoing: CloudFrontRequestResult = transformResponse(rendered)
+        const outgoing: CloudFrontRequestResult = await transformResponse(rendered)
         log('DEBUG', 'outgoing response', outgoing)
         log('INFO', 'handler', {
             path: request.uri,
@@ -70,7 +65,7 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     }
 }
 
-function transformIncomingHeaders(headers: CloudFrontHeaders): RequestHeaders {
+function transformIncomingHeaders(headers: CloudFrontHeaders): HeadersInit {
     return Object.fromEntries(
         Object.entries(headers).map(([k, vs]) => (
             [k, vs[0].value]
@@ -79,17 +74,19 @@ function transformIncomingHeaders(headers: CloudFrontHeaders): RequestHeaders {
 }
 
 
-function transformResponse(rendered: ServerResponse): CloudFrontRequestResult {
-    const body: BodyInfo | undefined = rendered.body ? fromStrictBody(rendered.body) : undefined
+async function transformResponse(rendered: Response): Promise<CloudFrontRequestResult> {
+    // TODO: BINARY RESPONSE???
+    const body = await rendered.text()
+    
     return {
         status: rendered.status.toString(),
         headers: transformOutgoingHeaders(rendered.headers),
-        body: body?.data || '',
-        bodyEncoding: body?.encoding || 'text',
+        body,
+        bodyEncoding: 'text',
     }
 }
 
-function transformOutgoingHeaders(headers: ResponseHeaders): CloudFrontHeaders {
+function transformOutgoingHeaders(headers: Headers): CloudFrontHeaders {
     return Object.fromEntries(Object.entries(headers).map(
         ([k, vs]) => (
             [k, typeof vs === 'string' ? [{ value: vs }] : vs.map(v => ({ value: v }))]
