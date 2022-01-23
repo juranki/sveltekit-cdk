@@ -23,12 +23,11 @@ export interface BodyInfo {
     encoding: 'base64' | 'text'
 }
 
-const encoder = new TextEncoder()
-
-export function toRawBody(body: BodyInfo): Uint8Array | string {
+export function toRawBody(body: BodyInfo): string {
+    // TODO: BINARY BODY???
     return body.encoding === 'base64'
-        ? new Uint8Array(Buffer.from(body.data, 'base64'))
-        : encoder.encode(body.data)
+        ? Buffer.from(body.data, 'base64').toString()
+        : body.data
 }
 
 export function fromStrictBody(body: StrictBody): BodyInfo {

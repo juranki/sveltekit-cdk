@@ -51,7 +51,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     }
 }
 
-function transformIncomingBody(evt: APIGatewayProxyEventV2): Uint8Array | string | undefined {
+function transformIncomingBody(evt: APIGatewayProxyEventV2): string | undefined {
     return evt.body?.length > 0 ? toRawBody({
         encoding: evt.isBase64Encoded ? 'base64' : 'text',
         data: evt.body
