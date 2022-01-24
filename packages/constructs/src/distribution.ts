@@ -16,7 +16,7 @@ import {
 import { HttpOrigin, S3Origin } from '@aws-cdk/aws-cloudfront-origins'
 import { Bucket, BucketProps } from '@aws-cdk/aws-s3'
 import { BucketDeployment, CacheControl, Source } from '@aws-cdk/aws-s3-deployment'
-import { Construct, Duration, RemovalPolicy } from '@aws-cdk/core'
+import { Construct, Duration } from '@aws-cdk/core'
 import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from './common'
 import { writeFileSync, readdirSync, statSync } from 'fs'
 import { join } from 'path'
@@ -175,6 +175,8 @@ export class SvelteDistribution extends Construct {
             this.function = new EdgeFunction(this, 'svelteHandler', {
                 code: Code.fromAsset(bundleDir),
                 handler: 'handler.handler',
+                memorySize: 256,
+                timeout: Duration.seconds(5),
                 runtime: Runtime.NODEJS_14_X,
                 logRetention: 7,
             })
