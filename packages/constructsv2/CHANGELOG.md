@@ -1,5 +1,11 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.2.4
+
+### Patch Changes
+
+- revert lambda@edge memory increase
+
 ## 0.2.3
 
 ### Patch Changes

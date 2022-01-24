@@ -1,5 +1,11 @@
 # sveltekit-cdk-constructs
 
+## 0.7.4
+
+### Patch Changes
+
+- revert lambda@edge memory increase
+
 ## 0.7.3
 
 ### Patch Changes
