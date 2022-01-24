@@ -163,7 +163,6 @@ export class SvelteDistribution extends Construct {
                 code: lambda.Code.fromAsset(bundleDir),
                 handler: 'handler.handler',
                 runtime: lambda.Runtime.NODEJS_14_X,
-                memorySize: 256,
                 timeout: Duration.seconds(5),
                 logRetention: 7,
             })

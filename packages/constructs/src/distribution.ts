@@ -175,7 +175,6 @@ export class SvelteDistribution extends Construct {
             this.function = new EdgeFunction(this, 'svelteHandler', {
                 code: Code.fromAsset(bundleDir),
                 handler: 'handler.handler',
-                memorySize: 256,
                 timeout: Duration.seconds(5),
                 runtime: Runtime.NODEJS_14_X,
                 logRetention: 7,
