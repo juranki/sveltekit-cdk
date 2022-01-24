@@ -1,5 +1,11 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.2.3
+
+### Patch Changes
+
+- increase lambda@edge ssr timeout and memory
+
 ## 0.2.2
 
 ### Patch Changes

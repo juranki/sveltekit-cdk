@@ -1,5 +1,11 @@
 # sveltekit-cdk-constructs
 
+## 0.7.3
+
+### Patch Changes
+
+- increase lambda@edge ssr timeout and memory
+
 ## 0.7.2
 
 ### Patch Changes

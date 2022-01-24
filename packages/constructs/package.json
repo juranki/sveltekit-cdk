@@ -1,6 +1,6 @@
 {
   "name": "@sveltekit-cdk/constructs",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Add SvelteKit site to CDK stack",
   "repository": {
     "type": "git",
