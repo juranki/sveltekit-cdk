@@ -1,5 +1,12 @@
 # sveltekit-cdk-adapter
 
+## 0.6.2
+
+### Patch Changes
+
+- refactor shim handling and adapter compile order
+- change package type to esmodule
+
 ## 0.6.1
 
 ### Patch Changes

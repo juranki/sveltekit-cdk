@@ -1,5 +1,11 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.2.5
+
+### Patch Changes
+
+- set distribution defaultRootObject to index.html
+
 ## 0.2.4
 
 ### Patch Changes

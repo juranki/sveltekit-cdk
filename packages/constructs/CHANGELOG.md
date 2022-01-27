@@ -1,5 +1,11 @@
 # sveltekit-cdk-constructs
 
+## 0.7.5
+
+### Patch Changes
+
+- set distribution defaultRootObject to index.html
+
 ## 0.7.4
 
 ### Patch Changes
