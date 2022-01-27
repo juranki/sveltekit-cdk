@@ -192,6 +192,7 @@ export class SvelteDistribution extends Construct {
         // distribution
         this.distribution = new Distribution(this, 'distro', {
             priceClass: props.priceClass || PriceClass.PRICE_CLASS_100,
+            defaultRootObject: 'index.html',
             defaultBehavior: props.renderer.type === 'HTTP_ORIGIN' ? {
                 origin,
                 viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
