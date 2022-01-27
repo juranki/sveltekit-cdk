@@ -32,10 +32,10 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     const domain = request.headers.host.length > 0 ? request.headers.host[0].value : config.distributionDomainName
     const querystring = request.querystring ? `?${request.querystring}` : ''
 
-    const input: Request = new Request(`https://${domain}${request.uri}${querystring}`,{
+    const input: Request = new Request(`https://${domain}${request.uri}${querystring}`, {
         headers: transformIncomingHeaders(request.headers),
         method: request.method,
-        body: request.body?.data.length > 0 ? toRawBody(request.body) : undefined,
+        body: request.body && request.body.data.length > 0 ? toRawBody(request.body) : undefined,
     })
 
     log('DEBUG', 'render input', input)
@@ -77,7 +77,7 @@ function transformIncomingHeaders(headers: CloudFrontHeaders): HeadersInit {
 async function transformResponse(rendered: Response): Promise<CloudFrontRequestResult> {
     // TODO: BINARY RESPONSE???
     const body = await rendered.text()
-    
+
     return {
         status: rendered.status.toString(),
         headers: transformOutgoingHeaders(rendered.headers),
@@ -87,10 +87,13 @@ async function transformResponse(rendered: Response): Promise<CloudFrontRequestR
 }
 
 function transformOutgoingHeaders(headers: Headers): CloudFrontHeaders {
-    return Object.fromEntries(Object.entries(headers).map(
-        ([k, vs]) => (
-            [k, typeof vs === 'string' ? [{ value: vs }] : vs.map(v => ({ value: v }))]
-        )
-    ))
+    const rv: CloudFrontHeaders = {}
+    headers.forEach((v, k) => {
+        rv[k.toLowerCase()] = [{
+            key: k,
+            value: v
+        }]
+    })
+    return rv
 }
 

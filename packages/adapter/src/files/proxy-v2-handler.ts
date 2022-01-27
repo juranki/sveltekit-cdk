@@ -49,9 +49,9 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 }
 
 function transformIncomingBody(evt: APIGatewayProxyEventV2): string | undefined {
-    return evt.body?.length > 0 ? toRawBody({
+    return evt.body && evt.body.length > 0 ? toRawBody({
         encoding: evt.isBase64Encoded ? 'base64' : 'text',
-        data: evt.body
+        data: evt.body!
     }) : undefined
 }
 
@@ -67,23 +67,24 @@ function transformIncomingHeaders(proxyHeaders: APIGatewayProxyEventHeaders, coo
 }
 
 function transformOutgoingHeaders(svelteHeaders: Headers): ProxyResponseHeadersV2 {
-    return Object.fromEntries<string>(
-        Object.entries(svelteHeaders)
-            .filter(([k, _]) => (k.toLowerCase() !== 'set-cookie'))
-            .map(([k, v]) => {
-                if (v instanceof Array) {
-                    return [k, v[0]]
-                }
-                return [k, v]
-            })
-    )
+    const rv:ProxyResponseHeadersV2 = {}
+    svelteHeaders.forEach((v,k) => {
+        if (k.toLocaleLowerCase() !== 'set-cookie') {
+            rv[k] = v
+        }
+    })
+    return rv
 }
 
 function transformOutgoingCookies(svelteHeaders: Headers): string[] | undefined {
     if (!svelteHeaders) return undefined
-    const cookieHeaderKeys = Object.keys(svelteHeaders).filter(k => (k.toLowerCase() === 'set-cookie'))
-    if (cookieHeaderKeys.length === 0) return undefined
-    return cookieHeaderKeys.map(k => svelteHeaders[k]).flat()
+    const rv: string[] = []
+    svelteHeaders.forEach((v, k) => {
+        if (k.toLocaleLowerCase() === 'set-cookie') {
+            rv.push(v)
+        }
+    })
+    return rv
 }
 
 async function transformResponse(resp: Response): Promise<APIGatewayProxyStructuredResultV2> {
@@ -96,6 +97,6 @@ async function transformResponse(resp: Response): Promise<APIGatewayProxyStructu
         headers: resp.headers ? transformOutgoingHeaders(resp.headers) : undefined,
         cookies: transformOutgoingCookies(resp.headers)
     }
-    
+
     return rv
 }

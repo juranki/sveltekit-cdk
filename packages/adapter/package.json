@@ -15,7 +15,7 @@
   "types": "dist/index.d.ts",
   "type": "commonjs",
   "scripts": {
-    "build": "rm -fr dist/* && tsc && cp -r handler/files dist"
+    "build": "rm -fr dist/* && tsc"
   },
   "keywords": [
     "sveltekit",
