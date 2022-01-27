@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ESNext",
     "outDir": "dist",
     "target": "es2015",
     "allowJs": true,

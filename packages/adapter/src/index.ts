@@ -31,9 +31,9 @@ export function AwsServerlessAdapter({
     return {
         name: 'sveltekit-cdk-adapter',
         async adapt(builder): Promise<void> {
-
+            const dirname = path.dirname(import.meta.url).split('file://')[1]
             const targetPath = artifactPath || path.join(cdkProjectPath!, 'sveltekit')
-            const files = path.join(__dirname, 'files');
+            const files = path.join(dirname, 'files');
             const dirs = {
                 static: path.join(targetPath, 'static'),
                 lambda: path.join(targetPath, 'lambda'),
@@ -59,6 +59,7 @@ export function AwsServerlessAdapter({
                 outfile: path.join(dirs.lambda, 'proxy-v2/handler.js'),
                 bundle: true,
                 platform: 'node',
+                inject: [path.join(files, 'shims.js')],
             })
 
             await build({
@@ -66,6 +67,7 @@ export function AwsServerlessAdapter({
                 outfile: path.join(dirs.lambda, 'at-edge/handler.js'),
                 bundle: true,
                 platform: 'node',
+                inject: [path.join(files, 'shims.js')],
             })
 
         },
