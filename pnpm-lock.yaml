@@ -213,6 +213,37 @@ importers:
       tslib: 2.3.1
       typescript: 4.4.4
 
+  packages/test-stack:
+    specifiers:
+      '@aws-cdk/aws-apigatewayv2-alpha': ^2.8.0-alpha.0
+      '@aws-cdk/aws-apigatewayv2-integrations-alpha': ^2.8.0-alpha.0
+      '@sveltekit-cdk/constructsv2': workspace:*
+      '@types/jest': ^26.0.10
+      '@types/node': 10.17.27
+      aws-cdk: 2.8.0
+      aws-cdk-lib: 2.8.0
+      constructs: ^10.0.0
+      jest: ^26.4.2
+      source-map-support: ^0.5.16
+      ts-jest: ^26.2.0
+      ts-node: ^9.0.0
+      typescript: ~3.9.7
+    dependencies:
+      '@aws-cdk/aws-apigatewayv2-alpha': 2.8.0-alpha.0_826ebb718f185caf3096cbfe6ae919fd
+      '@aws-cdk/aws-apigatewayv2-integrations-alpha': 2.8.0-alpha.0_399a2dc8bf327a936910cd0e257ec2a4
+      '@sveltekit-cdk/constructsv2': link:../constructsv2
+      aws-cdk-lib: 2.8.0_constructs@10.0.35
+      constructs: 10.0.35
+      source-map-support: 0.5.21
+    devDependencies:
+      '@types/jest': 26.0.24
+      '@types/node': 10.17.27
+      aws-cdk: 2.8.0
+      jest: 26.6.3_ts-node@9.1.1
+      ts-jest: 26.5.6_jest@26.6.3+typescript@3.9.10
+      ts-node: 9.1.1_typescript@3.9.10
+      typescript: 3.9.10
+
 packages:
 
   /@aws-cdk/assert/1.139.0_jest@26.6.3:
@@ -3929,12 +3960,6 @@ packages:
       ci-info: 2.0.0
     dev: true
 
-  /is-core-module/2.8.0:
-    resolution: {integrity: sha512-vd15qHsaqrRL7dtH6QNuy0ndJmRDrS9HAM1CAiSifNUFv4x1a0CCVsj18hJ1mShxIG6T2i1sO78MkP56r0nYRw==}
-    dependencies:
-      has: 1.0.3
-    dev: true
-
   /is-core-module/2.8.1:
     resolution: {integrity: sha512-SdNCUs284hr40hFTFP6l0IfZ/RSrMXF3qgoRHd3/79unUTvrFO/JoXwkGm+5J/Oe3E/b5GsnG330uUNgRpu1PA==}
     dependencies:
@@ -4428,7 +4453,7 @@ packages:
       jest-pnp-resolver: 1.2.2_jest-resolve@26.6.2
       jest-util: 26.6.2
       read-pkg-up: 7.0.1
-      resolve: 1.20.0
+      resolve: 1.22.0
       slash: 3.0.0
     dev: true
 
@@ -5137,7 +5162,7 @@ packages:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
     dependencies:
       hosted-git-info: 2.8.9
-      resolve: 1.20.0
+      resolve: 1.22.0
       semver: 5.7.1
       validate-npm-package-license: 3.0.4
     dev: true
@@ -5687,13 +5712,6 @@ packages:
   /resolve-url/0.2.1:
     resolution: {integrity: sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=}
     deprecated: https://github.com/lydell/resolve-url#deprecated
-    dev: true
-
-  /resolve/1.20.0:
-    resolution: {integrity: sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==}
-    dependencies:
-      is-core-module: 2.8.0
-      path-parse: 1.0.7
     dev: true
 
   /resolve/1.22.0:
