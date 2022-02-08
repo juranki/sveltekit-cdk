@@ -1,2 +1,11 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script context="module" lang="ts">
+	export const prerender = true;
+</script>
+
+<h1>Welcome to SvelteKit CDK Adapter test</h1>
+
+<h2>Prerendered pages</h2>
+<p>
+    <a href="/prerendered/foo">foo</a>
+    <a href="/prerendered/bar">bar</a>
+</p>
