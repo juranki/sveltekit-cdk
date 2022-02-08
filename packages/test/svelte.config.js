@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto';
+import { AwsServerlessAdapter } from '@sveltekit-cdk/adapter'
 import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -8,7 +8,9 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
-		adapter: adapter()
+		adapter: AwsServerlessAdapter({
+			cdkProjectPath: '../test-stack'
+		}),
 	}
 };
 
