@@ -1,10 +1,10 @@
 import { Construct } from 'constructs'
-import { Duration } from 'aws-cdk-lib'
+import { Duration, IgnoreMode } from 'aws-cdk-lib'
 import * as cdn from 'aws-cdk-lib/aws-cloudfront'
 import * as cdnOrigins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from './common'
-import { writeFileSync, readdirSync, statSync } from 'fs'
+import { writeFileSync, readdirSync, statSync, existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 import { buildSync } from 'esbuild'
 import { Certificate } from 'aws-cdk-lib/aws-certificatemanager'
@@ -112,6 +112,7 @@ export class SvelteDistribution extends Construct {
         checkProps(props)
         const artifactPath = props.artifactPath || DEFAULT_ARTIFACT_PATH
         const staticPath = join(artifactPath, 'static')
+        const prerenderedPath = join(artifactPath, 'prerendered.json')
 
         // origins
         const bucketProps = props.bucketProps || {}
@@ -207,16 +208,43 @@ export class SvelteDistribution extends Construct {
             })
         }
 
-        // deploy static content
-        new BucketDeployment(this, 'svelteStaticDeployment', {
+        let prerendered: string[] = []
+        if (existsSync(prerenderedPath)) {
+            prerendered = JSON.parse(readFileSync(prerenderedPath, { encoding: 'utf8' }))
+            prerendered = prerendered.filter(f => f !== '/').map(f => f.substring(1))
+        }
+
+        let prerenderedFiles: BucketDeployment | undefined = undefined
+        if (prerendered.length > 0) {
+            // deploy with explicit content type to set it correctly for prerendered
+            prerenderedFiles = new BucketDeployment(this, 'sveltePrerenderedDeployment', {
+                destinationBucket: this.bucket,
+                sources: [Source.asset(staticPath)],
+                distribution: this.distribution,
+                cacheControl: [
+                    CacheControl.maxAge(Duration.days(365))
+                ],
+                contentType: 'text/html',
+            })
+
+        }
+        // deploy again without content type but exclude prerendered
+        // to fix content types for rest of files
+        const staticFiles = new BucketDeployment(this, 'svelteStaticDeployment', {
             destinationBucket: this.bucket,
-            sources: [Source.asset(staticPath)],
+            sources: [Source.asset(staticPath, {
+                exclude: prerendered
+            })],
             distribution: this.distribution,
             cacheControl: [
                 CacheControl.maxAge(Duration.days(365))
-            ]
+            ],
+            prune: false,
+            exclude: prerendered,
         })
-
+        if (prerenderedFiles) {
+            staticFiles.node.addDependency(prerenderedFiles)
+        }
     }
 }
 
