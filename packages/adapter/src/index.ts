@@ -1,6 +1,7 @@
 import type { Adapter } from '@sveltejs/kit'
 import * as path from 'path'
 import { build } from 'esbuild'
+import { existsSync, readFileSync, renameSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 
 export interface AwsServerlessAdapterParams {
     /**
@@ -42,11 +43,42 @@ export function AwsServerlessAdapter({
             builder.rimraf(targetPath)
             builder.rimraf('.svelte-kit/cdk')
 
-            await builder.prerender({
-                dest: dirs.static
+            const prerendered = await builder.prerender({
+                dest: dirs.static,
             });
-            builder.writeClient(dirs.static)
-            builder.writeStatic(dirs.static)
+            
+            writeFileSync(
+                path.join(targetPath, 'prerendered.json'),
+                `[${prerendered.paths.map(p => `"${p}"`).join(',')}]`
+            )
+
+            prerendered.paths.forEach(p => {
+                if (p === '/') return // leave /index.html
+                const base = path.join(dirs.static, p)
+                const p1 = path.join(base, 'index.html')
+                const p2 = `${base}.html`
+                console.log(p, p1, p2)
+                if(existsSync(p1)) {
+                    const data = readFileSync(p1)
+                    unlinkSync(p1)
+                    rmdirSync(base)
+                    writeFileSync(base, data)
+                }
+                if(existsSync(p2)) {
+                    renameSync(p2, base)
+                }
+            })
+
+            const clientfiles = builder.writeClient(dirs.static)
+            const staticfiles = builder.writeStatic(dirs.static)
+            writeFileSync(
+                path.join(targetPath, 'client.json'),
+                `[${clientfiles.map(p => `"${p}"`).join(',')}]`
+            )
+            writeFileSync(
+                path.join(targetPath, 'static.json'),
+                `[${staticfiles.map(p => `"${p}"`).join(',')}]`
+            )
             builder.copy(`${files}/`, '.svelte-kit/cdk/', {
                 replace: {
                     APP: '../output/server/app',
