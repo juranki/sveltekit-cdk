@@ -36,6 +36,7 @@ export function AwsServerlessAdapter({
             const targetPath = artifactPath || path.join(cdkProjectPath!, 'sveltekit')
             const files = path.join(dirname, 'files');
             const dirs = {
+                prerendered: path.join(targetPath, 'prerendered'),
                 static: path.join(targetPath, 'static'),
                 lambda: path.join(targetPath, 'lambda'),
             }
@@ -44,33 +45,31 @@ export function AwsServerlessAdapter({
             builder.rimraf('.svelte-kit/cdk')
 
             const prerendered = await builder.prerender({
-                dest: dirs.static,
+                dest: dirs.prerendered,
             });
-            
-            writeFileSync(
-                path.join(targetPath, 'prerendered.json'),
-                `[${prerendered.paths.map(p => `"${p}"`).join(',')}]`
-            )
+            const clientfiles = builder.writeClient(dirs.static)
+            const staticfiles = builder.writeStatic(dirs.static)
 
             prerendered.paths.forEach(p => {
                 if (p === '/') return // leave /index.html
-                const base = path.join(dirs.static, p)
+                const base = path.join(dirs.prerendered, p)
                 const p1 = path.join(base, 'index.html')
                 const p2 = `${base}.html`
-                console.log(p, p1, p2)
-                if(existsSync(p1)) {
+                if (existsSync(p1)) {
                     const data = readFileSync(p1)
                     unlinkSync(p1)
                     rmdirSync(base)
                     writeFileSync(base, data)
                 }
-                if(existsSync(p2)) {
+                if (existsSync(p2)) {
                     renameSync(p2, base)
                 }
             })
 
-            const clientfiles = builder.writeClient(dirs.static)
-            const staticfiles = builder.writeStatic(dirs.static)
+            writeFileSync(
+                path.join(targetPath, 'prerendered.json'),
+                `[${prerendered.paths.map(p => `"${p}"`).join(',')}]`
+            )
             writeFileSync(
                 path.join(targetPath, 'client.json'),
                 `[${clientfiles.map(p => `"${p}"`).join(',')}]`
@@ -79,13 +78,19 @@ export function AwsServerlessAdapter({
                 path.join(targetPath, 'static.json'),
                 `[${staticfiles.map(p => `"${p}"`).join(',')}]`
             )
+            writeRoutes(
+                path.join(targetPath, 'routes.json'),
+                prerendered.paths, staticfiles, clientfiles
+            )
             builder.copy(`${files}/`, '.svelte-kit/cdk/', {
                 replace: {
                     APP: '../output/server/app',
-                    MANIFEST: '../output/server/manifest'
+                    MANIFEST: '../output/server/manifest',
+                    PRERENDERED: './prerendered',
                 }
             })
-
+            writePrerenderedTs('.svelte-kit/cdk/prerendered.ts', prerendered.paths)
+            
             await build({
                 entryPoints: ['.svelte-kit/cdk/proxy-v2-handler.js'],
                 outfile: path.join(dirs.lambda, 'proxy-v2/handler.js'),
@@ -104,4 +109,30 @@ export function AwsServerlessAdapter({
 
         },
     }
+}
+export type StaticRoutes = Record<string, 'prerendered' | 'static'>
+function writeRoutes(path:string, pre: string[], sta: string[], cli: string[]) {
+    const rv: StaticRoutes = {};
+
+    [...sta, ...cli].forEach(p => {
+        const ps = p.split('/')
+        const glob = ps.length > 1 ? `${ps[0]}/*` : p
+        rv[glob] = 'static'
+    });
+    pre.map(p => p === '/' ? 'index.html' : p.substring(1)).forEach(p => {
+        const ps = p.split('/')
+        const glob = ps.length > 1 ? `${ps[0]}/*` : p
+        if (rv[glob] === 'static') {
+            throw new Error('CDK Adapter cannot handle top level routes that mix static and pre-rendered content, yet')
+        }
+        rv[glob] = 'prerendered'
+    })
+
+    writeFileSync(path, JSON.stringify(rv, null, 2))
+}
+function writePrerenderedTs(path:string, pre:string[]) {
+    writeFileSync(
+        path,
+        `export const prerendered = [${pre.map(p => p === '/' ? "'/index.html'" : `'${p}'`)}]`
+    )
 }

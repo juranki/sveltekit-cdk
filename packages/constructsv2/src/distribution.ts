@@ -3,7 +3,7 @@ import { Duration, IgnoreMode } from 'aws-cdk-lib'
 import * as cdn from 'aws-cdk-lib/aws-cloudfront'
 import * as cdnOrigins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as s3 from 'aws-cdk-lib/aws-s3'
-import { DEFAULT_ARTIFACT_PATH, RendererProps, SvelteRendererEndpoint } from './common'
+import { DEFAULT_ARTIFACT_PATH, RendererProps, StaticRoutes, SvelteRendererEndpoint } from './common'
 import { writeFileSync, readdirSync, statSync, existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 import { buildSync } from 'esbuild'
@@ -112,26 +112,32 @@ export class SvelteDistribution extends Construct {
         checkProps(props)
         const artifactPath = props.artifactPath || DEFAULT_ARTIFACT_PATH
         const staticPath = join(artifactPath, 'static')
-        const prerenderedPath = join(artifactPath, 'prerendered.json')
+        const prerenderedPath = join(artifactPath, 'prerendered')
+        const routesPath = join(artifactPath, 'routes.json')
+        const routes: StaticRoutes = JSON.parse(readFileSync(routesPath, { encoding: 'utf8' }))
+
 
         // origins
         const bucketProps = props.bucketProps || {}
         this.bucket = new s3.Bucket(this, 'svelteStaticBucket', bucketProps);
 
-        const s3origin = new cdnOrigins.S3Origin(this.bucket)
+        const s3static = new cdnOrigins.S3Origin(this.bucket, {
+            originPath: 'static'
+        })
+        const s3prerendered = new cdnOrigins.S3Origin(this.bucket, {
+            originPath: 'prerendered'
+        })
         const origin = props.renderer.type === 'HTTP_ORIGIN'
             ? new cdnOrigins.HttpOrigin(props.renderer.endpoint!.httpEndpoint)
-            : s3origin
+            : s3prerendered
 
         // cache and origin request policies
         const originRequestPolicy = props.originRequestPolicy || new cdn.OriginRequestPolicy(this, 'svelteDynamicRequestPolicy', {
             cookieBehavior: cdn.OriginRequestCookieBehavior.all(),
-            headerBehavior: props.renderer.type === 'HTTP_ORIGIN'
-                ? cdn.OriginRequestHeaderBehavior.allowList('Accept')
-                : cdn.OriginRequestHeaderBehavior.all(),
+            headerBehavior: cdn.OriginRequestHeaderBehavior.allowList('Accept'),
             queryStringBehavior: cdn.OriginRequestQueryStringBehavior.all(),
         })
-        const cachePolicy = props.cachePolicy || cdn.CachePolicy.CACHING_DISABLED
+        const cachePolicy = props.cachePolicy || cdn.CachePolicy.CACHING_OPTIMIZED
 
         // at edge lambda
         let edgeLambdas: cdn.EdgeLambda[] | undefined = undefined
@@ -199,27 +205,29 @@ export class SvelteDistribution extends Construct {
             certificate: props.certificateArn ? Certificate.fromCertificateArn(this, 'domainCert', props.certificateArn) : undefined,
         })
 
+        let hasPrerendered = false
         // routes for static content
-        if (props.renderer.type !== 'NONE') {
-            forStaticRoutes(staticPath, (pattern) => {
-                this.distribution.addBehavior(pattern, s3origin, {
-                    viewerProtocolPolicy: cdn.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        Object.entries(routes).forEach(([glob, origin]) => {
+            if (origin === 'static') {
+                this.distribution.addBehavior(glob, s3static, {
+                    viewerProtocolPolicy: cdn.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
                 })
-            })
-        }
+            } else if (origin === 'prerendered') {
+                hasPrerendered = true
+                if (props.renderer.type === 'HTTP_ORIGIN') {
+                    this.distribution.addBehavior(glob, s3prerendered, {
+                        viewerProtocolPolicy: cdn.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
+                    })
+                }
+            }
+        })
 
-        let prerendered: string[] = []
-        if (existsSync(prerenderedPath)) {
-            prerendered = JSON.parse(readFileSync(prerenderedPath, { encoding: 'utf8' }))
-            prerendered = prerendered.filter(f => f !== '/').map(f => f.substring(1))
-        }
-
-        let prerenderedFiles: BucketDeployment | undefined = undefined
-        if (prerendered.length > 0) {
+        if (hasPrerendered) {
             // deploy with explicit content type to set it correctly for prerendered
-            prerenderedFiles = new BucketDeployment(this, 'sveltePrerenderedDeployment', {
+            new BucketDeployment(this, 'sveltePrerenderedDeployment', {
                 destinationBucket: this.bucket,
-                sources: [Source.asset(staticPath)],
+                destinationKeyPrefix: 'prerendered',
+                sources: [Source.asset(prerenderedPath)],
                 distribution: this.distribution,
                 cacheControl: [
                     CacheControl.maxAge(Duration.days(365))
@@ -228,23 +236,16 @@ export class SvelteDistribution extends Construct {
             })
 
         }
-        // deploy again without content type but exclude prerendered
-        // to fix content types for rest of files
-        const staticFiles = new BucketDeployment(this, 'svelteStaticDeployment', {
+
+        new BucketDeployment(this, 'svelteStaticDeployment', {
             destinationBucket: this.bucket,
-            sources: [Source.asset(staticPath, {
-                exclude: prerendered
-            })],
+            destinationKeyPrefix: 'static',
+            sources: [Source.asset(staticPath)],
             distribution: this.distribution,
             cacheControl: [
                 CacheControl.maxAge(Duration.days(365))
             ],
-            prune: false,
-            exclude: prerendered,
         })
-        if (prerenderedFiles) {
-            staticFiles.node.addDependency(prerenderedFiles)
-        }
     }
 }
 
@@ -259,16 +260,4 @@ function checkProps(props: SvelteDistributionProps) {
     if (props.certificateArn && !props.domainNames) {
         throw new Error("domainNames must be provided when setting a certificateArn")
     }
-}
-
-function forStaticRoutes(staticPath: string, cb: (pattern: string) => void): void {
-    readdirSync(staticPath).map(f => {
-        const fullPath = join(staticPath, f)
-        const stat = statSync(fullPath)
-        if (stat.isDirectory()) {
-            cb(`/${f}/*`)
-        } else {
-            cb(`/${f}`)
-        }
-    })
 }

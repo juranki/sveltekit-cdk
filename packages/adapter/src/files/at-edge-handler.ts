@@ -1,5 +1,6 @@
 import { App } from 'APP'
 import { manifest } from 'MANIFEST'
+import { prerendered } from 'PRERENDERED'
 import type {
     CloudFrontHeaders,
     CloudFrontRequestHandler,
@@ -22,6 +23,10 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     }
     const request = event.Records[0].cf.request
     const config = event.Records[0].cf.config
+
+    if (prerendered.includes(request.uri)) {
+        return request
+    }
 
     if (request.body && request.body.inputTruncated) {
         log('ERROR', 'input trucated', request)
@@ -53,7 +58,6 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
         })
         return outgoing
     }
-
 
     log('INFO', 'handler', {
         path: request.uri,

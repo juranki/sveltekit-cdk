@@ -18,3 +18,5 @@ export interface RendererProps {
         [key: string]: string;
     }
 }
+
+export type StaticRoutes = Record<string, 'prerendered' | 'static'>

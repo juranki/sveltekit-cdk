@@ -9,3 +9,8 @@
     <a href="/prerendered/foo">foo</a>
     <a href="/prerendered/bar">bar</a>
 </p>
+
+<h2>SSR page in same folder with prerendered pages</h2>
+<p>
+    <a href="/prerendered/dynamic">dynamic</a>
+</p>

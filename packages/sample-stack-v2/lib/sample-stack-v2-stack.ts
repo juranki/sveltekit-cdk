@@ -1,7 +1,6 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { SvelteDistribution } from '@sveltekit-cdk/constructsv2'
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class SimpleSvelteStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -9,7 +8,7 @@ export class SimpleSvelteStack extends Stack {
 
     new SvelteDistribution(this, 'svelteDistribution', {
       renderer: {
-        type: 'VIEWER_REQ',
+        type: 'ORIGIN_REQ',
         rendererProps: {
           environment: {
             LOG_LEVEL: 'DEBUG',
@@ -17,6 +16,5 @@ export class SimpleSvelteStack extends Stack {
         }
       }
     })
-
   }
 }

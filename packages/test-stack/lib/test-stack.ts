@@ -8,7 +8,7 @@ export class SvelteKitTestStack extends Stack {
 
     new SvelteDistribution(this, 'svelteDistribution', {
       renderer: {
-        type: 'VIEWER_REQ',
+        type: 'ORIGIN_REQ',
         rendererProps: {
           environment: {
             LOG_LEVEL: 'DEBUG',
