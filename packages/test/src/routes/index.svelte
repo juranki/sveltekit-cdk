@@ -29,8 +29,8 @@
 <Test test={$prerenderedContentType} />
 <Test test={$staticContent} />
 <Test test={$ssr} />
+<Test test={$caching} />
 <Test test={$requestHeaders} />
 <Test test={$responseHeaders} />
 <Test test={$cookies} />
-<Test test={$caching} />
 <Test test={$cacheControl} />
