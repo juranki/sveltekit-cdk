@@ -233,6 +233,7 @@ export class SvelteDistribution extends Construct {
                     CacheControl.maxAge(Duration.days(365))
                 ],
                 contentType: 'text/html',
+                distributionPaths: Object.entries(routes).filter(([_, t]) => (t === 'prerendered')).map(([r, _]) => `/${r}`),
             })
 
         }
@@ -245,6 +246,7 @@ export class SvelteDistribution extends Construct {
             cacheControl: [
                 CacheControl.maxAge(Duration.days(365))
             ],
+            distributionPaths: Object.entries(routes).filter(([_, t]) => (t === 'static')).map(([r, _]) => `/${r}`),
         })
     }
 }
