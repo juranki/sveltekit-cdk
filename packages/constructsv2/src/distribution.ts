@@ -106,7 +106,9 @@ export class SvelteDistribution extends Construct {
             headerBehavior: cdn.OriginRequestHeaderBehavior.allowList('Accept'),
             queryStringBehavior: cdn.OriginRequestQueryStringBehavior.all(),
         })
-        const cachePolicy = props.cachePolicy || cdn.CachePolicy.CACHING_OPTIMIZED
+        const cachePolicy = props.cachePolicy || new cdn.CachePolicy(this, 'svelteDynamicCachePolicy', {
+            cookieBehavior: cdn.CacheCookieBehavior.all(),
+        })
 
         // at edge lambda
         let edgeLambdas: cdn.EdgeLambda[] | undefined = undefined

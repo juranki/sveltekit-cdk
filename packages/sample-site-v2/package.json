@@ -11,13 +11,13 @@
   },
   "devDependencies": {
     "@sveltekit-cdk/adapter": "workspace:*",
-    "@sveltejs/kit": "1.0.0-next.260",
+    "@sveltejs/kit": "1.0.0-next.267",
     "@types/cookie": "^0.4.1",
-    "svelte": "^3.44.0",
+    "svelte": "^3.46.0",
     "svelte-check": "^2.2.6",
-    "svelte-preprocess": "^4.9.4",
+    "svelte-preprocess": "^4.10.1",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.3"
+    "typescript": "~4.5.4"
   },
   "type": "module",
   "dependencies": {
