@@ -7,13 +7,10 @@ export class SimpleSvelteStack extends Stack {
     super(scope, id, props);
 
     new SvelteDistribution(this, 'svelteDistribution', {
-      renderer: {
-        type: 'ORIGIN_REQ',
-        rendererProps: {
-          environment: {
-            LOG_LEVEL: 'DEBUG',
-          },
-        }
+      rendererProps: {
+        environment: {
+          LOG_LEVEL: 'DEBUG',
+        },
       }
     })
   }

@@ -1,28 +1,24 @@
 # SvelteKit CDK Adapter
 
-## WARNING: Not for production use!!
+> **Note: 2022-02-12**
+> Radically narrowed scope of the project to be able to focus on ease of use and robustness. Dropped support for  regular lambda SSR and CDK v1
+### WARNING: Not for production, yet!!
 
 This repo contains tooling to deploy SvelteKit sites to AWS using CDK.
-
-Package structure is based on assumption that SvelteKit site is part or a larger system,
-hosted on AWS and deployed with CDK.
 
 Tools are split to two packages: **adapter** that plugs into the sveltekit project, and 
 **constructs** that are imported to CDK project to integrate SvelteKit site to other parts
 of your system.
 
-- Adapter: **[@sveltekit-cdk/adapter](https://github.com/juranki/sveltekit-cdk/tree/main/packages/adapter#readme)** [![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fadapter.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fadapter)
-  - [x] makes sveltekit artifacts available to be consumed in CDK stacks
-  - [ ] optionally deploys a CDK stack after producing the artifacts
-- CDK v1 constructs: **[@sveltekit-cdk/constructs](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructs#readme)** [![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructs.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructs) 
-  - [x] CloudFront distribution for static content
-  - [x] Lambda@Edge renderer attached to the distribution
-  - [x] Lambda renderer behind API Gateway HTTP API
-- CDK v2 constructs: **[@sveltekit-cdk/constructsv2](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructsv2#readme)** [![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructsv2.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructsv2)
-  - [x] CloudFront distribution for static content
-  - [x] Lambda@Edge renderer attached to the distribution
-  - [x] Lambda renderer behind API Gateway HTTP API
+- **[@sveltekit-cdk/adapter](https://github.com/juranki/sveltekit-cdk/tree/main/packages/adapter#readme)** 
+  - plugs into the sveltekit project and makes site available to be consumed in CDK stacks
+  - [![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fadapter.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fadapter)
 
+-  **[@sveltekit-cdk/constructsv2](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructsv2#readme)** 
+   - SvelteDistribution construct bundles and deploys the site to Lambda@Edge and S3, and distributes it with CloudFront
+   - [![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructsv2.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructsv2)
+
+![](https://user-images.githubusercontent.com/6607/153542454-250fc3c6-7c83-401a-aade-73e03939ac2e.png)
 ## Howto
 
 **TODO: fill in details**
@@ -42,12 +38,12 @@ of your system.
 - In initial development, API IS NOT STABLE!
 - I feel quite confident about overall structure
 - Areas of uncertainty that are likely to cause significant changes (== opinions, feedback and advice appreciated)
-  - how to design constructs to be both intuitive and flexible; how much flexibility is really needed
-  - dependency management of constructs: cdk moves fast, v1 and v2 have different approaches to packaging and versioning 
-  - adapter interface of sveltekit migth still change a little
+  - ~~how to design constructs to be both intuitive and flexible; how much flexibility is really needed~~ **(2022-02-12: focus on ease or use and robustness, even at the expence of flexibility)**
+  - ~~dependency management of constructs: cdk moves fast, v1 and v2 have different approaches to packaging and versioning~~ **(2022-02-12: only support v2)** 
+  - adapter interface of sveltekit might still change a little
 
 ### Links
 
 - [API reference](https://juranki.github.io/sveltekit-cdk/)
 - [@sveltekit-cdk/adapter changelog](https://github.com/juranki/sveltekit-cdk/blob/main/packages/adapter/CHANGELOG.md)
-- [@sveltekit-cdk/constructs changelog](https://github.com/juranki/sveltekit-cdk/blob/main/packages/constructs/CHANGELOG.md)
+- [@sveltekit-cdk/constructsv2 changelog](https://github.com/juranki/sveltekit-cdk/blob/main/packages/constructsv2/CHANGELOG.md)

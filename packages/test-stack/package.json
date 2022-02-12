@@ -1,8 +1,8 @@
 {
-  "name": "sample-stack-v2",
+  "name": "test-stack",
   "version": "0.1.0",
   "bin": {
-    "sample-stack-v2": "bin/sample-stack-v2.js"
+    "test-stack": "bin/test-stack.js"
   },
   "scripts": {
     "build": "tsc",

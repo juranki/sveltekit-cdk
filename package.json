@@ -5,11 +5,11 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "build": "pnpm build --filter=\"@sveltekit-cdk/*\" --filter=\"sample-site\" --filter=\"sample-site-v2\"",
-    "synth": "pnpm synth --filter=\"sample-stack\" --filter=\"sample-stack-v2\"",
-    "diff": "pnpm diff --filter=\"sample-stack\" --filter=\"sample-stack-v2\"",
-    "deploy": "pnpm deploy --filter=\"sample-stack\"",
-    "deploy-v2": "pnpm deploy --filter=\"sample-stack-v2\"",
+    "build": "pnpm build --filter=\"@sveltekit-cdk/*\" --filter=\"sample-site-v2\" --filter=\"test\"",
+    "synth": "pnpm synth --filter=\"sample-stack-v2\"",
+    "diff": "pnpm diff --filter=\"sample-stack-v2\"",
+    "deploy": "pnpm deploy --filter=\"sample-stack-v2\"",
+    "deploy-test": "pnpm deploy --filter=\"test-stack\"",
     "bump": "changeset version",
     "pub": "pnpm publish --access public --filter=\"@sveltekit-cdk/*\""
   },
