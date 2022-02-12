@@ -3,16 +3,9 @@ import type { Test } from './types'
 
 export { prerendered } from './prerendered'
 export { prerenderedContentType } from './prerenderedContentType'
-export const staticContent = readable<Test>({
-    title: 'Static assets',
-    description: 'Static assets are served',
-    status: 'todo'
-})
-export const ssr = readable<Test>({
-    title: 'SSR pages',
-    description: 'Adapter is able to render SSR pages',
-    status: 'todo'
-})
+export { staticContent } from './static'
+export { ssr } from './ssr'
+
 export const requestHeaders = readable<Test>({
     title: 'Request headers',
     description: 'Some set of important headers is successfully passed to an endpoint',
