@@ -8,3 +8,7 @@ declare module 'MANIFEST' {
 	export const manifest: SSRManifest;
 	export const prerendered: Set<string>;
 }
+
+declare module 'PRERENDERED' {
+	export const prerendered: string[]
+}

@@ -1,11 +1,13 @@
 import { App } from 'APP'
 import { manifest } from 'MANIFEST'
+import { prerendered } from 'PRERENDERED'
 import type {
     CloudFrontHeaders,
     CloudFrontRequestHandler,
-    CloudFrontRequestResult
+    CloudFrontResultResponse
 } from 'aws-lambda'
 import { log, toRawBody } from './util'
+import { isBlaclisted } from './header-blacklist'
 
 const app = new App(manifest)
 
@@ -22,6 +24,10 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     }
     const request = event.Records[0].cf.request
     const config = event.Records[0].cf.config
+
+    if (prerendered.includes(request.uri)) {
+        return request
+    }
 
     if (request.body && request.body.inputTruncated) {
         log('ERROR', 'input trucated', request)
@@ -45,7 +51,7 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     if (rendered) {
         log('DEBUG', 'render output', rendered)
 
-        const outgoing: CloudFrontRequestResult = await transformResponse(rendered)
+        const outgoing: CloudFrontResultResponse = await transformResponse(rendered)
         log('DEBUG', 'outgoing response', outgoing)
         log('INFO', 'handler', {
             path: request.uri,
@@ -53,7 +59,6 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
         })
         return outgoing
     }
-
 
     log('INFO', 'handler', {
         path: request.uri,
@@ -74,7 +79,7 @@ function transformIncomingHeaders(headers: CloudFrontHeaders): HeadersInit {
 }
 
 
-async function transformResponse(rendered: Response): Promise<CloudFrontRequestResult> {
+async function transformResponse(rendered: Response): Promise<CloudFrontResultResponse> {
     // TODO: BINARY RESPONSE???
     const body = await rendered.text()
 
@@ -89,11 +94,19 @@ async function transformResponse(rendered: Response): Promise<CloudFrontRequestR
 function transformOutgoingHeaders(headers: Headers): CloudFrontHeaders {
     const rv: CloudFrontHeaders = {}
     headers.forEach((v, k) => {
+        if (isBlaclisted(k.toLowerCase())) return
         rv[k.toLowerCase()] = [{
             key: k,
-            value: v
+            value: v,
         }]
     })
+    // default to not caching SSR content
+    if (!rv['cache-control']) {
+        rv['cache-control'] = [{
+            key: 'Cache-Control',
+            value: 'no-store',
+        }]
+    }
     return rv
 }
 

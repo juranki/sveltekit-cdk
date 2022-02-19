@@ -9,13 +9,8 @@ const config = {
 
 	kit: {
 		adapter: AwsServerlessAdapter({
-			cdkProjectPath: '../sample-stack-v2'
+			cdkProjectPath: '../test-stack'
 		}),
-
-		// Override http methods in the Todo forms
-		methodOverride: {
-			allowed: ['PATCH', 'DELETE']
-		}
 	}
 };
 

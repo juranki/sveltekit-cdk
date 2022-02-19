@@ -1,9 +1,5 @@
 export const DEFAULT_ARTIFACT_PATH = 'sveltekit'
 
-export interface SvelteRendererEndpoint {
-    readonly httpEndpoint: string;
-}
-
 export interface RendererProps {
     /**
      * Location of sveltekit artifacts
@@ -18,3 +14,5 @@ export interface RendererProps {
         [key: string]: string;
     }
 }
+
+export type StaticRoutes = Record<string, 'prerendered' | 'static'>

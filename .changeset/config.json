@@ -7,9 +7,9 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "sample-site",
-    "sample-stack",
     "sample-site-v2",
-    "sample-stack-v2"
+    "sample-stack-v2",
+    "test",
+    "test-stack"
   ]
 }
