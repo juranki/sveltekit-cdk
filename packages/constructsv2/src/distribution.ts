@@ -86,7 +86,9 @@ export class SvelteDistribution extends Construct {
         const staticPath = join(artifactPath, 'static')
         const prerenderedPath = join(artifactPath, 'prerendered')
         const routesPath = join(artifactPath, 'routes.json')
+        const headersPath = join(artifactPath, 'headers.json')
         const routes: StaticRoutes = JSON.parse(readFileSync(routesPath, { encoding: 'utf8' }))
+        const headers: string[] = JSON.parse(readFileSync(headersPath, { encoding: 'utf8' }))
 
 
         // origins
@@ -103,7 +105,7 @@ export class SvelteDistribution extends Construct {
         // cache and origin request policies
         const originRequestPolicy = props.originRequestPolicy || new cdn.OriginRequestPolicy(this, 'svelteDynamicRequestPolicy', {
             cookieBehavior: cdn.OriginRequestCookieBehavior.all(),
-            headerBehavior: cdn.OriginRequestHeaderBehavior.allowList('Accept'),
+            headerBehavior: cdn.OriginRequestHeaderBehavior.allowList(...headers),
             queryStringBehavior: cdn.OriginRequestQueryStringBehavior.all(),
         })
         const cachePolicy = props.cachePolicy || new cdn.CachePolicy(this, 'svelteDynamicCachePolicy', {

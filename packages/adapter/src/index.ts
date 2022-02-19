@@ -18,10 +18,16 @@ export interface AwsServerlessAdapterParams {
      * Stack to deploy after producing artifact.
      */
     stackName?: string
+    /**
+     * Cloudfront doen't automatically pass all headers to origin handlers.
+     * List the headers your app needs to function.
+     * Cloudfront doesn't allow some headers, please check Cloudfront documentation for current limitations.
+     */
+    headers?: string[]
 }
 
 export function AwsServerlessAdapter({
-    cdkProjectPath, artifactPath, stackName
+    cdkProjectPath, artifactPath, stackName, headers
 }: AwsServerlessAdapterParams): Adapter {
     if (!cdkProjectPath && !artifactPath) {
         throw new Error("at least one of cdkProjectPath or artifactPath is required");
@@ -78,6 +84,10 @@ export function AwsServerlessAdapter({
                 path.join(targetPath, 'static.json'),
                 `[${staticfiles.map(p => `"${p}"`).join(',')}]`
             )
+            writeFileSync(
+                path.join(targetPath, 'headers.json'),
+                `[${(headers || ['accept']).map(h => `"${h.toLowerCase()}"`).join(',')}]`
+            )
             writeRoutes(
                 path.join(targetPath, 'routes.json'),
                 prerendered.paths, staticfiles, clientfiles
@@ -103,7 +113,7 @@ export function AwsServerlessAdapter({
     }
 }
 export type StaticRoutes = Record<string, 'prerendered' | 'static'>
-function writeRoutes(path:string, pre: string[], sta: string[], cli: string[]) {
+function writeRoutes(path: string, pre: string[], sta: string[], cli: string[]) {
     const rv: StaticRoutes = {};
 
     [...sta, ...cli].forEach(p => {
@@ -122,7 +132,7 @@ function writeRoutes(path:string, pre: string[], sta: string[], cli: string[]) {
 
     writeFileSync(path, JSON.stringify(rv, null, 2))
 }
-function writePrerenderedTs(path:string, pre:string[]) {
+function writePrerenderedTs(path: string, pre: string[]) {
     writeFileSync(
         path,
         `export const prerendered = [${pre.map(p => p === '/' ? "'/index.html'" : `'${p}'`)}]`
