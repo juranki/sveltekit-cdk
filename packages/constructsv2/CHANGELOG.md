@@ -1,5 +1,16 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.3.0
+
+### Major Changes
+
+- BREAKING: Drop support for CDK v1
+- BREAKING: only support one configuration of CloudFront, Lambda@Edge and S3
+
+### Patch Changes
+
+- Solve problems with prerendered pages
+
 ## 0.2.5
 
 ### Patch Changes

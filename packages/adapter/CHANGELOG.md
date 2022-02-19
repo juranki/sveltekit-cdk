@@ -1,5 +1,18 @@
 # sveltekit-cdk-adapter
 
+## 0.7.0
+
+### Major Changes
+
+- BREAKING: Drop support for CDK v1
+- BREAKING: only support one configuration of CloudFront, Lambda@Edge and S3
+
+### Patch Changes
+
+- Solve problems with prerendered pages
+- Fix problems with caching of SSR pages
+- Block headers that are blacklisted by CloudFront
+
 ## 0.6.2
 
 ### Patch Changes
