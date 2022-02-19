@@ -1,7 +1,6 @@
 {
     "entryPoints": [
         "./packages/adapter",
-        "./packages/constructs",
         "./packages/constructsv2"
     ],
     "entryPointStrategy": "packages",
