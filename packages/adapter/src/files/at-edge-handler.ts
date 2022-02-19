@@ -97,9 +97,16 @@ function transformOutgoingHeaders(headers: Headers): CloudFrontHeaders {
         if (isBlaclisted(k.toLowerCase())) return
         rv[k.toLowerCase()] = [{
             key: k,
-            value: v
+            value: v,
         }]
     })
+    // default to not caching SSR content
+    if (!rv['cache-control']) {
+        rv['cache-control'] = [{
+            key: 'Cache-Control',
+            value: 'no-store',
+        }]
+    }
     return rv
 }
 
