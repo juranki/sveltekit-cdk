@@ -1,14 +1,19 @@
 // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/edge-functions-restrictions.html
 
+import { log } from "./util"
+
 export function isBlaclisted(header: string): boolean {
     if (blacklist.includes(header)) {
+        log('WARN', 'App.render emitted blacklisted header', header)
         return true
     }
     if (readonly.includes(header)) {
+        log('WARN', 'App.render emitted readonly header', header)
         return true
     }
     for (const b of prefixBlacklist) {
         if (header.startsWith(b)) {
+            log('WARN', 'App.render emitted blacklisted header', header)
             return true
         }
     }

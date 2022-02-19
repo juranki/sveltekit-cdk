@@ -2,11 +2,12 @@ import type { StrictBody } from "@sveltejs/kit/types/hooks"
 
 
 // LOGGING UTILITIES
-export type LogLevel = 'ERROR' | 'INFO' | 'DEBUG'
+export type LogLevel = 'ERROR' | 'WARN' | 'INFO' | 'DEBUG'
 
 const LOG_LEVEL = (process.env.LOG_LEVEL?.toUpperCase() || 'INFO') as LogLevel
 const logLevels: { [k: string]: number } = {
-    ERROR: 3,
+    ERROR: 4,
+    WARN: 3,
     INFO: 2,
     DEBUG: 1,
 }
