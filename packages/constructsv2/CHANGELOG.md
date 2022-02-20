@@ -1,5 +1,11 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.3.1
+
+### Patch Changes
+
+- fix routing for /index.svelte when it's not prerendered
+
 ## 0.3.0
 
 ### Major Changes

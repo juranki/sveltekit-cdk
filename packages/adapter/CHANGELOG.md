@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.7.1
+
+### Patch Changes
+
+- fix routing for /index.svelte when it's not prerendered
+
 ## 0.7.0
 
 ### Major Changes
