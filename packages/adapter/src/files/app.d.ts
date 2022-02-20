@@ -11,4 +11,5 @@ declare module 'MANIFEST' {
 
 declare module 'PRERENDERED' {
 	export const prerendered: string[]
+	export const createIndex: boolean
 }

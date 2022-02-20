@@ -1,7 +1,7 @@
 import type { Adapter } from '@sveltejs/kit'
 import * as path from 'path'
 import { build } from 'esbuild'
-import { existsSync, readFileSync, renameSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 
 export interface AwsServerlessAdapterParams {
     /**
@@ -56,25 +56,9 @@ export function AwsServerlessAdapter({
             const clientfiles = builder.writeClient(dirs.static)
             const staticfiles = builder.writeStatic(dirs.static)
 
-            prerendered.paths.forEach(p => {
-                if (p === '/') return // leave /index.html
-                const base = path.join(dirs.prerendered, p)
-                const p1 = path.join(base, 'index.html')
-                const p2 = `${base}.html`
-                if (existsSync(p1)) {
-                    const data = readFileSync(p1)
-                    unlinkSync(p1)
-                    rmdirSync(base)
-                    writeFileSync(base, data)
-                }
-                if (existsSync(p2)) {
-                    renameSync(p2, base)
-                }
-            })
-
             writeFileSync(
                 path.join(targetPath, 'prerendered.json'),
-                `[${prerendered.paths.map(p => `"${p}"`).join(',')}]`
+                JSON.stringify(prerendered),
             )
             writeFileSync(
                 path.join(targetPath, 'client.json'),
@@ -99,7 +83,7 @@ export function AwsServerlessAdapter({
                     PRERENDERED: './prerendered',
                 }
             })
-            writePrerenderedTs('.svelte-kit/cdk/prerendered.ts', prerendered.paths)
+            writePrerenderedTs('.svelte-kit/cdk/prerendered.ts', prerendered.paths, builder.trailingSlash === 'always')
 
             await build({
                 entryPoints: ['.svelte-kit/cdk/at-edge-handler.js'],
@@ -121,9 +105,15 @@ function writeRoutes(path: string, pre: string[], sta: string[], cli: string[]) 
         const glob = ps.length > 1 ? `${ps[0]}/*` : p
         rv[glob] = 'static'
     });
-    pre.map(p => p === '/' ? 'index.html' : p.substring(1)).forEach(p => {
-        const ps = p.split('/')
-        const glob = ps.length > 1 ? `${ps[0]}/*` : p
+    pre.forEach(p => {
+        let glob: string
+        if (p === '/') {
+            glob = '/'
+        } else {
+            const ps = p.substring(1).split('/')
+            glob = ps.length > 1 ? `${ps[0]}/*` : p
+            glob = `/${glob}`
+        }
         if (rv[glob] === 'static') {
             throw new Error('CDK Adapter cannot handle top level routes that mix static and pre-rendered content, yet')
         }
@@ -132,9 +122,12 @@ function writeRoutes(path: string, pre: string[], sta: string[], cli: string[]) 
 
     writeFileSync(path, JSON.stringify(rv, null, 2))
 }
-function writePrerenderedTs(path: string, pre: string[]) {
+function writePrerenderedTs(path: string, pre: string[], createIndex: boolean) {
     writeFileSync(
         path,
-        `export const prerendered = [${pre.map(p => p === '/' ? "'/index.html'" : `'${p}'`)}]`
+        [
+            `export const prerendered = [${pre.map(p => `'${p}'`)}]`,
+            `export const createIndex = ${createIndex}`
+        ].join('\n')
     )
 }

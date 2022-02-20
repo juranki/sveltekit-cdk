@@ -1,6 +1,6 @@
 import { App } from 'APP'
 import { manifest } from 'MANIFEST'
-import { prerendered } from 'PRERENDERED'
+import { prerendered, createIndex } from 'PRERENDERED'
 import type {
     CloudFrontHeaders,
     CloudFrontRequestHandler,
@@ -26,6 +26,11 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     const config = event.Records[0].cf.config
 
     if (prerendered.includes(request.uri)) {
+        if (request.uri === '/' || request.uri === '') {
+            request.uri = '/index.html'
+        } else {
+            request.uri = `${request.uri}${createIndex ? '/index.html' : '.html'}`
+        }
         return request
     }
 

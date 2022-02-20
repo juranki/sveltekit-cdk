@@ -154,7 +154,6 @@ export class SvelteDistribution extends Construct {
         // distribution
         this.distribution = new cdn.Distribution(this, 'distro', {
             priceClass: props.priceClass || cdn.PriceClass.PRICE_CLASS_100,
-            defaultRootObject: 'index.html',
             defaultBehavior: {
                 origin,
                 viewerProtocolPolicy: cdn.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -189,8 +188,7 @@ export class SvelteDistribution extends Construct {
                 cacheControl: [
                     CacheControl.maxAge(Duration.days(365))
                 ],
-                contentType: 'text/html',
-                distributionPaths: Object.entries(routes).filter(([_, t]) => (t === 'prerendered')).map(([r, _]) => `/${r}`),
+                distributionPaths: Object.entries(routes).filter(([_, t]) => (t === 'prerendered')).map(([r, _]) => r),
             })
 
         }
