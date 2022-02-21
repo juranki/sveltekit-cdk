@@ -5,7 +5,7 @@ import { browser } from '$app/env'
 
 const test: Test = {
     title: 'Caching',
-    description: 'SSR pages are cached and served from cache after initial load. (10 attempts left)',
+    description: 'SSR pages without maxage are not cached. (10 attempts left)',
     status: 'initial'
 }
 
@@ -25,7 +25,7 @@ async function run(set: Subscriber<Test>) {
     // init counters
     let countDown = 10
     let sameCount = 0
-    let previousTS = ''
+    let previousTS = []
     // set status
     set({
         ...test,
@@ -35,7 +35,7 @@ async function run(set: Subscriber<Test>) {
     let intervalId = setInterval(async () => {
         set({
             ...test,
-            description: `SSR pages are cached and served from cache after initial load. (${countDown} attempts left)`,
+            description: `SSR pages without maxage are not cached. (${countDown} attempts left)`,
             status: 'running'
         })
         let res: Response
@@ -45,7 +45,7 @@ async function run(set: Subscriber<Test>) {
         } catch (error) {
             set({
                 ...test,
-                description: `SSR pages are cached and served from cache after initial load. (${countDown} attempts left)`,
+                description: `SSR pages without maxage are not cached. (${countDown} attempts left)`,
                 status: 'failure',
                 error: error.toString()
             })
@@ -58,7 +58,7 @@ async function run(set: Subscriber<Test>) {
             set({
                 ...test,
                 status: 'failure',
-                description: `SSR pages are cached and served from cache after initial load. (${countDown} attempts left)`,
+                description: `SSR pages without maxage are not cached. (${countDown} attempts left)`,
                 error: error.toString()
             })
             clearInterval(intervalId)
@@ -70,33 +70,30 @@ async function run(set: Subscriber<Test>) {
             set({
                 ...test,
                 status: 'failure',
-                description: `SSR pages are cached and served from cache after initial load. (${countDown} attempts left)`,
+                description: `SSR pages without maxage are not cached. (${countDown} attempts left)`,
                 error: "Didn't find expected pattern in response"
             })
             clearInterval(intervalId)
             return
         }
-        if(previousTS === match[1]) {
-            sameCount++
-        } else {
-            sameCount = 0
-        }
-        previousTS = match[1]
-        countDown--
-        if (sameCount > 2) {
-            clearInterval(intervalId)
-            set({
-                ...test,
-                description: `SSR pages are cached and served from cache after initial load. (${countDown} attempts left)`,
-                status: 'success',
-            })
-        }
-        if (countDown <= 0) {
+        if (previousTS.includes(match[1])) {
             set({
                 ...test,
                 status: 'failure',
-                description: `SSR pages are cached and served from cache after initial load. (${countDown} attempts left)`,
-                error: "New page was served for each request"
+                description: `SSR pages without maxage are not cached. (${countDown} attempts left)`,
+                error: "A page with same timestamp was served twise"
+            })
+            clearInterval(intervalId)
+            return
+        }
+        
+        previousTS.push(match[1])
+        countDown--
+        if (countDown <= 0) {
+            set({
+                ...test,
+                status: 'success',
+                description: `SSR pages without maxage are not cached.`,
             })
             clearInterval(intervalId)
             return
