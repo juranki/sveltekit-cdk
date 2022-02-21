@@ -83,16 +83,37 @@ function transformIncomingHeaders(headers: CloudFrontHeaders): HeadersInit {
     )
 }
 
+function bodyEncondingFromMime(mime: string | null): 'base64' | 'text' | undefined {
+    if (!mime) return undefined
+    if (mime.startsWith('text/')) return 'text'
+    if ([
+        'application/json',
+        'application/xml',
+        'application/js',
+        'application/javascript',
+        'image/svg+xml',
+    ].includes(mime)) return 'text'
+
+    return 'base64'
+}
 
 async function transformResponse(rendered: Response): Promise<CloudFrontResultResponse> {
-    // TODO: BINARY RESPONSE???
-    const body = await rendered.text()
+    const bodyEncoding = bodyEncondingFromMime(rendered.headers.get('content-type'))
+    let body: string | undefined
+
+    if (bodyEncoding === 'text') {
+        body = await rendered.text()
+    } else if (bodyEncoding === 'base64') {
+        const aBuf = await rendered.arrayBuffer()
+        const buf = Buffer.from(aBuf)
+        body = buf.toString('base64')
+    }
 
     return {
         status: rendered.status.toString(),
         headers: transformOutgoingHeaders(rendered.headers),
         body,
-        bodyEncoding: 'text',
+        bodyEncoding,
     }
 }
 
