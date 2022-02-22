@@ -24,10 +24,9 @@ export interface BodyInfo {
     encoding: 'base64' | 'text'
 }
 
-export function toRawBody(body: BodyInfo): string {
-    // TODO: BINARY BODY???
+export function toRawBody(body: BodyInfo): BodyInit {
     return body.encoding === 'base64'
-        ? Buffer.from(body.data, 'base64').toString()
+        ? Buffer.from(body.data, 'base64')
         : body.data
 }
 

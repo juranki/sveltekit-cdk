@@ -13,6 +13,7 @@
     staticContent,
     caching,
     cacheControl,
+    binaryRequestBody,
   } from "$lib/test";
   import Test from "$lib/Test.svelte";
 </script>
@@ -30,6 +31,7 @@
 <Test test={$staticContent} />
 <Test test={$ssr} />
 <Test test={$caching} />
+<Test test={$binaryRequestBody} />
 <Test test={$requestHeaders} />
 <Test test={$responseHeaders} />
 <Test test={$cookies} />

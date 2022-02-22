@@ -6,6 +6,7 @@ export { prerenderedContentType } from './prerenderedContentType'
 export { staticContent } from './static'
 export { ssr } from './ssr'
 export { caching } from './caching'
+export { binaryRequestBody } from './binaryRequestBody'
 
 export const requestHeaders = readable<Test>({
     title: 'Request headers',
