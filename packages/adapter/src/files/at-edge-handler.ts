@@ -85,13 +85,14 @@ function transformIncomingHeaders(headers: CloudFrontHeaders): HeadersInit {
 
 function bodyEncondingFromMime(mime: string | null): 'base64' | 'text' | undefined {
     if (!mime) return undefined
+    mime = mime.split(';')[0] // remove parameters
     if (mime.startsWith('text/')) return 'text'
+    if (mime.endsWith('+xml')) return 'text'
     if ([
         'application/json',
         'application/xml',
         'application/js',
         'application/javascript',
-        'image/svg+xml',
     ].includes(mime)) return 'text'
 
     return 'base64'
