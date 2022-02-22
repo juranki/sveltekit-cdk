@@ -1,5 +1,13 @@
 # sveltekit-cdk-adapter
 
+## 0.7.2
+
+### Patch Changes
+
+- a863f90: adjust to breaking changes in @sveltejs/kit@1.0.0-next.280
+- 1a10ef9: fix transformation of binary request body
+- 4e8a024: fix transformation of binary response body
+
 ## 0.7.1
 
 ### Patch Changes
