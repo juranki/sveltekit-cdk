@@ -78,7 +78,7 @@ export function AwsServerlessAdapter({
             )
             builder.copy(`${files}/`, '.svelte-kit/cdk/', {
                 replace: {
-                    APP: '../output/server/app',
+                    SERVER: '../output/server/index',
                     MANIFEST: '../output/server/manifest',
                     PRERENDERED: './prerendered',
                 }

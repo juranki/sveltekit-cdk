@@ -1,4 +1,4 @@
-import { App } from 'APP'
+import { Server } from 'SERVER'
 import { manifest } from 'MANIFEST'
 import { prerendered, createIndex } from 'PRERENDERED'
 import type {
@@ -9,7 +9,7 @@ import type {
 import { log, toRawBody } from './util'
 import { isBlaclisted } from './header-blacklist'
 
-const app = new App(manifest)
+const server = new Server(manifest)
 
 export const handler: CloudFrontRequestHandler = async (event, context) => {
 
@@ -51,7 +51,7 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
 
     log('DEBUG', 'render input', input)
 
-    const rendered = await app.render(input)
+    const rendered = await server.respond(input)
 
     if (rendered) {
         log('DEBUG', 'render output', rendered)
