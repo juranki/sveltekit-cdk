@@ -1,5 +1,3 @@
-import type { StrictBody } from "@sveltejs/kit/types/hooks"
-
 
 // LOGGING UTILITIES
 export type LogLevel = 'ERROR' | 'WARN' | 'INFO' | 'DEBUG'
@@ -28,17 +26,4 @@ export function toRawBody(body: BodyInfo): BodyInit {
     return body.encoding === 'base64'
         ? Buffer.from(body.data, 'base64')
         : body.data
-}
-
-export function fromStrictBody(body: StrictBody): BodyInfo {
-    if (body instanceof Uint8Array) {
-        return {
-            data: Buffer.from(body).toString('base64'),
-            encoding: 'base64',
-        }
-    }
-    return {
-        data: body,
-        encoding: 'text'
-    }
 }
