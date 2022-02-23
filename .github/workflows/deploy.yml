@@ -20,7 +20,9 @@ jobs:
         id: content
         uses: actions/cache@v2
         with:
-          path: packages/stack/sveltekit
+          path: |
+            packages/test-stack/sveltekit
+            packages/sample-stack-v2/sveltekit
           key: ${{ runner.os }}-content
       - name: Cache pnpm modules
         id: pnpm
@@ -50,7 +52,9 @@ jobs:
         id: content
         uses: actions/cache@v2
         with:
-          path: packages/stack/sveltekit
+          path: |
+            packages/test-stack/sveltekit
+            packages/sample-stack-v2/sveltekit
           key: ${{ runner.os }}-content
       - name: Cache pnpm modules
         id: pnpm
@@ -84,7 +88,9 @@ jobs:
         id: content
         uses: actions/cache@v2
         with:
-          path: packages/stack/sveltekit
+          path: |
+            packages/test-stack/sveltekit
+            packages/sample-stack-v2/sveltekit
           key: ${{ runner.os }}-content
       - name: Cache pnpm modules
         id: pnpm
