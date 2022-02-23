@@ -16,6 +16,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Cache package builds
+        id: dist
+        uses: actions/cache@v2
+        with:
+          path: packages/**/dist
+          key: ${{ runner.os }}-dist
       - name: Cache site content
         id: content
         uses: actions/cache@v2
@@ -48,6 +54,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Cache package builds
+        id: dist
+        uses: actions/cache@v2
+        with:
+          path: packages/**/dist
+          key: ${{ runner.os }}-dist
       - name: Cache site content
         id: content
         uses: actions/cache@v2
@@ -84,6 +96,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Cache package builds
+        id: dist
+        uses: actions/cache@v2
+        with:
+          path: packages/**/dist
+          key: ${{ runner.os }}-dist
       - name: Cache site content
         id: content
         uses: actions/cache@v2
