@@ -90,7 +90,7 @@ export function AwsServerlessAdapter({
                 outfile: path.join(dirs.lambda, 'at-edge/handler.js'),
                 bundle: true,
                 platform: 'node',
-                inject: [path.join(files, 'shims.js')],
+                inject: [path.join(builder.getBuildDirectory('cdk'), 'shims.js')],
             })
 
         },
