@@ -76,14 +76,14 @@ export function AwsServerlessAdapter({
                 path.join(targetPath, 'routes.json'),
                 prerendered.paths, staticfiles, clientfiles
             )
-            builder.copy(`${files}/`, '.svelte-kit/cdk/', {
+            builder.copy(`${files}/`, builder.getBuildDirectory('cdk'), {
                 replace: {
                     SERVER: '../output/server/index',
                     MANIFEST: '../output/server/manifest',
                     PRERENDERED: './prerendered',
                 }
             })
-            writePrerenderedTs(path.join('.svelte-kit', 'cdk', 'prerendered.ts'), prerendered.paths, builder.trailingSlash === 'always')
+            writePrerenderedTs(path.join(builder.getBuildDirectory('cdk'), 'prerendered.ts'), prerendered.paths, builder.trailingSlash === 'always')
 
             await build({
                 entryPoints: ['.svelte-kit/cdk/at-edge-handler.js'],
