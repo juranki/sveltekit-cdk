@@ -1,7 +1,7 @@
 import type { Adapter } from '@sveltejs/kit'
 import * as path from 'path'
 import { build } from 'esbuild'
-import { writeFileSync } from 'fs';
+import { writeFileSync, mkdirSync } from 'fs';
 
 export interface AwsServerlessAdapterParams {
     /**
@@ -76,6 +76,7 @@ export function AwsServerlessAdapter({
                 path.join(targetPath, 'routes.json'),
                 prerendered.paths, staticfiles, clientfiles
             )
+            mkdirSync(builder.getBuildDirectory('cdk'), { recursive: true })
             builder.copy(`${files}/`, builder.getBuildDirectory('cdk'), {
                 replace: {
                     SERVER: '../output/server/index',
@@ -84,7 +85,6 @@ export function AwsServerlessAdapter({
                 }
             })
             writePrerenderedTs(path.join(builder.getBuildDirectory('cdk'), 'prerendered.ts'), prerendered.paths, builder.trailingSlash === 'always')
-
             await build({
                 entryPoints: ['.svelte-kit/cdk/at-edge-handler.js'],
                 outfile: path.join(dirs.lambda, 'at-edge/handler.js'),
