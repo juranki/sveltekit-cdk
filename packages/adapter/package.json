@@ -15,7 +15,7 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "rm -fr dist/* && tsc && cp shims.js dist/files"
+    "build": "node prepare-build.cjs && tsc && node finalize-build.cjs"
   },
   "keywords": [
     "sveltekit",
@@ -27,6 +27,7 @@
     "@sveltejs/kit": "1.0.0-next.282",
     "@types/aws-lambda": "^8.10.92",
     "@types/node": "10.17.27",
+    "rimraf": "^3.0.2",
     "typescript": "^4.5.5"
   },
   "dependencies": {
