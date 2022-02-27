@@ -38,7 +38,11 @@ export function AwsServerlessAdapter({
     return {
         name: 'sveltekit-cdk-adapter',
         async adapt(builder): Promise<void> {
-            const dirname = path.dirname(import.meta.url).split('file://')[1]
+            let dirname = path.dirname(import.meta.url).split('file://')[1]
+            if (process.platform === 'win32') {
+                // remove first slash from path
+                dirname = dirname.substring(1)
+            }
             const targetPath = artifactPath || path.join(cdkProjectPath!, 'sveltekit')
             const files = path.join(dirname, 'files');
             const dirs = {
@@ -48,7 +52,7 @@ export function AwsServerlessAdapter({
             }
 
             builder.rimraf(targetPath)
-            builder.rimraf('.svelte-kit/cdk')
+            builder.rimraf(builder.getBuildDirectory('cdk'))
 
             const prerendered = await builder.prerender({
                 dest: dirs.prerendered,
@@ -77,7 +81,7 @@ export function AwsServerlessAdapter({
                 prerendered.paths, staticfiles, clientfiles
             )
             mkdirSync(builder.getBuildDirectory('cdk'), { recursive: true })
-            builder.copy(`${files}/`, builder.getBuildDirectory('cdk'), {
+            const copiedFiles = builder.copy(files, builder.getBuildDirectory('cdk'), {
                 replace: {
                     SERVER: '../output/server/index',
                     MANIFEST: '../output/server/manifest',
