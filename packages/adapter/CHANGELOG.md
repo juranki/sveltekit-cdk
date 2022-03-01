@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.7.3
+
+### Patch Changes
+
+- fix build on win32
+
 ## 0.7.2
 
 ### Patch Changes
