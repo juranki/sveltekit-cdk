@@ -56,7 +56,7 @@ importers:
     specifiers:
       '@fontsource/fira-mono': ^4.5.0
       '@lukeed/uuid': ^2.0.0
-      '@sveltejs/kit': 1.0.0-next.292
+      '@sveltejs/kit': 1.0.0-next.294
       '@sveltekit-cdk/adapter': workspace:*
       '@types/cookie': ^0.4.1
       cookie: ^0.4.1
@@ -70,7 +70,7 @@ importers:
       '@lukeed/uuid': 2.0.0
       cookie: 0.4.1
     devDependencies:
-      '@sveltejs/kit': 1.0.0-next.292_svelte@3.46.4
+      '@sveltejs/kit': 1.0.0-next.294_svelte@3.46.4
       '@sveltekit-cdk/adapter': link:../adapter
       '@types/cookie': 0.4.1
       svelte: 3.46.4
@@ -112,7 +112,7 @@ importers:
 
   packages/test:
     specifiers:
-      '@sveltejs/kit': 1.0.0-next.292
+      '@sveltejs/kit': 1.0.0-next.294
       '@sveltekit-cdk/adapter': workspace:*
       msgpackr: ^1.5.4
       svelte: ^3.46.4
@@ -121,7 +121,7 @@ importers:
       tslib: ^2.3.1
       typescript: ^4.5.5
     devDependencies:
-      '@sveltejs/kit': 1.0.0-next.292_svelte@3.46.4
+      '@sveltejs/kit': 1.0.0-next.294_svelte@3.46.4
       '@sveltekit-cdk/adapter': link:../adapter
       msgpackr: 1.5.4
       svelte: 3.46.4
@@ -1056,8 +1056,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.292_svelte@3.46.4:
-    resolution: {integrity: sha512-sWLuN7/rOsV3xX0VtT562PXhGqkuU9np03Gv3k0v+MKh+NW59TUGgQTWIe0LP6ImHiZaMt0Uaw4oYfIn0wsTmQ==}
+  /@sveltejs/kit/1.0.0-next.294_svelte@3.46.4:
+    resolution: {integrity: sha512-whTYeri/oaV672KErlhCAvAawlsnd8iu/MQmjdu85TApDYolLe8FDTg6GQ55+0IJbx1N7dOer/HopWzKudPgFA==}
     engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:
