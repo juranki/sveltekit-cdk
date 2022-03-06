@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.7.4
+
+### Patch Changes
+
+- 2cdd82b: adjust to adapter changes (1.0.0-next.282 -> 1.0.0-next.292)
+
 ## 0.7.3
 
 ### Patch Changes
