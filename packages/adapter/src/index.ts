@@ -54,15 +54,17 @@ export function AwsServerlessAdapter({
             builder.rimraf(targetPath)
             builder.rimraf(builder.getBuildDirectory('cdk'))
 
-            const prerendered = await builder.prerender({
-                dest: dirs.prerendered,
-            });
+            const prerendered = builder.writePrerendered(dirs.prerendered)
             const clientfiles = builder.writeClient(dirs.static)
             const staticfiles = builder.writeStatic(dirs.static)
 
+            // get the routes of prerendered pages
+            const prerenderedRoutes = prerendered.map(
+                f => `/${f.replace(/^index.html$/, '').replace(/\/index.html$/, '').replace(/.html$/, '')}`
+            )
             writeFileSync(
                 path.join(targetPath, 'prerendered.json'),
-                JSON.stringify(prerendered),
+                JSON.stringify(prerenderedRoutes),
             )
             writeFileSync(
                 path.join(targetPath, 'client.json'),
@@ -78,7 +80,7 @@ export function AwsServerlessAdapter({
             )
             writeRoutes(
                 path.join(targetPath, 'routes.json'),
-                prerendered.paths, staticfiles, clientfiles
+                prerendered, staticfiles, clientfiles
             )
             mkdirSync(builder.getBuildDirectory('cdk'), { recursive: true })
             const copiedFiles = builder.copy(files, builder.getBuildDirectory('cdk'), {
@@ -88,7 +90,10 @@ export function AwsServerlessAdapter({
                     PRERENDERED: './prerendered',
                 }
             })
-            writePrerenderedTs(path.join(builder.getBuildDirectory('cdk'), 'prerendered.ts'), prerendered.paths, builder.trailingSlash === 'always')
+            writePrerenderedTs(
+                path.join(builder.getBuildDirectory('cdk'), 'prerendered.ts'),
+                prerenderedRoutes, builder.config.kit.trailingSlash === 'always',
+            )
             await build({
                 entryPoints: [path.join(builder.getBuildDirectory('cdk'), 'at-edge-handler.js')],
                 outfile: path.join(dirs.lambda, 'at-edge/handler.js'),
@@ -111,10 +116,10 @@ function writeRoutes(path: string, pre: string[], sta: string[], cli: string[]) 
     });
     pre.forEach(p => {
         let glob: string
-        if (p === '/') {
+        if (p === 'index.html') {
             glob = '/'
         } else {
-            const ps = p.substring(1).split('/')
+            const ps = p.split('/')
             glob = ps.length > 1 ? `${ps[0]}/*` : p
             glob = `/${glob}`
         }
