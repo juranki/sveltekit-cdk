@@ -28,80 +28,43 @@ jobs:
       - run: pnpm install
       - run: pnpm build
 
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cache package builds
-        id: dist
-        uses: actions/cache@v2
-        with:
-          path: packages/**/dist
-          key: ${{ runner.os }}-dist
-      - name: Cache site content
-        id: content
-        uses: actions/cache@v2
-        with:
-          path: |
-            packages/test-stack/sveltekit
-            packages/sample-stack-v2/sveltekit
-          key: ${{ runner.os }}-content
-      - name: Cache pnpm modules
-        id: pnpm
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-
-      - uses: pnpm/action-setup@v2.2.0
-        with:
-          version: latest
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "14.x"
-          cache: pnpm
-      - run: pnpm install
-      - run: pnpm build
-
   deploy-demo:
     name: Deploy demo site
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Cache package builds
-        id: dist
-        uses: actions/cache@v2
-        with:
-          path: packages/**/dist
-          key: ${{ runner.os }}-dist
-      - name: Cache site content
-        id: content
-        uses: actions/cache@v2
-        with:
-          path: |
-            packages/test-stack/sveltekit
-            packages/sample-stack-v2/sveltekit
-          key: ${{ runner.os }}-content
-      - name: Cache pnpm modules
-        id: pnpm
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-
+      # - name: Cache package builds
+      #   id: dist
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: packages/**/dist
+      #     key: ${{ runner.os }}-dist
+      # - name: Cache site content
+      #   id: content
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       packages/test-stack/sveltekit
+      #       packages/sample-stack-v2/sveltekit
+      #     key: ${{ runner.os }}-content
+      # - name: Cache pnpm modules
+      #   id: pnpm
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ~/.pnpm-store
+      #     key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-
       - uses: pnpm/action-setup@v2.2.0
         with:
           version: latest
       - uses: actions/setup-node@v2
         with:
-          node-version: "14.x"
+          node-version: "16.x"
           cache: pnpm
       - run: pnpm install
+      - run: pnpm build
       - run: pnpm deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -114,36 +77,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Cache package builds
-        id: dist
-        uses: actions/cache@v2
-        with:
-          path: packages/**/dist
-          key: ${{ runner.os }}-dist
-      - name: Cache site content
-        id: content
-        uses: actions/cache@v2
-        with:
-          path: |
-            packages/test-stack/sveltekit
-            packages/sample-stack-v2/sveltekit
-          key: ${{ runner.os }}-content
-      - name: Cache pnpm modules
-        id: pnpm
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-
+      # - name: Cache package builds
+      #   id: dist
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: packages/**/dist
+      #     key: ${{ runner.os }}-dist
+      # - name: Cache site content
+      #   id: content
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       packages/test-stack/sveltekit
+      #       packages/sample-stack-v2/sveltekit
+      #     key: ${{ runner.os }}-content
+      # - name: Cache pnpm modules
+      #   id: pnpm
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ~/.pnpm-store
+      #     key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-
       - uses: pnpm/action-setup@v2.2.0
         with:
           version: latest
       - uses: actions/setup-node@v2
         with:
-          node-version: "14.x"
+          node-version: "16.x"
           cache: pnpm
       - run: pnpm install
+      - run: pnpm build
       - run: pnpm deploy-test
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
