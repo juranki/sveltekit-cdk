@@ -30,7 +30,7 @@ jobs:
 
   deploy-demo:
     name: Deploy demo site
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -73,7 +73,7 @@ jobs:
   
   deploy-test:
     name: Deploy test site
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
