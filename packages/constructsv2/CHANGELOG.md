@@ -1,5 +1,11 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.3.2
+
+### Patch Changes
+
+- 7399f8f: Allow CDK tokens (values that are evaluated during deploy) in renderer environment
+
 ## 0.3.1
 
 ### Patch Changes

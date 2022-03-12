@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.7.5
+
+### Patch Changes
+
+- 7399f8f: Allow CDK tokens (values that are evaluated during deploy) in renderer environment
+
 ## 0.7.4
 
 ### Patch Changes
