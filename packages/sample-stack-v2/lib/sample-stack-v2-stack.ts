@@ -8,9 +8,7 @@ export class SimpleSvelteStack extends Stack {
 
     new SvelteDistribution(this, 'svelteDistribution', {
       rendererProps: {
-        environment: {
-          LOG_LEVEL: 'DEBUG',
-        },
+        logLevel: 'DEBUG',
       }
     })
   }

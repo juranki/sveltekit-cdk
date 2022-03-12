@@ -13,3 +13,6 @@ declare module 'PRERENDERED' {
 	export const prerendered: string[]
 	export const createIndex: boolean
 }
+
+declare var SVELTEKIT_CDK_ENV_MAP: Record<string, string> | undefined
+declare var SVELTEKIT_CDK_LOG_LEVEL: 'ERROR' | 'WARN' | 'INFO' | 'DEBUG'

@@ -10,6 +10,7 @@ import { log, toRawBody } from './util'
 import { isBlaclisted } from './header-blacklist'
 
 const server = new Server(manifest)
+let envReady = false
 
 export const handler: CloudFrontRequestHandler = async (event, context) => {
 
@@ -24,6 +25,7 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     }
     const request = event.Records[0].cf.request
     const config = event.Records[0].cf.config
+    const customHeaders = request.origin?.s3?.customHeaders
 
     if (prerendered.includes(request.uri)) {
         if (request.uri === '/' || request.uri === '') {
@@ -32,6 +34,14 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
             request.uri = `${request.uri}${createIndex ? '/index.html' : '.html'}`
         }
         return request
+    }
+
+    if (!envReady && SVELTEKIT_CDK_ENV_MAP && customHeaders) {
+        for (const headerName in SVELTEKIT_CDK_ENV_MAP) {
+            process.env[SVELTEKIT_CDK_ENV_MAP[headerName]] = customHeaders[headerName][0].value
+        }
+        log('DEBUG', 'process.env', process.env)
+        envReady = true
     }
 
     if (request.body && request.body.inputTruncated) {

@@ -11,6 +11,7 @@ import { Certificate } from 'aws-cdk-lib/aws-certificatemanager'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { CacheControl } from 'aws-cdk-lib/aws-codepipeline-actions'
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment'
+import { randomBytes } from 'crypto'
 
 export interface SvelteDistributionProps {
     /**
@@ -89,7 +90,8 @@ export class SvelteDistribution extends Construct {
         const headersPath = join(artifactPath, 'headers.json')
         const routes: StaticRoutes = JSON.parse(readFileSync(routesPath, { encoding: 'utf8' }))
         const headers: string[] = JSON.parse(readFileSync(headersPath, { encoding: 'utf8' }))
-
+        const envUtils = new EnvUtil(props.rendererProps?.environment || {})
+        
 
         // origins
         const bucketProps = props.bucketProps || {}
@@ -99,7 +101,8 @@ export class SvelteDistribution extends Construct {
             originPath: 'static'
         })
         const origin = new cdnOrigins.S3Origin(this.bucket, {
-            originPath: 'prerendered'
+            originPath: 'prerendered',
+            customHeaders: envUtils.customHeaders(),
         })
 
         // cache and origin request policies
@@ -115,22 +118,17 @@ export class SvelteDistribution extends Construct {
         // at edge lambda
         let edgeLambdas: cdn.EdgeLambda[] | undefined = undefined
 
-        const envCode = props.rendererProps?.environment ?
-            Object.entries(props.rendererProps.environment)
-                .map(([k, v]) => (`process.env["${k}"]="${v}";`))
-                .join('\n') :
-            ''
-
         const bundleDir = join(artifactPath, 'lambda/at-edge-env')
-        const envFile = join(artifactPath, 'lambda/env.js')
         const outfile = join(bundleDir, 'handler.js')
-        writeFileSync(envFile, envCode)
         const code = buildSync({
             entryPoints: [join(artifactPath, 'lambda/at-edge/handler.js')],
             outfile,
             bundle: true,
             platform: 'node',
-            inject: [envFile],
+            define: {
+                SVELTEKIT_CDK_LOG_LEVEL: JSON.stringify(props.rendererProps?.logLevel || 'INFO'),
+                SVELTEKIT_CDK_ENV_MAP: envUtils.mappingJSON(),
+            }
         })
         if (code.errors.length > 0) {
             console.log('bundling lambda failed')
@@ -211,3 +209,30 @@ function checkProps(props: SvelteDistributionProps) {
         throw new Error("domainNames must be provided when setting a certificateArn")
     }
 }
+
+/**
+ * Prepare structures for passing env vars into Lambda@Edge
+ */
+class EnvUtil {
+    values: Record<string,string>
+    headers: Record<string,string>
+    
+    constructor(env:Record<string,string>) {
+        this.values = env
+        this.headers = Object.fromEntries(
+            Object.keys(env).map(k => [k, `x-env-${randomBytes(9).toString('hex')}`])
+        )
+    }
+
+    mappingJSON = () => {
+        return JSON.stringify(Object.fromEntries(
+            Object.entries(this.headers).map(([k,v]) => ([v,k]))))
+    }
+
+    customHeaders = () => {
+        return Object.fromEntries(Object.entries(this.values).map(([k,v]) => (
+            [this.headers[k], v]
+        )))
+    }
+}
+

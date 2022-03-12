@@ -13,6 +13,10 @@ export interface RendererProps {
     environment?: {
         [key: string]: string;
     }
+    /**
+     * Logging verbosity (default: INFO)
+     */
+    logLevel?: 'ERROR' | 'WARN' | 'INFO' | 'DEBUG'
 }
 
 export type StaticRoutes = Record<string, 'prerendered' | 'static'>
