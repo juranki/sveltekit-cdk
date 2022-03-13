@@ -19,7 +19,7 @@ export interface AwsServerlessAdapterParams {
      */
     stackName?: string
     /**
-     * Cloudfront doen't automatically pass all headers to origin handlers.
+     * Cloudfront doesn't automatically pass all headers to origin handlers.
      * List the headers your app needs to function.
      * Cloudfront doesn't allow some headers, please check Cloudfront documentation for current limitations.
      */
