@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.7.6
+
+### Patch Changes
+
+- add client address provider
+
 ## 0.7.5
 
 ### Patch Changes

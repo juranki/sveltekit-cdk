@@ -1,5 +1,11 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.3.3
+
+### Patch Changes
+
+- add client address provider
+
 ## 0.3.2
 
 ### Patch Changes
