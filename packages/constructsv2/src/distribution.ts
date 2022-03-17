@@ -108,7 +108,7 @@ export class SvelteDistribution extends Construct {
         // cache and origin request policies
         const originRequestPolicy = props.originRequestPolicy || new cdn.OriginRequestPolicy(this, 'svelteDynamicRequestPolicy', {
             cookieBehavior: cdn.OriginRequestCookieBehavior.all(),
-            headerBehavior: cdn.OriginRequestHeaderBehavior.allowList(...headers),
+            headerBehavior: cdn.OriginRequestHeaderBehavior.allowList(...headers, 'CloudFront-Viewer-Address'),
             queryStringBehavior: cdn.OriginRequestQueryStringBehavior.all(),
         })
         const cachePolicy = props.cachePolicy || new cdn.CachePolicy(this, 'svelteDynamicCachePolicy', {

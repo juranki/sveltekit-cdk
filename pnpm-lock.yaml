@@ -14,7 +14,7 @@ importers:
 
   packages/adapter:
     specifiers:
-      '@sveltejs/kit': 1.0.0-next.292
+      '@sveltejs/kit': 1.0.0-next.299
       '@types/aws-lambda': ^8.10.92
       '@types/node': 10.17.27
       esbuild: ^0.14.25
@@ -23,7 +23,7 @@ importers:
     dependencies:
       esbuild: 0.14.25
     devDependencies:
-      '@sveltejs/kit': 1.0.0-next.292
+      '@sveltejs/kit': 1.0.0-next.299
       '@types/aws-lambda': 8.10.92
       '@types/node': 10.17.27
       rimraf: 3.0.2
@@ -56,12 +56,12 @@ importers:
     specifiers:
       '@fontsource/fira-mono': ^4.5.0
       '@lukeed/uuid': ^2.0.0
-      '@sveltejs/kit': 1.0.0-next.295
+      '@sveltejs/kit': 1.0.0-next.299
       '@sveltekit-cdk/adapter': workspace:*
       '@types/cookie': ^0.4.1
       cookie: ^0.4.1
       svelte: ^3.46.4
-      svelte-check: ^2.4.5
+      svelte-check: ^2.4.6
       svelte-preprocess: ^4.10.4
       tslib: ^2.3.1
       typescript: ~4.5.5
@@ -70,11 +70,11 @@ importers:
       '@lukeed/uuid': 2.0.0
       cookie: 0.4.1
     devDependencies:
-      '@sveltejs/kit': 1.0.0-next.295_svelte@3.46.4
+      '@sveltejs/kit': 1.0.0-next.299_svelte@3.46.4
       '@sveltekit-cdk/adapter': link:../adapter
       '@types/cookie': 0.4.1
       svelte: 3.46.4
-      svelte-check: 2.4.5_svelte@3.46.4
+      svelte-check: 2.4.6_svelte@3.46.4
       svelte-preprocess: 4.10.4_svelte@3.46.4+typescript@4.5.5
       tslib: 2.3.1
       typescript: 4.5.5
@@ -112,20 +112,20 @@ importers:
 
   packages/test:
     specifiers:
-      '@sveltejs/kit': 1.0.0-next.295
+      '@sveltejs/kit': 1.0.0-next.299
       '@sveltekit-cdk/adapter': workspace:*
       msgpackr: ^1.5.4
       svelte: ^3.46.4
-      svelte-check: ^2.4.5
+      svelte-check: ^2.4.6
       svelte-preprocess: ^4.10.4
       tslib: ^2.3.1
       typescript: ^4.5.5
     devDependencies:
-      '@sveltejs/kit': 1.0.0-next.295_svelte@3.46.4
+      '@sveltejs/kit': 1.0.0-next.299_svelte@3.46.4
       '@sveltekit-cdk/adapter': link:../adapter
       msgpackr: 1.5.4
       svelte: 3.46.4
-      svelte-check: 2.4.5_svelte@3.46.4
+      svelte-check: 2.4.6_svelte@3.46.4
       svelte-preprocess: 4.10.4_svelte@3.46.4+typescript@4.5.5
       tslib: 2.3.1
       typescript: 4.5.5
@@ -1038,8 +1038,8 @@ packages:
       '@sinonjs/commons': 1.8.3
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.292:
-    resolution: {integrity: sha512-sWLuN7/rOsV3xX0VtT562PXhGqkuU9np03Gv3k0v+MKh+NW59TUGgQTWIe0LP6ImHiZaMt0Uaw4oYfIn0wsTmQ==}
+  /@sveltejs/kit/1.0.0-next.299:
+    resolution: {integrity: sha512-m8VBccfX3ozgHjjz193pZbfTK02P47bqdhj07cveUEhVLwbujOVWbgblPCrNh0rkTER7z1k5hRZnWrFYaDjQJA==}
     engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:
@@ -1056,8 +1056,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.295_svelte@3.46.4:
-    resolution: {integrity: sha512-4pO/swXByhU+7bhNikTjh1d4QxAMP9TZ74p7sdPuyJf5cg7Zrfk1nBtaMt0R+8+5j1xfC/XWRcxa3WnhT9bQMA==}
+  /@sveltejs/kit/1.0.0-next.299_svelte@3.46.4:
+    resolution: {integrity: sha512-m8VBccfX3ozgHjjz193pZbfTK02P47bqdhj07cveUEhVLwbujOVWbgblPCrNh0rkTER7z1k5hRZnWrFYaDjQJA==}
     engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:
@@ -5655,8 +5655,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /svelte-check/2.4.5_svelte@3.46.4:
-    resolution: {integrity: sha512-nRft8BbG2wcxyCdHDZ7X43xLcvDzua3xLwq6wzHGcAF3ka3Jyhv2rvgq0+SF9NwHLMefp9C2XkM6etzsxK/cMQ==}
+  /svelte-check/2.4.6_svelte@3.46.4:
+    resolution: {integrity: sha512-luzdly7RJhyXucQe8ID/7CqDgXdMrPYXmyZBjCbp+cixzTopZotuWevrB5hWDOnOU19m2cyetigIIa7WDHnCmQ==}
     hasBin: true
     peerDependencies:
       svelte: ^3.24.0
