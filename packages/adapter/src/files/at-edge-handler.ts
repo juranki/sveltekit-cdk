@@ -61,7 +61,15 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
 
     log('DEBUG', 'render input', input)
 
-    const rendered = await server.respond(input)
+    const rendered = await server.respond(input, {
+        getClientAddress() {
+            const addrHeader = request.headers['cloudfront-viewer-address']
+            if (addrHeader) {
+                return addrHeader[0].value.split(':')[0]
+            }
+            return ''
+        },
+    })
 
     if (rendered) {
         log('DEBUG', 'render output', rendered)
