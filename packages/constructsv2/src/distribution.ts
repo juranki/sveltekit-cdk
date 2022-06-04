@@ -4,7 +4,7 @@ import * as cdn from 'aws-cdk-lib/aws-cloudfront'
 import * as cdnOrigins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import { DEFAULT_ARTIFACT_PATH, RendererProps, StaticRoutes } from './common'
-import { writeFileSync, readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import { join } from 'path'
 import { buildSync } from 'esbuild'
 import { Certificate } from 'aws-cdk-lib/aws-certificatemanager'
@@ -125,6 +125,7 @@ export class SvelteDistribution extends Construct {
             outfile,
             bundle: true,
             platform: 'node',
+            target: ['es2020'],
             define: {
                 SVELTEKIT_CDK_LOG_LEVEL: JSON.stringify(props.rendererProps?.logLevel || 'INFO'),
                 SVELTEKIT_CDK_ENV_MAP: envUtils.mappingJSON(),
@@ -138,7 +139,7 @@ export class SvelteDistribution extends Construct {
         this.function = new cdn.experimental.EdgeFunction(this, 'svelteHandler', {
             code: lambda.Code.fromAsset(bundleDir),
             handler: 'handler.handler',
-            runtime: lambda.Runtime.NODEJS_14_X,
+            runtime: lambda.Runtime.NODEJS_16_X,
             timeout: Duration.seconds(5),
             logRetention: 7,
         })
