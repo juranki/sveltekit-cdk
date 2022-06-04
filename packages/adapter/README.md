@@ -6,12 +6,10 @@
 
 ## Intro
 
-Plug this adapter to your SvelteKit project to
-copy artifacts to CDK stack, and optionally deploy thereafter.
+Prepare the artifacts for your SvelteKit site using this adapter.
 
-Use the [@sveltekit-cdk/construct](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructs#readme)
-to specify how SvelteKit is integrated to your
-stack.
+Then use `SvelteDistribution` construct from  [@sveltekit-cdk/constructsv2](https://github.com/juranki/sveltekit-cdk/tree/main/packages/constructsv2#readme)
+to include the site to your CDK stack.
 
 ## Instructions
 
