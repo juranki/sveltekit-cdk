@@ -31,10 +31,10 @@ export function enhance(
 			form: HTMLFormElement;
 		}) => void;
 	} = {}
-): { destroy: () => void } {
+) {
 	let current_token: unknown;
 
-	async function handle_submit(e: Event) {
+	async function handle_submit(e: SubmitEvent) {
 		const token = (current_token = {});
 
 		e.preventDefault();
@@ -65,8 +65,8 @@ export function enhance(
 			} else {
 				console.error(await response.text());
 			}
-		} catch (e: any) {
-			if (error) {
+		} catch (e: unknown) {
+			if (error && e instanceof Error) {
 				error({ data, form, error: e, response: null });
 			} else {
 				throw e;

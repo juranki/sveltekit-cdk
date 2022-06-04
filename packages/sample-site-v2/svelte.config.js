@@ -1,4 +1,4 @@
-import { adapter } from '@sveltekit-cdk/adapter'
+import { adapter } from '@sveltekit-cdk/adapter';
 import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
