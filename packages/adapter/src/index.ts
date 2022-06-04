@@ -3,21 +3,21 @@ import * as path from 'path'
 import { build } from 'esbuild'
 import { writeFileSync, mkdirSync } from 'fs';
 
-export interface AwsServerlessAdapterParams {
+export interface AdapterParams {
     /**
-     * Location of CDK project. Required for automatic deploy.
+     * Location of CDK project.
+     * 
+     * One of `cdkProjectPath` or `artifactPath` is required.
      */
     cdkProjectPath?: string
     /**
      * Path to store sveltekit artifacts.
      * 
+     * One of `cdkProjectPath` or `artifactPath` is required.
+     * 
      * @default ${cdkProjectPath}/sveltekit
      */
     artifactPath?: string
-    /**
-     * Stack to deploy after producing artifact.
-     */
-    stackName?: string
     /**
      * Cloudfront doesn't automatically pass all headers to origin handlers.
      * List the headers your app needs to function.
@@ -26,14 +26,23 @@ export interface AwsServerlessAdapterParams {
     headers?: string[]
 }
 
-export function AwsServerlessAdapter({
-    cdkProjectPath, artifactPath, stackName, headers
-}: AwsServerlessAdapterParams): Adapter {
+/**
+ * Deprecated, use [[adapter]] instead.
+ * @deprecated
+ */
+export function AwsServerlessAdapter(params: AdapterParams): Adapter {
+    console.warn('AwsServerlessAdapter is deprecated, please use adapter')
+    return adapter(params)
+}
+
+/**
+ * Returns adapter that prepares SvelteKit site for deployment with AWS CDK V2
+ */
+export function adapter({
+    cdkProjectPath, artifactPath, headers
+}: AdapterParams): Adapter {
     if (!cdkProjectPath && !artifactPath) {
         throw new Error("at least one of cdkProjectPath or artifactPath is required");
-    }
-    if (!cdkProjectPath && stackName) {
-        throw new Error("when stackName is specified, cdkProjectPath is mandatory");
     }
     return {
         name: 'sveltekit-cdk-adapter',
@@ -101,7 +110,7 @@ export function AwsServerlessAdapter({
                 platform: 'node',
                 inject: [path.join(builder.getBuildDirectory('cdk'), 'shims.js')],
             })
-
+            builder.log(`CDK artifacts were written to ${targetPath}`)
         },
     }
 }
