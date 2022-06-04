@@ -5,13 +5,13 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "build": "pnpm build --filter=\"@sveltekit-cdk/*\" --filter=\"sample-site-v2\" --filter=\"test\"",
-    "synth": "pnpm synth --filter=\"sample-stack-v2\"",
-    "diff": "pnpm diff --filter=\"sample-stack-v2\"",
-    "deploy": "pnpm deploy --filter=\"sample-stack-v2\"",
-    "deploy-test": "pnpm deploy --filter=\"test-stack\"",
+    "build": "pnpm --filter=\"@sveltekit-cdk/*\" --filter=\"sample-site-v2\" --filter=\"test\" build",
+    "synth": "pnpm --filter=\"sample-stack-v2\" synth",
+    "diff": "pnpm --filter=\"sample-stack-v2\" diff",
+    "deploy": "pnpm --filter=\"sample-stack-v2\" deploy",
+    "deploy-test": "pnpm --filter=\"test-stack\" deploy",
     "bump": "changeset version",
-    "pub": "pnpm publish --access public --filter=\"@sveltekit-cdk/*\""
+    "pub": "pnpm --filter=\"@sveltekit-cdk/*\" publish --access public"
   },
   "keywords": [],
   "author": "juhani@juranki.com",
