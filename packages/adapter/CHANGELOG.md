@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.7.7
+
+### Patch Changes
+
+- adjust to sveltekit changes (sveltejs/kit#4934)
+
 ## 0.7.6
 
 ### Patch Changes

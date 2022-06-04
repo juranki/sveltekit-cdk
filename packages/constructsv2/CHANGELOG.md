@@ -1,5 +1,11 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.3.4
+
+### Patch Changes
+
+- upgrade lambda runtime (14 -> 16)
+
 ## 0.3.3
 
 ### Patch Changes
