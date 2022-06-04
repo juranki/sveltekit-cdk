@@ -11,19 +11,19 @@
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "devDependencies": {
-    "@sveltejs/kit": "1.0.0-next.299",
+    "@sveltejs/kit": "1.0.0-next.348",
     "@sveltekit-cdk/adapter": "workspace:*",
-    "@types/cookie": "^0.4.1",
-    "svelte": "^3.46.4",
-    "svelte-check": "^2.4.6",
-    "svelte-preprocess": "^4.10.4",
-    "tslib": "^2.3.1",
-    "typescript": "~4.5.5"
+    "@types/cookie": "^0.5.1",
+    "svelte": "^3.48.0",
+    "svelte-check": "^2.7.2",
+    "svelte-preprocess": "^4.10.6",
+    "tslib": "^2.4.0",
+    "typescript": "~4.7.3"
   },
   "type": "module",
   "dependencies": {
-    "@fontsource/fira-mono": "^4.5.0",
+    "@fontsource/fira-mono": "^4.5.8",
     "@lukeed/uuid": "^2.0.0",
-    "cookie": "^0.4.1"
+    "cookie": "^0.5.0"
   }
 }
