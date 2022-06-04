@@ -5,7 +5,9 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "build": "pnpm --filter=\"@sveltekit-cdk/*\" --filter=\"sample-site-v2\" --filter=\"test\" build",
+    "adapter-deps": "pnpm --filter=\"@sveltekit-cdk/*\" --filter=\"sveltekit-cdk\" install",
+    "build-adapter": "pnpm --filter=\"@sveltekit-cdk/*\" build",
+    "build-sites": "pnpm --filter=\"sample-site-v2\" --filter=\"test\" build",
     "synth": "pnpm --filter=\"sample-stack-v2\" synth",
     "diff": "pnpm --filter=\"sample-stack-v2\" diff",
     "deploy": "pnpm --filter=\"sample-stack-v2\" deploy",
