@@ -1,2 +1,5 @@
 packages:
   - "packages/**"
+  # exclude test site until migration is ready
+  # https://github.com/sveltejs/kit/discussions/5774
+  - "!packages/test*/**"
