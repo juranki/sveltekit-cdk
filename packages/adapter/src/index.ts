@@ -65,7 +65,6 @@ export function adapter({
 
             const prerendered = builder.writePrerendered(dirs.prerendered)
             const clientfiles = builder.writeClient(dirs.static)
-            const staticfiles = builder.writeStatic(dirs.static)
 
             // get the routes of prerendered pages
             const prerenderedRoutes = prerendered.map(
@@ -80,16 +79,12 @@ export function adapter({
                 `[${clientfiles.map(p => `"${p}"`).join(',')}]`
             )
             writeFileSync(
-                path.join(targetPath, 'static.json'),
-                `[${staticfiles.map(p => `"${p}"`).join(',')}]`
-            )
-            writeFileSync(
                 path.join(targetPath, 'headers.json'),
                 `[${(headers || ['accept']).map(h => `"${h.toLowerCase()}"`).join(',')}]`
             )
             writeRoutes(
                 path.join(targetPath, 'routes.json'),
-                prerendered, staticfiles, clientfiles
+                prerendered, clientfiles
             )
             mkdirSync(builder.getBuildDirectory('cdk'), { recursive: true })
             const copiedFiles = builder.copy(files, builder.getBuildDirectory('cdk'), {
@@ -115,10 +110,10 @@ export function adapter({
     }
 }
 export type StaticRoutes = Record<string, 'prerendered' | 'static'>
-function writeRoutes(path: string, pre: string[], sta: string[], cli: string[]) {
+function writeRoutes(path: string, pre: string[], cli: string[]) {
     const rv: StaticRoutes = {};
 
-    [...sta, ...cli].forEach(p => {
+    cli.forEach(p => {
         const ps = p.split('/')
         const glob = ps.length > 1 ? `${ps[0]}/*` : p
         rv[glob] = 'static'

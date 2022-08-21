@@ -21,7 +21,7 @@ export interface BodyInfo {
     encoding: 'base64' | 'text'
 }
 
-export function toRawBody(body: BodyInfo): BodyInit {
+export function toRawBody(body: BodyInfo): Buffer | string {
     return body.encoding === 'base64'
         ? Buffer.from(body.data, 'base64')
         : body.data

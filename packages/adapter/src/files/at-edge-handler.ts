@@ -138,7 +138,7 @@ async function transformResponse(rendered: Response): Promise<CloudFrontResultRe
 
 function transformOutgoingHeaders(headers: Headers): CloudFrontHeaders {
     const rv: CloudFrontHeaders = {}
-    headers.forEach((v, k) => {
+    headers.forEach((v: string, k: string) => {
         if (isBlaclisted(k.toLowerCase())) return
         rv[k.toLowerCase()] = [{
             key: k,
