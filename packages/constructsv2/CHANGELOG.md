@@ -1,5 +1,11 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.3.5
+
+### Patch Changes
+
+- set tsc target to es2020
+
 ## 0.3.4
 
 ### Patch Changes

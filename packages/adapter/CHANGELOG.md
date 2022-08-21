@@ -1,5 +1,16 @@
 # sveltekit-cdk-adapter
 
+## 0.8.0
+
+### Minor Changes
+
+- adjust to sveltekit changes (remove writeStatic, sveltejs/kit#5618)
+
+### Patch Changes
+
+- fix warnings when bundling site (#11)
+- allow + in path of static file (related to sveltejs/kit#5748)
+
 ## 0.7.7
 
 ### Patch Changes
