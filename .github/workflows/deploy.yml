@@ -6,8 +6,6 @@ name: Deploy
 on:
   push:
     branches: [main]
-#  pull_request:
-#    branches: [ main ]
 
 jobs:
   builds-on-every-os:
@@ -28,36 +26,13 @@ jobs:
       - run: pnpm adapter-deps
       - run: pnpm build-adapter
       - run: pnpm install
-      - run: pnpm build-sites
+      - run: pnpm build-sample
 
   deploy-demo:
     name: Deploy demo site
-    # needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # - name: Cache package builds
-      #   id: dist
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: packages/**/dist
-      #     key: ${{ runner.os }}-dist
-      # - name: Cache site content
-      #   id: content
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: |
-      #       packages/test-stack/sveltekit
-      #       packages/sample-stack-v2/sveltekit
-      #     key: ${{ runner.os }}-content
-      # - name: Cache pnpm modules
-      #   id: pnpm
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ~/.pnpm-store
-      #     key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-
       - uses: pnpm/action-setup@v2.2.0
         with:
           version: latest
@@ -68,54 +43,31 @@ jobs:
       - run: pnpm adapter-deps
       - run: pnpm build-adapter
       - run: pnpm install
-      - run: pnpm build-sites
-      - run: pnpm deploy
+      - run: pnpm build-sample
+      - run: pnpm deploy-sample
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: "eu-central-1"
   
-  deploy-test:
-    name: Deploy test site
-    # needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      # - name: Cache package builds
-      #   id: dist
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: packages/**/dist
-      #     key: ${{ runner.os }}-dist
-      # - name: Cache site content
-      #   id: content
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: |
-      #       packages/test-stack/sveltekit
-      #       packages/sample-stack-v2/sveltekit
-      #     key: ${{ runner.os }}-content
-      # - name: Cache pnpm modules
-      #   id: pnpm
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ~/.pnpm-store
-      #     key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-
-      - uses: pnpm/action-setup@v2.2.0
-        with:
-          version: latest
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "16.x"
-          cache: pnpm
-      - run: pnpm adapter-deps
-      - run: pnpm build-adapter
-      - run: pnpm install
-      - run: pnpm build-sites
-      - run: pnpm deploy-test
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: "eu-central-1"
+  # deploy-test:
+  #   name: Deploy test site
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: pnpm/action-setup@v2.2.0
+  #       with:
+  #         version: latest
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: "16.x"
+  #         cache: pnpm
+  #     - run: pnpm adapter-deps
+  #     - run: pnpm build-adapter
+  #     - run: pnpm install
+  #     - run: pnpm build-test
+  #     - run: pnpm deploy-test
+  #       env:
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         AWS_DEFAULT_REGION: "eu-central-1"

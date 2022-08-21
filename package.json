@@ -7,11 +7,12 @@
   "scripts": {
     "adapter-deps": "pnpm --filter=\"@sveltekit-cdk/*\" --filter=\"sveltekit-cdk\" install",
     "build-adapter": "pnpm --filter=\"@sveltekit-cdk/*\" build",
-    "build-sites": "pnpm --filter=\"sample-site-v2\" --filter=\"test\" build",
+    "build-sample": "pnpm --filter=\"sample-site-v2\" build",
+    "build-test": "pnpm --filter=\"test\" build",
     "synth": "pnpm --filter=\"sample-stack-v2\" synth",
     "diff": "pnpm --filter=\"sample-stack-v2\" diff",
-    "deploy": "pnpm --filter=\"sample-stack-v2\" deploy",
-    "deploy-test": "pnpm --filter=\"test-stack\" deploy",
+    "deploy-sample": "pnpm --filter=\"sample-stack-v2\" run deploy",
+    "deploy-test": "pnpm --filter=\"test-stack\" run deploy",
     "bump": "changeset version",
     "pub": "pnpm --filter=\"@sveltekit-cdk/*\" publish --access public"
   },
