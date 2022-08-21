@@ -1,7 +1,7 @@
 import type { Adapter } from '@sveltejs/kit'
 import * as path from 'path'
 import { build } from 'esbuild'
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync, mkdirSync, renameSync } from 'fs';
 
 export interface AdapterParams {
     /**
@@ -65,6 +65,12 @@ export function adapter({
 
             const prerendered = builder.writePrerendered(dirs.prerendered)
             const clientfiles = builder.writeClient(dirs.static)
+
+            // UGLY WORKAROUND FOR CF/S3 ROUTING FOR FILES WITH + IN PATH
+            for (let filename of clientfiles.filter(f => f.includes('+'))) {
+                const newFilename = filename.replaceAll('+', ' ')
+                renameSync(path.join(dirs.static, filename), path.join(dirs.static, newFilename))
+            }
 
             // get the routes of prerendered pages
             const prerenderedRoutes = prerendered.map(
