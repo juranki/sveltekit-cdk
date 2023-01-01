@@ -6,12 +6,10 @@ declare module 'MANIFEST' {
 	import { SSRManifest } from '@sveltejs/kit';
 
 	export const manifest: SSRManifest;
-	export const prerendered: Set<string>;
 }
 
 declare module 'PRERENDERED' {
-	export const prerendered: string[]
-	export const createIndex: boolean
+	export const prerenderedPages: { [route: string]: string }
 }
 
 declare var SVELTEKIT_CDK_ENV_MAP: Record<string, string> | undefined

@@ -1,4 +1,4 @@
-import type { Adapter } from '@sveltejs/kit'
+import type { Adapter, Builder } from '@sveltejs/kit'
 import * as path from 'path'
 import { build } from 'esbuild'
 import { writeFileSync, mkdirSync, renameSync } from 'fs';
@@ -72,14 +72,6 @@ export function adapter({
                 renameSync(path.join(dirs.static, filename), path.join(dirs.static, newFilename))
             }
 
-            // get the routes of prerendered pages
-            const prerenderedRoutes = prerendered.map(
-                f => `/${f.replace(/^index.html$/, '').replace(/\/index.html$/, '').replace(/.html$/, '')}`
-            )
-            writeFileSync(
-                path.join(targetPath, 'prerendered.json'),
-                JSON.stringify(prerenderedRoutes),
-            )
             writeFileSync(
                 path.join(targetPath, 'client.json'),
                 `[${clientfiles.map(p => `"${p}"`).join(',')}]`
@@ -102,7 +94,7 @@ export function adapter({
             })
             writePrerenderedTs(
                 path.join(builder.getBuildDirectory('cdk'), 'prerendered.ts'),
-                prerenderedRoutes, builder.config.kit.trailingSlash === 'always',
+                builder,
             )
             await build({
                 entryPoints: [path.join(builder.getBuildDirectory('cdk'), 'at-edge-handler.js')],
@@ -141,12 +133,15 @@ function writeRoutes(path: string, pre: string[], cli: string[]) {
 
     writeFileSync(path, JSON.stringify(rv, null, 2))
 }
-function writePrerenderedTs(path: string, pre: string[], createIndex: boolean) {
+function writePrerenderedTs(path: string, builder: Builder) {
+    const prerenderedPages: { [route: string]: string } = {}
+    builder.prerendered.pages.forEach((v, k) => {
+        prerenderedPages[k] = v.file
+    })
     writeFileSync(
         path,
         [
-            `export const prerendered = [${pre.map(p => `'${p}'`)}]`,
-            `export const createIndex = ${createIndex}`
+            `export const prerenderedPages = ${JSON.stringify(prerenderedPages)}`
         ].join('\n')
     )
 }
