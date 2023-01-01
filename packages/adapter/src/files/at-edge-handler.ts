@@ -78,9 +78,9 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
 
     const rendered = await server.respond(input, {
         getClientAddress() {
-            const addrHeader = request.headers['cloudfront-viewer-address']
+            const addrHeader = request.headers['x-forwarded-for']
             if (addrHeader) {
-                return addrHeader[0].value.split(':')[0]
+                return addrHeader[0].value
             }
             return ''
         },
