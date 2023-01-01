@@ -1,4 +1,4 @@
 export { }
 declare global {
-    export { Request,HeadersInit, Response, Headers } from 'node-fetch'
+    export { HeadersInit, Response, Request, Headers } from 'undici';
 }
