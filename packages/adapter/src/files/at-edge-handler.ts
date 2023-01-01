@@ -74,8 +74,6 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
         body: request.body && request.body.data.length > 0 ? toRawBody(request.body) : undefined,
     })
 
-    log('DEBUG', 'render input', input)
-
     const rendered = await server.respond(input, {
         getClientAddress() {
             const addrHeader = request.headers['x-forwarded-for']
@@ -87,8 +85,6 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     })
 
     if (rendered) {
-        log('DEBUG', 'render output', rendered)
-
         const outgoing: CloudFrontResultResponse = await transformResponse(rendered)
         log('DEBUG', 'outgoing response', outgoing)
         log('INFO', 'handler', {
