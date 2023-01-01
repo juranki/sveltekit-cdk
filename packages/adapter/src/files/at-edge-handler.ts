@@ -3,6 +3,7 @@ import { manifest } from 'MANIFEST'
 import { prerenderedPages } from 'PRERENDERED'
 import type {
     CloudFrontHeaders,
+    CloudFrontRequest,
     CloudFrontRequestHandler,
     CloudFrontResultResponse
 } from 'aws-lambda'
@@ -29,12 +30,14 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     const config = event.Records[0].cf.config
     const customHeaders = request.origin?.s3?.customHeaders
     const uri: string = request.uri === '' ? '/' : request.uri
+
     if (prerenderedPages[uri]) {
         log('DEBUG', 'loadPrerendered', {
             uri: request.uri,
             path: prerenderedPages[uri]
         })
         request.uri = `/${prerenderedPages[uri]}`
+        request.headers = getS3Headers(request)
         return request
     }
 
@@ -61,8 +64,12 @@ export const handler: CloudFrontRequestHandler = async (event, context) => {
     const domain = request.headers.host.length > 0 ? request.headers.host[0].value : config.distributionDomainName
     const querystring = request.querystring ? `?${request.querystring}` : ''
 
+    const headers = transformIncomingHeaders(request.headers)
+    log('DEBUG', 'request headers', headers)
+    log('DEBUG', 'domain', headers)
+
     const input: Request = new Request(`https://${domain}${request.uri}${querystring}`, {
-        headers: transformIncomingHeaders(request.headers),
+        headers,
         method: request.method,
         body: request.body && request.body.data.length > 0 ? toRawBody(request.body) : undefined,
     })
@@ -161,5 +168,20 @@ function transformOutgoingHeaders(headers: Headers): CloudFrontHeaders {
         }]
     }
     return rv
+}
+
+/**
+ * Headers for s3 GetObject request
+ */
+function getS3Headers(request: CloudFrontRequest): CloudFrontHeaders {
+    return {
+        host: [{key: 'Host', value: request.origin!.s3!.domainName}],
+        accept: request.headers.accept,
+        'x-forwarded-for': request.headers['x-forwarded-for'],
+        'user-agent': [{key: 'User-Agent', value: 'Amazon CloudFront'}],
+        via: request.headers.via,
+        pragma: [{key: 'Pragma', value: 'no-cache'}],
+        'cache-control': [{key: 'Cache-Control', value: 'no-cache'}],
+    }
 }
 

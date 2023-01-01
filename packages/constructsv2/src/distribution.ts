@@ -37,7 +37,7 @@ export interface SvelteDistributionProps {
      * Origin request policy determines which parts of requests
      * CloudFront passes to your backend
      * 
-     * @default allow all for lambda@edge, otherwise minimal policy to make the sveltekit demo work (userid cookie, Accept header, all query str params)
+     * @default AllViewer managed policy
      * @link https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-origin-requests.html
      */
     originRequestPolicy?: cdn.IOriginRequestPolicy
@@ -104,13 +104,9 @@ export class SvelteDistribution extends Construct {
             originPath: 'prerendered',
             customHeaders: envUtils.customHeaders(),
         })
-
+        
         // cache and origin request policies
-        const originRequestPolicy = props.originRequestPolicy || new cdn.OriginRequestPolicy(this, 'svelteDynamicRequestPolicy', {
-            cookieBehavior: cdn.OriginRequestCookieBehavior.all(),
-            headerBehavior: cdn.OriginRequestHeaderBehavior.allowList(...headers, 'CloudFront-Viewer-Address'),
-            queryStringBehavior: cdn.OriginRequestQueryStringBehavior.all(),
-        })
+        const originRequestPolicy = props.originRequestPolicy || cdn.OriginRequestPolicy.ALL_VIEWER
         const cachePolicy = props.cachePolicy || new cdn.CachePolicy(this, 'svelteDynamicCachePolicy', {
             cookieBehavior: cdn.CacheCookieBehavior.all(),
         })
@@ -141,6 +137,7 @@ export class SvelteDistribution extends Construct {
             handler: 'handler.handler',
             runtime: lambda.Runtime.NODEJS_16_X,
             timeout: Duration.seconds(5),
+            memorySize: 512,
             logRetention: 7,
         })
 
