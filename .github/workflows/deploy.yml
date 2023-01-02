@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: "16.x"
           cache: pnpm
+      - run: node --version
       - run: pnpm adapter-deps
       - run: pnpm build-adapter
       - run: pnpm install
