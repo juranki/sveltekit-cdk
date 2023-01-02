@@ -13,7 +13,7 @@
 		"@sveltekit-cdk/adapter": "workspace:*",
 		"@fontsource/fira-mono": "^4.5.10",
 		"@neoconfetti/svelte": "^1.0.0",
-		"@sveltejs/kit": "1.0.0-next.588",
+		"@sveltejs/kit": "^1.0.0",
 		"@types/cookie": "^0.5.1",
 		"svelte": "^3.54.0",
 		"svelte-check": "^2.9.2",
