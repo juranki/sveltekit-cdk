@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.9.1
+
+### Patch Changes
+
+- d8184ce: add missing peer dependency
+
 ## 0.9.0
 
 ### Minor Changes
