@@ -5,7 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "adapter-deps": "pnpm --filter=\"@sveltekit-cdk/adapter\" install && pnpm --filter=\"@sveltekit-cdk/constructsv2\" install && pnpm --filter=\"sveltekit-cdk\" install",
+    "adapter-deps": "pnpm --filter=\"@sveltekit-cdk/*\" install",
     "build-adapter": "pnpm --filter=\"@sveltekit-cdk/*\" build",
     "build-sample": "pnpm --filter=\"sample-site-v2\" build",
     "build-test": "pnpm --filter=\"test\" build",

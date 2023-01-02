@@ -11,14 +11,14 @@ jobs:
   builds-on-every-os:
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
         node-version: [16.x]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2.2.4
         with:
-          version: 7.19
+          version: latest
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -32,7 +32,7 @@ jobs:
 
   deploy-demo:
     name: Deploy demo site
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2.2.4
