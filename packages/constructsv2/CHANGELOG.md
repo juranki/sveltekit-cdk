@@ -1,5 +1,11 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.4.0
+
+### Minor Changes
+
+- fix handling of request headers
+
 ## 0.3.5
 
 ### Patch Changes

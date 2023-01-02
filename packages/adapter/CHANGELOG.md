@@ -1,5 +1,18 @@
 # sveltekit-cdk-adapter
 
+## 0.9.0
+
+### Minor Changes
+
+- update sveltekit to ^1.0.0
+- fix handling of request headers
+
+### Patch Changes
+
+- init sveltekit server
+- simplify handling of pre-rendered routes
+- node-fetch > undici
+
 ## 0.8.0
 
 ### Minor Changes
