@@ -2,7 +2,9 @@
 
 [![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fadapter.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fadapter)
 
-## WARNING: Not for production use!!
+> ### WARNING: Not for production, yet!!
+>
+> No compatibility between versions is garanteed while in [initial development](https://semver.org/#spec-item-4). It's recommended to use exact version in `package.json` to avoid suprices. 
 
 ## Intro
 

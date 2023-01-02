@@ -2,8 +2,9 @@
  
  [![npm version](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructsv2.svg)](https://badge.fury.io/js/@sveltekit-cdk%2Fconstructsv2)
 
-## WARNING: Not for production use!!
-
+> ### WARNING: Not for production, yet!!
+>
+> No compatibility between versions is garanteed while in [initial development](https://semver.org/#spec-item-4). It's recommended to use exact version in `package.json` to avoid suprices. 
 
 Use constructs from this package to add SvelteKit
 site to your CDK v2 project. 

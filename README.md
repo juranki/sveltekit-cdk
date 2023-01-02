@@ -1,8 +1,8 @@
 # SvelteKit CDK Adapter
 
-> **Note: 2022-02-12**
-> Radically narrowed scope of the project to be able to focus on ease of use and robustness. Dropped support for  regular lambda SSR and CDK v1
-### WARNING: Not for production, yet!!
+> ### WARNING: Not for production, yet!!
+>
+> No compatibility between versions is garanteed while in [initial development](https://semver.org/#spec-item-4). It's recommended to use exact version in `package.json` to avoid suprices. 
 
 This repo contains tooling to deploy SvelteKit sites to AWS using CDK.
 
