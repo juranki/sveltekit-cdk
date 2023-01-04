@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.11.0
+
+### Minor Changes
+
+- 1fce418: BREAKING! remove headers adapter option (all headers passed to app by default)
+
 ## 0.10.0
 
 ### Minor Changes

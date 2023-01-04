@@ -1,5 +1,11 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.6.0
+
+### Minor Changes
+
+- 1fce418: BREAKING! remove headers adapter option (all headers passed to app by default)
+
 ## 0.5.0
 
 ### Minor Changes
