@@ -17,4 +17,4 @@ to deploy the site
 ### Links
 
 - [API reference](https://juranki.github.io/sveltekit-cdk/modules/_sveltekit_cdk_constructsv2.html)
-- [Changelog](./CHANGELOG.md)
+- [Changelog](https://github.com/juranki/sveltekit-cdk/blob/main/packages/constructsv2/CHANGELOG.md)

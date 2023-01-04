@@ -43,5 +43,5 @@ to include the site to your CDK stack.
 ### Links
 
 - [API reference](https://juranki.github.io/sveltekit-cdk/modules/_sveltekit_cdk_adapter.html)
-- [Changelog](./CHANGELOG.md)
+- [Changelog](https://github.com/juranki/sveltekit-cdk/blob/main/packages/adapter/CHANGELOG.md)
 
