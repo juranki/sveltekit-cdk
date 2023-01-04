@@ -27,15 +27,6 @@ export interface AdapterParams {
 }
 
 /**
- * Deprecated, use [[adapter]] instead.
- * @deprecated
- */
-export function AwsServerlessAdapter(params: AdapterParams): Adapter {
-    console.warn('AwsServerlessAdapter is deprecated, please use adapter')
-    return adapter(params)
-}
-
-/**
  * Returns adapter that prepares SvelteKit site for deployment with AWS CDK V2
  */
 export function adapter({
