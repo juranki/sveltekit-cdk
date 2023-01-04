@@ -40,7 +40,7 @@ of your system.
 - Areas of uncertainty that are likely to cause significant changes (== opinions, feedback and advice appreciated)
   - ~~how to design constructs to be both intuitive and flexible; how much flexibility is really needed~~ **(2022-02-12: focus on ease or use and robustness, even at the expence of flexibility)**
   - ~~dependency management of constructs: cdk moves fast, v1 and v2 have different approaches to packaging and versioning~~ **(2022-02-12: only support v2)** 
-  - adapter interface of sveltekit might still change a little
+  - ~~adapter interface of sveltekit might still change a little~~
 
 ### Links
 
