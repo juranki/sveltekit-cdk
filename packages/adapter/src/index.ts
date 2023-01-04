@@ -18,20 +18,12 @@ export interface AdapterParams {
      * @default ${cdkProjectPath}/sveltekit
      */
     artifactPath?: string
-    /**
-     * Cloudfront doesn't automatically pass all headers to origin handlers.
-     * List the headers your app needs to function.
-     * Cloudfront doesn't allow some headers, please check Cloudfront documentation for current limitations.
-     */
-    headers?: string[]
 }
 
 /**
  * Returns adapter that prepares SvelteKit site for deployment with AWS CDK V2
  */
-export function adapter({
-    cdkProjectPath, artifactPath, headers
-}: AdapterParams): Adapter {
+export function adapter({ cdkProjectPath, artifactPath }: AdapterParams): Adapter {
     if (!cdkProjectPath && !artifactPath) {
         throw new Error("at least one of cdkProjectPath or artifactPath is required");
     }
@@ -67,10 +59,7 @@ export function adapter({
                 path.join(targetPath, 'client.json'),
                 `[${clientfiles.map(p => `"${p}"`).join(',')}]`
             )
-            writeFileSync(
-                path.join(targetPath, 'headers.json'),
-                `[${(headers || ['accept']).map(h => `"${h.toLowerCase()}"`).join(',')}]`
-            )
+            
             writeRoutes(
                 path.join(targetPath, 'routes.json'),
                 prerendered, clientfiles
