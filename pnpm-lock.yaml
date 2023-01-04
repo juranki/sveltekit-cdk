@@ -25,7 +25,7 @@ importers:
     dependencies:
       esbuild: 0.14.42
     devDependencies:
-      '@sveltejs/kit': 1.0.1_svelte@3.55.0+vite@4.0.3
+      '@sveltejs/kit': 1.0.1_vite@4.0.3
       '@types/aws-lambda': 8.10.109
       '@types/node': 17.0.39
       rimraf: 3.0.2
@@ -35,24 +35,20 @@ importers:
 
   packages/constructsv2:
     specifiers:
-      '@aws-cdk/aws-apigatewayv2-alpha': ^2.27.0-alpha.0
-      '@aws-cdk/aws-apigatewayv2-integrations-alpha': ^2.27.0-alpha.0
       '@types/aws-lambda': ^8.10.98
       '@types/node': 17.0.39
-      aws-cdk-lib: ^2.27.0
-      constructs: ^10.1.26
+      aws-cdk-lib: ^2.59.0
+      constructs: ^10.1.209
       esbuild: ^0.14.42
       rimraf: ^3.0.2
       typescript: ^4.7.3
     dependencies:
       esbuild: 0.14.42
     devDependencies:
-      '@aws-cdk/aws-apigatewayv2-alpha': 2.27.0-alpha.0_3cgkzquj2mzkc5l6ss2lxnisja
-      '@aws-cdk/aws-apigatewayv2-integrations-alpha': 2.27.0-alpha.0_lvfkbsp7mxcph7vbyqymd7hid4
       '@types/aws-lambda': 8.10.98
       '@types/node': 17.0.39
-      aws-cdk-lib: 2.27.0_constructs@10.1.26
-      constructs: 10.1.26
+      aws-cdk-lib: 2.59.0_constructs@10.1.209
+      constructs: 10.1.209
       rimraf: 3.0.2
       typescript: 4.7.3
 
@@ -82,30 +78,26 @@ importers:
 
   packages/sample-stack-v2:
     specifiers:
-      '@aws-cdk/aws-apigatewayv2-alpha': ^2.27.0-alpha.0
-      '@aws-cdk/aws-apigatewayv2-integrations-alpha': ^2.27.0-alpha.0
       '@sveltekit-cdk/constructsv2': workspace:*
       '@types/jest': ^28.1.0
       '@types/node': 17.0.39
-      aws-cdk: 2.27.0
-      aws-cdk-lib: 2.27.0
-      constructs: ^10.1.26
+      aws-cdk: 2.59.0
+      aws-cdk-lib: 2.59.0
+      constructs: ^10.1.209
       jest: ^28.1.0
       source-map-support: ^0.5.21
       ts-jest: ^28.0.4
       ts-node: ^10.8.1
       typescript: ~4.7.3
     dependencies:
-      '@aws-cdk/aws-apigatewayv2-alpha': 2.27.0-alpha.0_3cgkzquj2mzkc5l6ss2lxnisja
-      '@aws-cdk/aws-apigatewayv2-integrations-alpha': 2.27.0-alpha.0_lvfkbsp7mxcph7vbyqymd7hid4
       '@sveltekit-cdk/constructsv2': link:../constructsv2
-      aws-cdk-lib: 2.27.0_constructs@10.1.26
-      constructs: 10.1.26
+      aws-cdk-lib: 2.59.0_constructs@10.1.209
+      constructs: 10.1.209
       source-map-support: 0.5.21
     devDependencies:
       '@types/jest': 28.1.0
       '@types/node': 17.0.39
-      aws-cdk: 2.27.0
+      aws-cdk: 2.59.0
       jest: 28.1.0_fnqh7lxo2tirk2pbcjqseislty
       ts-jest: 28.0.4_dobhpzuee57u35mlukeats7vq4
       ts-node: 10.8.1_7mvreszf4wwmovnfi4srbo6mna
@@ -113,27 +105,14 @@ importers:
 
 packages:
 
-  /@aws-cdk/aws-apigatewayv2-alpha/2.27.0-alpha.0_3cgkzquj2mzkc5l6ss2lxnisja:
-    resolution: {integrity: sha512-e0VsZANE8qNiAznRW5m7soHivcsyJoKhkHSVg9WRTTIwS0rZEty7qZH0UjDxq7M2lgIZICaLWAyJOWvGpHEqIA==}
-    engines: {node: '>= 14.15.0'}
-    peerDependencies:
-      aws-cdk-lib: ^2.27.0
-      constructs: ^10.0.0
-    dependencies:
-      aws-cdk-lib: 2.27.0_constructs@10.1.26
-      constructs: 10.1.26
+  /@aws-cdk/asset-awscli-v1/2.2.49:
+    resolution: {integrity: sha512-Qd5bdLlC/sphWQQPNn7etKXWCh+fij7DWxtkIwvhhZ+LM6UEApGLS8sBLBQcRO2ZQdEuNb+zeClUy+3DNojfeg==}
 
-  /@aws-cdk/aws-apigatewayv2-integrations-alpha/2.27.0-alpha.0_lvfkbsp7mxcph7vbyqymd7hid4:
-    resolution: {integrity: sha512-AL3Ps0hPV8zRcI8k2wW4uTh+k9ZfvjgyUouDOZBaEW0U8PoQOgRj7b0FJbE+zmgbnw3YY2ycoCSpTfVbN3Akdg==}
-    engines: {node: '>= 14.15.0'}
-    peerDependencies:
-      '@aws-cdk/aws-apigatewayv2-alpha': 2.27.0-alpha.0
-      aws-cdk-lib: ^2.27.0
-      constructs: ^10.0.0
-    dependencies:
-      '@aws-cdk/aws-apigatewayv2-alpha': 2.27.0-alpha.0_3cgkzquj2mzkc5l6ss2lxnisja
-      aws-cdk-lib: 2.27.0_constructs@10.1.26
-      constructs: 10.1.26
+  /@aws-cdk/asset-kubectl-v20/2.1.1:
+    resolution: {integrity: sha512-U1ntiX8XiMRRRH5J1IdC+1t5CE89015cwyt5U63Cpk0GnMlN5+h9WsWMlKlPXZR4rdq/m806JRlBMRpBUB2Dhw==}
+
+  /@aws-cdk/asset-node-proxy-agent-v5/2.0.38:
+    resolution: {integrity: sha512-BBwAjORhuUkTGO3CxGS5Evcp5n20h9v06Sftn2R1DuSm8zIoUlPsNlI1HUk8XqYuoEI4aD7IKRQBLglv09ciJQ==}
 
   /@babel/code-frame/7.15.8:
     resolution: {integrity: sha512-2IAnmn8zbvC/jKYhq5Ki9I+DwjlrtMPUCH/CpHvqI4dNnlwHwsxoIhlc8WcYY5LSYknXQtAlFYuHfqAFCvQ4Wg==}
@@ -1206,6 +1185,33 @@ packages:
       svelte: 3.55.0
       tiny-glob: 0.2.9
       undici: 5.14.0
+      vite: 4.0.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@sveltejs/kit/1.0.1_vite@4.0.3:
+    resolution: {integrity: sha512-C41aCaDjA7xoUdsrc/lSdU1059UdLPIRE1vEIRRynzpMujNgp82bTMHkDosb6vykH6LrLf3tT2w2/5NYQhKYGQ==}
+    engines: {node: ^16.14 || >=18}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      svelte: ^3.54.0
+      vite: ^4.0.0
+    dependencies:
+      '@sveltejs/vite-plugin-svelte': 2.0.2_vite@4.0.3
+      '@types/cookie': 0.5.1
+      cookie: 0.5.0
+      devalue: 4.2.0
+      esm-env: 1.0.0
+      kleur: 4.1.5
+      magic-string: 0.27.0
+      mime: 3.0.0
+      sade: 1.8.1
+      set-cookie-parser: 2.5.1
+      sirv: 2.0.2
+      tiny-glob: 0.2.9
+      undici: 5.14.0
       vite: 4.0.3_@types+node@17.0.39
     transitivePeerDependencies:
       - supports-color
@@ -1224,6 +1230,24 @@ packages:
       magic-string: 0.27.0
       svelte: 3.55.0
       svelte-hmr: 0.15.1_svelte@3.55.0
+      vite: 4.0.3
+      vitefu: 0.2.4_vite@4.0.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@sveltejs/vite-plugin-svelte/2.0.2_vite@4.0.3:
+    resolution: {integrity: sha512-xCEan0/NNpQuL0l5aS42FjwQ6wwskdxC3pW1OeFtEKNZwRg7Evro9lac9HesGP6TdFsTv2xMes5ASQVKbCacxg==}
+    engines: {node: ^14.18.0 || >= 16}
+    peerDependencies:
+      svelte: ^3.54.0
+      vite: ^4.0.0
+    dependencies:
+      debug: 4.3.4
+      deepmerge: 4.2.2
+      kleur: 4.1.5
+      magic-string: 0.27.0
+      svelte-hmr: 0.15.1
       vite: 4.0.3_@types+node@17.0.39
       vitefu: 0.2.4_vite@4.0.3
     transitivePeerDependencies:
@@ -1454,21 +1478,24 @@ packages:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
 
-  /aws-cdk-lib/2.27.0_constructs@10.1.26:
-    resolution: {integrity: sha512-CsTy/+RIBMvP9LlZjkQakkKPpwU50+HAMCMaGOcyIHADDQdXobGcZXTO+Tq00sH2DoQjPV1ZhhBim5z3k/2KXw==}
+  /aws-cdk-lib/2.59.0_constructs@10.1.209:
+    resolution: {integrity: sha512-FT6QRsou8TibQcz/TqI3rEkB9EBVF5Om5lv9MXz/5qiKehWRbKZVX0I0l/SSAvGSmdTU5Pfr+WRBTk51oNMAdw==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
     dependencies:
+      '@aws-cdk/asset-awscli-v1': 2.2.49
+      '@aws-cdk/asset-kubectl-v20': 2.1.1
+      '@aws-cdk/asset-node-proxy-agent-v5': 2.0.38
       '@balena/dockerignore': 1.0.2
       case: 1.6.3
-      constructs: 10.1.26
+      constructs: 10.1.209
       fs-extra: 9.1.0
-      ignore: 5.2.0
+      ignore: 5.2.4
       jsonschema: 1.4.1
       minimatch: 3.1.2
       punycode: 2.1.1
-      semver: 7.3.7
+      semver: 7.3.8
       yaml: 1.10.2
     bundledDependencies:
       - '@balena/dockerignore'
@@ -1481,8 +1508,8 @@ packages:
       - semver
       - yaml
 
-  /aws-cdk/2.27.0:
-    resolution: {integrity: sha512-TAKSP4ViFqj+jktFwJl4IE4jZbQCsH32t7L/VcGY71VZV9VqvuzkjF4gGx+hrES+A/dFBtLmPXsumyJu5y0elQ==}
+  /aws-cdk/2.59.0:
+    resolution: {integrity: sha512-5xKh+nC6wLsjYGwA+YYbX9ZonJLYmthxSZy8pK/Bm9rL2mFpnMKvQZJz67L6ghOt1XumoB1vZbIhptln68jTuw==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
     optionalDependencies:
@@ -1808,10 +1835,10 @@ packages:
     dev: true
 
   /concat-map/0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  /constructs/10.1.26:
-    resolution: {integrity: sha512-Pvkez/igQ9lQLBNFr0FIHzJ4761XpchLV06lLQH2c0kCA10WqGrKBFOgEchT7260VrNVQQ1uBo7R0szphKYvZw==}
+  /constructs/10.1.209:
+    resolution: {integrity: sha512-BLvvM9bsKg4AGgeHWzT2elFh4UCFgmF4JyRjFcUMmHPJzgmErSwzUen/jVP4kI28nahakJXouiff6KZt0ey+3Q==}
     engines: {node: '>= 14.17.0'}
 
   /convert-source-map/1.8.0:
@@ -2535,8 +2562,8 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
-  /ignore/5.2.0:
-    resolution: {integrity: sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==}
+  /ignore/5.2.4:
+    resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}
     engines: {node: '>= 4'}
 
   /import-fresh/3.3.0:
@@ -3845,8 +3872,8 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
-  /semver/7.3.7:
-    resolution: {integrity: sha512-QlYTucUYOews+WeEujDoEGziz4K6c47V/Bd+LjSSYcA94p+DmINdf7ncaUinThfvZyu13lN9OY1XDxt8C0Tw0g==}
+  /semver/7.3.8:
+    resolution: {integrity: sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
@@ -4154,6 +4181,13 @@ packages:
       - sass
       - stylus
       - sugarss
+    dev: true
+
+  /svelte-hmr/0.15.1:
+    resolution: {integrity: sha512-BiKB4RZ8YSwRKCNVdNxK/GfY+r4Kjgp9jCLEy0DuqAKfmQtpL38cQK3afdpjw4sqSs4PLi3jIPJIFp259NkZtA==}
+    engines: {node: ^12.20 || ^14.13.1 || >= 16}
+    peerDependencies:
+      svelte: '>=3.19.0'
     dev: true
 
   /svelte-hmr/0.15.1_svelte@3.55.0:
