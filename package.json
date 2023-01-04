@@ -11,7 +11,7 @@
     "build-test": "pnpm --filter=\"test\" build",
     "synth": "pnpm --filter=\"sample-stack-v2\" synth",
     "diff": "pnpm --filter=\"sample-stack-v2\" diff",
-    "deploy-sample": "pnpm --filter=\"sample-stack-v2\" run deploy",
+    "deploy-sample": "pnpm --filter=\"sample-stack-v2\" run deploy --all",
     "deploy-test": "pnpm --filter=\"test-stack\" run deploy",
     "bump": "changeset version",
     "pub": "pnpm --filter=\"@sveltekit-cdk/*\" publish --access public"
