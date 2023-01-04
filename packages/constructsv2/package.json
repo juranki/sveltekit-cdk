@@ -11,16 +11,10 @@
   },
   "homepage": "https://github.com/juranki/sveltekit-cdk#readme",
   "license": "MIT",
-  "main": "dist/cjs/index.js",
-  "module": "dist/mjs/index.js",
-  "exports": {
-    ".": {
-      "import": "./dist/mjs/index.js",
-      "require": "./dist/cjs/index.js"
-    }
-  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "node prepare-build.cjs && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json"
+    "build": "node prepare-build.cjs && tsc -p tsconfig.json"
   },
   "keywords": [
     "sveltekit",
