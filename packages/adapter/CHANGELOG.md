@@ -1,5 +1,11 @@
 # sveltekit-cdk-adapter
 
+## 0.10.0
+
+### Minor Changes
+
+- c99f66b: remove deprecated AwsServerlessAdapter
+
 ## 0.9.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@sveltekit-cdk/adapter",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Plug this adapter to your SvelteKit project to deploy using AWS CDK",
   "repository": {
     "type": "git",

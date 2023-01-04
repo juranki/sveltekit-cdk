@@ -1,5 +1,15 @@
 # @sveltekit-cdk/constructsv2
 
+## 0.5.0
+
+### Minor Changes
+
+- dccc547: build only commonjs package
+
+### Patch Changes
+
+- 3931799: update cdk versions and remove unused deps
+
 ## 0.4.0
 
 ### Minor Changes
