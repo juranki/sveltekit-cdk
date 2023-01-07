@@ -1,5 +1,5 @@
 {
-  "name": "constructs",
+  "name": "@sveltekit-cdk/constructs",
   "description": "CDKv2 construct for deploying SvelteKit site to AWS CloudFront and Lambda@Edge",
   "repository": {
     "type": "git",
@@ -129,7 +129,8 @@
       ]
     },
     "outdir": "dist",
-    "versionFormat": "full"
+    "versionFormat": "full",
+    "targets": []
   },
   "overrides": {
     "@types/prettier": "2.6.0",

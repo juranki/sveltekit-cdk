@@ -47,7 +47,6 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
   parent: root,
   outdir: nameToPath(constructsName),
   name: constructsName,
-  packageName: 'constructs',
   repositoryUrl: "git@github.com:juranki/sveltekit-cdk.git",
   description:
     "CDKv2 construct for deploying SvelteKit site to AWS CloudFront and Lambda@Edge",
@@ -66,6 +65,7 @@ constructs.package.addField("jsii", {
   },
   outdir: "dist",
   versionFormat: "full",
+  targets: []
 });
 constructs.synth();
 
