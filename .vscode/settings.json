@@ -1,5 +1,6 @@
 {
     "yaml.schemas": {
         "https://json.schemastore.org/github-workflow.json": "file:///Users/juhani/src/sveltekit-cdk/.github/workflows/deploy.yml"
-    }
+    },
+    "editor.tabSize": 2
 }
