@@ -34,6 +34,7 @@
     }
   },
   "ignorePatterns": [
+    "*.cjs",
     "*.js",
     "!.projenrc.js",
     "*.d.ts",

@@ -109,8 +109,19 @@ const adapter = new typescript.TypeScriptProject({
       moduleResolution: "node",
     },
   },
+  eslintOptions: {
+    ignorePatterns: [
+      "*.cjs",
+      "*.js",
+      "!.projenrc.js",
+      "*.d.ts",
+      "node_modules/",
+      "*.generated.ts",
+      "coverage",
+    ],
+  },
 });
 fixSnapshot(adapter);
-adapter.packageTask.prependExec('node copy-shims.cjs')
+adapter.packageTask.prependExec("node copy-shims.cjs");
 adapter.package.addField("type", "module");
 adapter.synth();
