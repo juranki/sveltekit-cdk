@@ -6,6 +6,8 @@
     "eslint.workingDirectories": [
         "packages/@sveltekit-cdk/adapter",
         "packages/@sveltekit-cdk/artifact",
-        "packages/@sveltekit-cdk/constructs"
+        "packages/@sveltekit-cdk/constructs",
+        "packages/samples/sveltekit-demo-app",
+        "packages/samples/sveltekit-demo-stack"
     ]
 }

@@ -126,3 +126,16 @@ fixSnapshot(adapter);
 adapter.packageTask.prependExec("node copy-shims.cjs");
 adapter.package.addField("type", "module");
 adapter.synth();
+
+const sveltekitDemoStack = new awscdk.AwsCdkTypeScriptApp({
+  packageManager,
+  cdkVersion,
+  name: 'sveltekit-demo-stack',
+  parent: root,
+  outdir: 'packages/samples/sveltekit-demo-stack',
+  defaultReleaseBranch,
+  minNodeVersion,
+  cdkVersion,
+});
+sveltekitDemoStack.addDevDeps("@sveltekit-cdk/constructs")
+sveltekitDemoStack.synth();
