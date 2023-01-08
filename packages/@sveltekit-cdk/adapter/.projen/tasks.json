@@ -97,6 +97,9 @@
       "description": "Creates the distribution package",
       "steps": [
         {
+          "exec": "node copy-shims.cjs"
+        },
+        {
           "exec": "mkdir -p dist/js"
         },
         {

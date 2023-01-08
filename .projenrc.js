@@ -108,5 +108,6 @@ const adapter = new typescript.TypeScriptProject({
   },
 });
 fixSnapshot(adapter);
+adapter.packageTask.prependExec('node copy-shims.cjs')
 adapter.package.addField("type", "module");
 adapter.synth();
