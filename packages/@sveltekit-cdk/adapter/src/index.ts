@@ -1,5 +1,7 @@
 import { writeFileSync, renameSync } from 'fs';
 import * as path from 'path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import type { Adapter, Builder } from '@sveltejs/kit';
 import { SvelteKitCDKArtifact } from '@sveltekit-cdk/artifact';
 import { build } from 'esbuild';
@@ -32,12 +34,16 @@ export function adapter({ cdkProjectPath, artifactPath }: AdapterParams): Adapte
     name: 'sveltekit-cdk-adapter',
     async adapt(builder): Promise<void> {
 
+      let codePath = dirname(fileURLToPath(path.dirname(import.meta.url)));
+      builder.log(`code path: ${codePath}`);
+
       // Prepare code for lambda function
-      const lambdaPath = builder.getBuildDirectory('@sveltekit-cdk');
+      const lambdaPath = builder.getBuildDirectory('sveltekit-cdk');
       builder.rimraf(lambdaPath);
       builder.mkdirp(lambdaPath);
 
-      const files = path.join(__dirname, 'files');
+      const files = path.join(codePath, 'lib', 'files');
+      builder.log(`files path: ${files}`);
       builder.copy(files, lambdaPath, {
         replace: {
           SERVER: '../output/server/index',
@@ -102,7 +108,7 @@ function writePrerenderedTs(targetPath: string, builder: Builder) {
     prerenderedPages[k] = v.file;
   });
   writeFileSync(
-    targetPath,
+    path.join(targetPath, 'prerendered.ts'),
     [
       `export const prerenderedPages = ${JSON.stringify(prerenderedPages)}`,
     ].join('\n'),

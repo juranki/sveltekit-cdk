@@ -30,7 +30,10 @@ const root = new javascript.NodeProject({
   packageManager,
 });
 root.package.addField("private", true);
-root.package.addField("workspaces", ["packages/@sveltekit-cdk/*"]);
+root.package.addField("workspaces", [
+  "packages/@sveltekit-cdk/*",
+  "packages/samples/*",
+]);
 root.package.setScript("build", "nx run-many --target=build");
 root.synth();
 
@@ -46,8 +49,8 @@ const artifact = new typescript.TypeScriptProject({
   packageManager,
 });
 fixSnapshot(artifact);
-artifact.addGitIgnore('/test-data/');
-artifact.addPackageIgnore('/test-data/')
+artifact.addGitIgnore("/test-data/");
+artifact.addPackageIgnore("/test-data/");
 artifact.synth();
 
 // @sveltekit-cdk/constructs
