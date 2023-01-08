@@ -2,5 +2,10 @@
     "yaml.schemas": {
         "https://json.schemastore.org/github-workflow.json": "file:///Users/juhani/src/sveltekit-cdk/.github/workflows/deploy.yml"
     },
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "eslint.workingDirectories": [
+        "packages/@sveltekit-cdk/adapter",
+        "packages/@sveltekit-cdk/artifact",
+        "packages/@sveltekit-cdk/constructs"
+    ]
 }
