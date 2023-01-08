@@ -87,6 +87,7 @@ constructs.synth();
 
 // @sveltekit-cdk/adapter
 const adapter = new typescript.TypeScriptProject({
+  packageManager,
   minNodeVersion,
   authorName,
   authorEmail,
