@@ -1,7 +1,7 @@
 const projen = require("projen");
-const { awscdk, typescript, javascript, } = projen;
+const { awscdk, typescript, javascript } = projen;
 
-const packageManager = javascript.NodePackageManager.NPM
+const packageManager = javascript.NodePackageManager.NPM;
 const authorName = "Juhani Ränkimies";
 const authorEmail = "juhani@juranki.com";
 const cdkVersion = "2.59.0";
@@ -11,6 +11,15 @@ const constructsName = "@sveltekit-cdk/constructs";
 const adapterName = "@sveltekit-cdk/adapter";
 const artifactName = "@sveltekit-cdk/artifact";
 const nameToPath = (n) => `packages/${n}`;
+const fixSnapshot = (p) => {
+  p.testTask.steps[0].exec = "jest --passWithNoTests --coverageProvider=v8";
+  const updateSnapshotTask = p.addTask("test:snapshot", {
+    description: "Update test snapshots",
+  });
+  updateSnapshotTask.prependExec(
+    "jest --passWithNoTests --coverageProvider=v8 --updateSnapshot"
+  );
+};
 
 // root of the monorepo
 const root = new javascript.NodeProject({
@@ -36,6 +45,7 @@ const artifact = new typescript.TypeScriptProject({
   defaultReleaseBranch,
   packageManager,
 });
+fixSnapshot(artifact);
 artifact.synth();
 
 // @sveltekit-cdk/constructs
@@ -56,6 +66,7 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
   stability: "experimental",
   packageManager,
 });
+fixSnapshot(constructs);
 constructs.package.addField("jsii", {
   excludeTypescript: ["test"],
   tsc: {
@@ -65,7 +76,7 @@ constructs.package.addField("jsii", {
   },
   outdir: "dist",
   versionFormat: "full",
-  targets: []
+  targets: [],
 });
 constructs.synth();
 
@@ -94,6 +105,6 @@ const adapter = new typescript.TypeScriptProject({
     },
   },
 });
+fixSnapshot(adapter);
 adapter.package.addField("type", "module");
 adapter.synth();
-
