@@ -1,3 +1,4 @@
+import { logLevel } from './settings';
 
 // LOGGING UTILITIES
 export type LogLevel = 'ERROR' | 'WARN' | 'INFO' | 'DEBUG'
@@ -9,7 +10,7 @@ const logLevels: { [k: string]: number } = {
   DEBUG: 1,
 };
 export function log(level: LogLevel, msg: string, data: any): void {
-  if (logLevels[level] && logLevels[level] >= logLevels[SVELTEKIT_CDK_LOG_LEVEL]) {
+  if (logLevels[level] && logLevels[level] >= logLevels[logLevel]) {
     console.log(JSON.stringify({ level, msg, data }));
   }
 }

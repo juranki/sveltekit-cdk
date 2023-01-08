@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`write 1`] = `
+"{
+  "version": 1,
+  "staticGlobs": [
+    "/",
+    "favicon.ico",
+    "_app/*"
+  ]
+}"
+`;

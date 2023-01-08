@@ -46,6 +46,8 @@ const artifact = new typescript.TypeScriptProject({
   packageManager,
 });
 fixSnapshot(artifact);
+artifact.addGitIgnore('/test-data/');
+artifact.addPackageIgnore('/test-data/')
 artifact.synth();
 
 // @sveltekit-cdk/constructs

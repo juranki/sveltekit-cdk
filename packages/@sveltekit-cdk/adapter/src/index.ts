@@ -1,6 +1,7 @@
-import { writeFileSync, mkdirSync, renameSync } from 'fs';
+import { writeFileSync, renameSync } from 'fs';
 import * as path from 'path';
 import type { Adapter, Builder } from '@sveltejs/kit';
+import { SvelteKitCDKArtifact } from '@sveltekit-cdk/artifact';
 import { build } from 'esbuild';
 
 export interface AdapterParams {
@@ -30,89 +31,71 @@ export function adapter({ cdkProjectPath, artifactPath }: AdapterParams): Adapte
   return {
     name: 'sveltekit-cdk-adapter',
     async adapt(builder): Promise<void> {
-      // let dirname = path.dirname(import.meta.url).split('file://')[1];
-      // if (process.platform === 'win32') {
-      //   // remove first slash from path
-      //   dirname = dirname.substring(1);
-      // }
-      const targetPath = artifactPath || path.join(cdkProjectPath!, 'sveltekit');
+
+      // Prepare code for lambda function
+      const lambdaPath = builder.getBuildDirectory('@sveltekit-cdk');
+      builder.rimraf(lambdaPath);
+      builder.mkdirp(lambdaPath);
+
       const files = path.join(__dirname, 'files');
-      const dirs = {
-        prerendered: path.join(targetPath, 'prerendered'),
-        static: path.join(targetPath, 'static'),
-        lambda: path.join(targetPath, 'lambda'),
-      };
-
-      builder.rimraf(targetPath);
-      builder.rimraf(builder.getBuildDirectory('cdk'));
-
-      const prerendered = builder.writePrerendered(dirs.prerendered);
-      const clientfiles = builder.writeClient(dirs.static);
-
-      // UGLY WORKAROUND FOR CF/S3 ROUTING FOR FILES WITH + IN PATH
-      for (let filename of clientfiles.filter(f => f.includes('+'))) {
-        const newFilename = filename.replaceAll('+', ' ');
-        renameSync(path.join(dirs.static, filename), path.join(dirs.static, newFilename));
-      }
-
-      writeFileSync(
-        path.join(targetPath, 'client.json'),
-        `[${clientfiles.map(p => `"${p}"`).join(',')}]`,
-      );
-
-      writeRoutes(
-        path.join(targetPath, 'routes.json'),
-        prerendered, clientfiles,
-      );
-      mkdirSync(builder.getBuildDirectory('cdk'), { recursive: true });
-      builder.copy(files, builder.getBuildDirectory('cdk'), {
+      builder.copy(files, lambdaPath, {
         replace: {
           SERVER: '../output/server/index',
           MANIFEST: '../output/server/manifest',
           PRERENDERED: './prerendered',
         },
       });
-      writePrerenderedTs(
-        path.join(builder.getBuildDirectory('cdk'), 'prerendered.ts'),
-        builder,
-      );
+      writePrerenderedTs(lambdaPath, builder);
+
+      // Prepare artifact for CDK deployment
+      const targetPath = artifactPath || path.join(cdkProjectPath!, 'sveltekit');
+      builder.rimraf(targetPath);
+
+      const artifact = new SvelteKitCDKArtifact(targetPath);
+      artifact.subdirectories.forEach((p) => builder.mkdirp(p));
+
+      builder.writePrerendered(artifact.staticPath);
+      const staticFiles = builder.writeClient(artifact.staticPath);
+      artifact.staticGlobs = staticGlobs(staticFiles);
+
+      // UGLY WORKAROUND FOR CF/S3 ROUTING FOR FILES WITH + IN PATH
+      for (let filename of staticFiles.filter(f => f.includes('+'))) {
+        const newFilename = filename.replaceAll('+', ' ');
+        renameSync(path.join(artifact.staticPath, filename), path.join(artifact.staticPath, newFilename));
+      }
+
       await build({
-        entryPoints: [path.join(builder.getBuildDirectory('cdk'), 'at-edge-handler.js')],
-        outfile: path.join(dirs.lambda, 'at-edge/handler.js'),
+        entryPoints: [path.join(lambdaPath, 'at-edge-handler.js')],
+        outfile: path.join(artifact.lambdaPath, 'at-edge-handler.js'),
         bundle: true,
         platform: 'node',
-        inject: [path.join(builder.getBuildDirectory('cdk'), 'shims.js')],
+        inject: [path.join(lambdaPath, 'shims.js')],
+        external: ['./settings'],
       });
-      builder.log(`CDK artifacts were written to ${targetPath}`);
+
+      artifact.write();
+
+      builder.log(`CDK artifact was written to ${targetPath}`);
     },
   };
 }
-export type StaticRoutes = Record<string, 'prerendered' | 'static'>
-function writeRoutes(targetPath: string, pre: string[], cli: string[]) {
-  const rv: StaticRoutes = {};
 
-  cli.forEach(p => {
+/**
+ * Returns a list of glob patterns that can be used for
+ * creating CloudFront behaviours for serving static content
+ *
+ * @param staticFiles
+ */
+function staticGlobs(staticFiles: string[]): string[] {
+  const globs: { [glob: string]: boolean } = {};
+  staticFiles.forEach(p => {
     const ps = p.split('/');
     const glob = ps.length > 1 ? `${ps[0]}/*` : p;
-    rv[glob] = 'static';
+    globs[glob] = true;
   });
-  pre.forEach(p => {
-    let glob: string;
-    if (p === 'index.html') {
-      glob = '/';
-    } else {
-      const ps = p.split('/');
-      glob = ps.length > 1 ? `${ps[0]}/*` : p;
-      glob = `/${glob}`;
-    }
-    if (rv[glob] === 'static') {
-      throw new Error('CDK Adapter cannot handle top level routes that mix static and pre-rendered content, yet');
-    }
-    rv[glob] = 'prerendered';
-  });
-
-  writeFileSync(targetPath, JSON.stringify(rv, null, 2));
+  return Object.keys(globs);
 }
+
 function writePrerenderedTs(targetPath: string, builder: Builder) {
   const prerenderedPages: { [route: string]: string } = {};
   builder.prerendered.pages.forEach((v, k) => {

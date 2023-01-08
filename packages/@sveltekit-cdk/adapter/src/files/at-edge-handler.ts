@@ -9,6 +9,7 @@ import { manifest } from 'MANIFEST';
 import { prerenderedPages } from 'PRERENDERED';
 import { Server } from 'SERVER';
 import { isBlaclisted } from './header-blacklist';
+import { headerEnvMap } from './settings';
 import { log, toRawBody } from './util';
 
 const server = new Server(manifest);
@@ -42,10 +43,10 @@ export const handler: CloudFrontRequestHandler = async (event) => {
     return request;
   }
 
-  if (!envReady && SVELTEKIT_CDK_ENV_MAP && customHeaders) {
-    for (const headerName in SVELTEKIT_CDK_ENV_MAP) {
-      process.env[SVELTEKIT_CDK_ENV_MAP[headerName]] = customHeaders[headerName][0].value;
-      svelteEnv[SVELTEKIT_CDK_ENV_MAP[headerName]] = customHeaders[headerName][0].value;
+  if (!envReady && headerEnvMap && customHeaders) {
+    for (const headerName in headerEnvMap) {
+      process.env[headerEnvMap[headerName]] = customHeaders[headerName][0].value;
+      svelteEnv[headerEnvMap[headerName]] = customHeaders[headerName][0].value;
     }
     log('DEBUG', 'process.env', process.env);
     envReady = true;

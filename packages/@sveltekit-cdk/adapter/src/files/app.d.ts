@@ -11,6 +11,3 @@ declare module 'MANIFEST' {
 declare module 'PRERENDERED' {
 	export const prerenderedPages: { [route: string]: string }
 }
-
-declare var SVELTEKIT_CDK_ENV_MAP: Record<string, string> | undefined
-declare var SVELTEKIT_CDK_LOG_LEVEL: 'ERROR' | 'WARN' | 'INFO' | 'DEBUG'
