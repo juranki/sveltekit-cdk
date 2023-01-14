@@ -16,5 +16,5 @@ test('i have a site', () => {
     const stack = new TestStack(app, 'TestStack');
     Template.fromStack(stack);
   };
-  expect(f).toThrowError("ENOENT: no such file or directory, open 'sveltekit/routes.json'");
+  expect(f).toThrowError("ENOENT: no such file or directory, open 'sveltekit/meta.json'");
 });

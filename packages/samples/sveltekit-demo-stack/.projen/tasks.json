@@ -164,11 +164,21 @@
       "description": "Run tests",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --coverageProvider=v8 --updateSnapshot",
+          "exec": "jest --passWithNoTests --coverageProvider=v8 --ci",
           "receiveArgs": true
         },
         {
           "spawn": "eslint"
+        }
+      ]
+    },
+    "test:update": {
+      "name": "test:update",
+      "description": "Update jest snapshots",
+      "steps": [
+        {
+          "exec": "jest --updateSnapshot --passWithNoTests --coverageProvider=v8 --ci",
+          "receiveArgs": true
         }
       ]
     },
@@ -189,7 +199,7 @@
       },
       "steps": [
         {
-          "exec": "npm update npm-check-updates"
+          "exec": "yarn upgrade npm-check-updates"
         },
         {
           "exec": "npm-check-updates --dep dev --upgrade --target=minor"
@@ -207,10 +217,10 @@
           "exec": "npm-check-updates --dep bundle --upgrade --target=minor"
         },
         {
-          "exec": "npm install"
+          "exec": "yarn install --check-files"
         },
         {
-          "exec": "npm update"
+          "exec": "yarn upgrade"
         },
         {
           "exec": "npx projen"

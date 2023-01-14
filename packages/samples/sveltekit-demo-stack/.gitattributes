@@ -2,4 +2,4 @@
 
 /.gitattributes linguist-generated
 /.projen/** linguist-generated
-/package-lock.json linguist-generated
+/yarn.lock linguist-generated

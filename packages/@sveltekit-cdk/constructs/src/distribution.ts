@@ -1,6 +1,7 @@
 import { randomBytes } from 'crypto';
-import { readFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { join } from 'path';
+import { SvelteKitCDKArtifact } from '@sveltekit-cdk/artifact';
 import { Duration } from 'aws-cdk-lib';
 import { Certificate } from 'aws-cdk-lib/aws-certificatemanager';
 import * as cdn from 'aws-cdk-lib/aws-cloudfront';
@@ -10,7 +11,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import { Construct } from 'constructs';
-import { DEFAULT_ARTIFACT_PATH, RendererProps, StaticRoutes } from './common';
+import { DEFAULT_ARTIFACT_PATH, RendererProps } from './common';
 
 export interface SvelteDistributionProps {
   /**
@@ -83,10 +84,8 @@ export class SvelteDistribution extends Construct {
     // validate pros and apply defaults
     checkProps(props);
     const artifactPath = props.artifactPath || DEFAULT_ARTIFACT_PATH;
-    const staticPath = join(artifactPath, 'static');
-    const prerenderedPath = join(artifactPath, 'prerendered');
-    const routesPath = join(artifactPath, 'routes.json');
-    const routes: StaticRoutes = JSON.parse(readFileSync(routesPath, { encoding: 'utf8' }));
+    const artifact = new SvelteKitCDKArtifact(artifactPath);
+    artifact.read();
     const envUtils = new EnvUtil(props.rendererProps?.environment || {});
 
 
@@ -94,12 +93,8 @@ export class SvelteDistribution extends Construct {
     const bucketProps = props.bucketProps || {};
     this.bucket = new s3.Bucket(this, 'svelteStaticBucket', bucketProps);
 
-    const s3static = new cdnOrigins.S3Origin(this.bucket, {
+    const s3origin = new cdnOrigins.S3Origin(this.bucket, {
       originPath: 'static',
-    });
-    const origin = new cdnOrigins.S3Origin(this.bucket, {
-      originPath: 'prerendered',
-      customHeaders: envUtils.customHeaders(),
     });
 
     // cache and origin request policies
@@ -108,37 +103,24 @@ export class SvelteDistribution extends Construct {
       cookieBehavior: cdn.CacheCookieBehavior.all(),
     });
 
-    // at edge lambda
-    let edgeLambdas: cdn.EdgeLambda[] | undefined = undefined;
-
-    const bundleDir = join(artifactPath, 'lambda/at-edge-env');
-    // const outfile = join(bundleDir, 'handler.js');
-    // const code = buildSync({
-    //   entryPoints: [join(artifactPath, 'lambda/at-edge/handler.js')],
-    //   outfile,
-    //   bundle: true,
-    //   platform: 'node',
-    //   target: ['es2020'],
-    //   define: {
-    //     SVELTEKIT_CDK_LOG_LEVEL: JSON.stringify(props.rendererProps?.logLevel || 'INFO'),
-    //     SVELTEKIT_CDK_ENV_MAP: envUtils.mappingJSON(),
-    //   },
-    // });
-    // if (code.errors.length > 0) {
-    //   console.log('bundling lambda failed');
-    //   throw new Error(code.errors.map(e => (e.text)).join('\n'));
-    // }
+    writeFileSync(
+      join(artifact.lambdaPath, 'settings.js'),
+      [
+        `export const logLevel = ${JSON.stringify(props.rendererProps?.logLevel || 'INFO')};`,
+        `export const headerEnvMap = ${envUtils.mappingJSON()};`,
+      ].join('\n'),
+    );
 
     this.function = new cdn.experimental.EdgeFunction(this, 'svelteHandler', {
-      code: lambda.Code.fromAsset(bundleDir),
-      handler: 'handler.handler',
+      code: lambda.Code.fromAsset(artifact.lambdaPath),
+      handler: 'at-edge-handler.handler',
       runtime: lambda.Runtime.NODEJS_16_X,
       timeout: Duration.seconds(5),
       memorySize: 512,
       logRetention: 7,
     });
 
-    edgeLambdas = [{
+    const edgeLambdas = [{
       eventType: cdn.LambdaEdgeEventType.ORIGIN_REQUEST,
       functionVersion: this.function.currentVersion,
       includeBody: true,
@@ -148,53 +130,33 @@ export class SvelteDistribution extends Construct {
     this.distribution = new cdn.Distribution(this, 'distro', {
       priceClass: props.priceClass || cdn.PriceClass.PRICE_CLASS_100,
       defaultBehavior: {
-        origin,
+        origin: s3origin,
         viewerProtocolPolicy: cdn.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         edgeLambdas,
         allowedMethods: cdn.AllowedMethods.ALLOW_ALL,
-        originRequestPolicy: edgeLambdas ? originRequestPolicy : undefined,
-        cachePolicy: edgeLambdas ? cachePolicy : undefined,
+        originRequestPolicy,
+        cachePolicy,
       },
       domainNames: props.domainNames ? props.domainNames : undefined,
       certificate: props.certificateArn ? Certificate.fromCertificateArn(this, 'domainCert', props.certificateArn) : undefined,
     });
 
-    let hasPrerendered = false;
     // routes for static content
-    Object.entries(routes).forEach(([glob, orig]) => {
-      if (orig === 'static') {
-        this.distribution.addBehavior(glob, s3static, {
-          viewerProtocolPolicy: cdn.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        });
-      } else if (orig === 'prerendered') {
-        hasPrerendered = true;
-      }
-    });
-
-    if (hasPrerendered) {
-      // deploy with explicit content type to set it correctly for prerendered
-      new BucketDeployment(this, 'sveltePrerenderedDeployment', {
-        destinationBucket: this.bucket,
-        destinationKeyPrefix: 'prerendered',
-        sources: [Source.asset(prerenderedPath)],
-        distribution: this.distribution,
-        cacheControl: [
-          CacheControl.maxAge(Duration.days(365)),
-        ],
-        distributionPaths: Object.entries(routes).filter(([_, t]) => (t === 'prerendered')).map(([r, _]) => r),
+    artifact.staticGlobs.forEach((glob) => {
+      this.distribution.addBehavior(glob, s3origin, {
+        viewerProtocolPolicy: cdn.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       });
-
-    }
+    });
 
     new BucketDeployment(this, 'svelteStaticDeployment', {
       destinationBucket: this.bucket,
       destinationKeyPrefix: 'static',
-      sources: [Source.asset(staticPath)],
+      sources: [Source.asset(artifact.staticPath)],
       distribution: this.distribution,
       cacheControl: [
         CacheControl.maxAge(Duration.days(365)),
       ],
-      distributionPaths: Object.entries(routes).filter(([_, t]) => (t === 'static')).map(([r, _]) => `/${r}`),
+      distributionPaths: getDistributionPaths(artifact),
     });
   }
 }
@@ -229,5 +191,15 @@ class EnvUtil {
       [this.headers[k], v]
     )));
   };
+}
+
+function getDistributionPaths(artifact: SvelteKitCDKArtifact): string[] {
+  return artifact.prerenderedRoutes.concat(artifact.staticGlobs).map(p => {
+    if (p.startsWith('/')) {
+      return p;
+    } else {
+      return `/${p}`;
+    };
+  });
 }
 

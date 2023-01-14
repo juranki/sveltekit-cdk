@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "staticGlobs": [
+    "_app/*",
+    "favicon.png",
+    "robots.txt",
+    "vite-manifest.json"
+  ]
+}

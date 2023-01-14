@@ -6,7 +6,6 @@ export class SvelteKitDemoStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
     super(scope, id, props);
 
-    //@ts-ignore
     new SvelteDistribution(this, 'site', {
       artifactPath: '../../../sveltekit-demo-artifact',
     });

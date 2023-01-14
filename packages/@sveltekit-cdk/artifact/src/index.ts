@@ -1,4 +1,4 @@
-import { writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 
 /**
@@ -14,7 +14,8 @@ export class SvelteKitCDKArtifact {
   /**
    * List of glob patterns for routing static content.
    */
-  public staticGlobs?: string[];
+  public staticGlobs: string[] = [];
+  public prerenderedRoutes: string[] = [];
 
   constructor(basePath: string) {
     this.staticPath = path.join(basePath, 'static');
@@ -34,5 +35,14 @@ export class SvelteKitCDKArtifact {
       version: this.version,
       staticGlobs: this.staticGlobs,
     }, null, 2));
+  }
+
+  read() {
+    const json = readFileSync(this.metaPath, { encoding: 'utf-8' });
+    const o = JSON.parse(json);
+    if (o.version !== this.version) {
+      throw new Error(`invalid artifact version ${o.version} (expected ${this.version})`);
+    }
+    this.staticGlobs = o.staticGlobs;
   }
 }

@@ -18,13 +18,13 @@
     "synth": "npx projen synth",
     "synth:silent": "npx projen synth:silent",
     "test": "npx projen test",
+    "test:update": "npx projen test:update",
     "test:watch": "npx projen test:watch",
     "upgrade": "npx projen upgrade",
     "watch": "npx projen watch",
     "projen": "npx projen"
   },
   "devDependencies": {
-    "@sveltekit-cdk/constructs": "^0.0.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16",
     "@typescript-eslint/eslint-plugin": "^5",
@@ -45,6 +45,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@sveltekit-cdk/constructs": "^0.0.0",
     "aws-cdk-lib": "^2.59.0",
     "constructs": "^10.0.5"
   },

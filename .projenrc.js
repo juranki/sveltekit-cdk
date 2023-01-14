@@ -1,7 +1,7 @@
 const projen = require("projen");
 const { awscdk, typescript, javascript } = projen;
 
-const packageManager = javascript.NodePackageManager.NPM;
+const packageManager = javascript.NodePackageManager.YARN;
 const authorName = "Juhani Ränkimies";
 const authorEmail = "juhani@juranki.com";
 const cdkVersion = "2.59.0";
@@ -11,15 +11,6 @@ const constructsName = "@sveltekit-cdk/constructs";
 const adapterName = "@sveltekit-cdk/adapter";
 const artifactName = "@sveltekit-cdk/artifact";
 const nameToPath = (n) => `packages/${n}`;
-const fixSnapshot = (p) => {
-  p.testTask.steps[0].exec = "jest --passWithNoTests --coverageProvider=v8";
-  const updateSnapshotTask = p.addTask("test:snapshot", {
-    description: "Update test snapshots",
-  });
-  updateSnapshotTask.prependExec(
-    "jest --passWithNoTests --coverageProvider=v8 --updateSnapshot"
-  );
-};
 
 // root of the monorepo
 const root = new javascript.NodeProject({
@@ -35,10 +26,12 @@ root.package.addField("workspaces", [
   "packages/samples/*",
 ]);
 root.package.setScript("build", "nx run-many --target=build");
-root.synth();
 
 // @sveltekit-cdk/artifact
 const artifact = new typescript.TypeScriptProject({
+  jestOptions: {
+    updateSnapshot: "never",
+  },
   minNodeVersion,
   authorName,
   authorEmail,
@@ -48,13 +41,15 @@ const artifact = new typescript.TypeScriptProject({
   defaultReleaseBranch,
   packageManager,
 });
-fixSnapshot(artifact);
 artifact.addGitIgnore("/test-data/");
 artifact.addPackageIgnore("/test-data/");
-artifact.synth();
 
 // @sveltekit-cdk/constructs
 const constructs = new awscdk.AwsCdkConstructLibrary({
+  jestOptions: {
+    updateSnapshot: "never",
+  },
+  docgen: false,
   author: authorName,
   authorAddress: authorEmail,
   cdkVersion,
@@ -71,7 +66,6 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
   stability: "experimental",
   packageManager,
 });
-fixSnapshot(constructs);
 constructs.package.addField("jsii", {
   excludeTypescript: ["test"],
   tsc: {
@@ -83,10 +77,12 @@ constructs.package.addField("jsii", {
   versionFormat: "full",
   targets: [],
 });
-constructs.synth();
 
 // @sveltekit-cdk/adapter
 const adapter = new typescript.TypeScriptProject({
+  jestOptions: {
+    updateSnapshot: "never",
+  },
   packageManager,
   minNodeVersion,
   authorName,
@@ -122,20 +118,23 @@ const adapter = new typescript.TypeScriptProject({
     ],
   },
 });
-fixSnapshot(adapter);
 adapter.packageTask.prependExec("node copy-shims.cjs");
 adapter.package.addField("type", "module");
-adapter.synth();
 
 const sveltekitDemoStack = new awscdk.AwsCdkTypeScriptApp({
+  jestOptions: {
+    updateSnapshot: "never",
+  },
   packageManager,
   cdkVersion,
-  name: 'sveltekit-demo-stack',
+  name: "sveltekit-demo-stack",
   parent: root,
-  outdir: 'packages/samples/sveltekit-demo-stack',
+  outdir: "packages/samples/sveltekit-demo-stack",
   defaultReleaseBranch,
   minNodeVersion,
   cdkVersion,
 });
-sveltekitDemoStack.addDevDeps("@sveltekit-cdk/constructs")
-sveltekitDemoStack.synth();
+sveltekitDemoStack.addDeps("@sveltekit-cdk/constructs");
+
+
+root.synth();
