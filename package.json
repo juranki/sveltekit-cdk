@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "npm-check-updates": "^16",
-    "nx": "15.4.5",
+    "nx": "^15.6.3",
     "projen": "^0.66.7",
     "standard-version": "^9"
   },

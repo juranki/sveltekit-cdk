@@ -38,7 +38,6 @@
     "@typescript-eslint/eslint-plugin": "^5",
     "@typescript-eslint/parser": "^5",
     "aws-cdk-lib": "2.59.0",
-    "constructs": "10.0.5",
     "eslint": "^8",
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-import-resolver-typescript": "^3.5.2",
@@ -59,7 +58,8 @@
     "constructs": "^10.0.5"
   },
   "dependencies": {
-    "@sveltekit-cdk/artifact": "^0.0.0"
+    "@sveltekit-cdk/artifact": "^0.0.0",
+    "constructs": "10.1.213"
   },
   "bundledDependencies": [
     "@sveltekit-cdk/artifact"

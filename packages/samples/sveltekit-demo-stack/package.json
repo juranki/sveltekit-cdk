@@ -47,7 +47,7 @@
   "dependencies": {
     "@sveltekit-cdk/constructs": "^0.0.0",
     "aws-cdk-lib": "^2.59.0",
-    "constructs": "^10.0.5"
+    "constructs": "10.1.213"
   },
   "engines": {
     "node": ">= 16.19.0"

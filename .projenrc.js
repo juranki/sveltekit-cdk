@@ -78,6 +78,8 @@ constructs.package.addField("jsii", {
   targets: [],
 });
 
+constructs.addDeps("constructs@10.1.213");
+
 // @sveltekit-cdk/adapter
 const adapter = new typescript.TypeScriptProject({
   jestOptions: {
@@ -135,6 +137,7 @@ const sveltekitDemoStack = new awscdk.AwsCdkTypeScriptApp({
   cdkVersion,
 });
 sveltekitDemoStack.addDeps("@sveltekit-cdk/constructs");
+sveltekitDemoStack.addDeps("constructs@10.1.213");
 
 
 root.synth();
