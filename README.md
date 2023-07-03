@@ -1,5 +1,10 @@
 # SvelteKit CDK Adapter
 
+> ### WARNING: Not maintained
+>
+> Have a look at [SST](https://docs.sst.dev/) instead.
+
+
 > ### WARNING: Not for production, yet!!
 >
 > No compatibility between versions is garanteed while in [initial development](https://semver.org/#spec-item-4). It's recommended to use exact version in `package.json` to avoid suprices. 
